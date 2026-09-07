@@ -29,19 +29,16 @@ class ModificacionContrato extends Model
         'nuevo_bono' => 'decimal:2',
     ];
 
-    /**
-     * Contrato al que pertenece la modificación.
-     */
     public function contrato(): BelongsTo
     {
         return $this->belongsTo(Contrato::class);
     }
 
-    /**
-     * Documentos asociados a la modificación contractual.
-     */
     public function documentos(): MorphMany
     {
-        return $this->morphMany(Documento::class, 'documentable');
+        return $this->morphMany(
+            Documento::class,
+            'documentable'
+        );
     }
 }

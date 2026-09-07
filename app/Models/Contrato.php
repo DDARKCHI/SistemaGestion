@@ -43,18 +43,25 @@ class Contrato extends Model
     }
 
     /**
-     * Modificaciones del contrato.
+     * Historial de modificaciones y anexos
+     * asociados al contrato.
      */
     public function modificaciones(): HasMany
     {
-        return $this->hasMany(ModificacionContrato::class);
+        return $this->hasMany(
+            ModificacionContrato::class
+        )->orderByDesc('fecha');
     }
 
     /**
-     * Documentos asociados al contrato.
+     * Documentos asociados directamente
+     * al contrato original.
      */
     public function documentos(): MorphMany
     {
-        return $this->morphMany(Documento::class, 'documentable');
+        return $this->morphMany(
+            Documento::class,
+            'documentable'
+        );
     }
 }

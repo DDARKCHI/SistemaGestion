@@ -20,6 +20,8 @@ class Cuadratura extends Model
         'total_ingresos',
         'total_descuentos',
         'total_gastos',
+        'saldo_a_favor',
+        'saldo_en_contra',
         'total_liquidado',
         'estado',
         'observaciones',
@@ -30,6 +32,8 @@ class Cuadratura extends Model
         'total_ingresos' => 'decimal:2',
         'total_descuentos' => 'decimal:2',
         'total_gastos' => 'decimal:2',
+        'saldo_a_favor' => 'decimal:2',
+        'saldo_en_contra' => 'decimal:2',
         'total_liquidado' => 'decimal:2',
     ];
 
