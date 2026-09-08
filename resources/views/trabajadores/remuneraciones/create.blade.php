@@ -5,9 +5,7 @@
 @section('topbar_title', 'Nueva remuneración')
 
 @push('styles')
-
 <style>
-
     .remuneracion-create-header {
         display: flex;
         align-items: flex-start;
@@ -132,9 +130,7 @@
     }
 
     .remuneracion-create-input,
-    .remuneracion-create-select,
     .remuneracion-create-textarea {
-
         width: 100%;
         box-sizing: border-box;
         border: 1px solid #dce3eb;
@@ -145,54 +141,54 @@
         font-size: 11px;
         outline: none;
         transition: border-color .15s ease, box-shadow .15s ease;
-
     }
 
-    .remuneracion-create-input,
-    .remuneracion-create-select {
-
+    .remuneracion-create-input {
         min-height: 38px;
         padding: 8px 10px;
-
-    }
-
-    .remuneracion-create-textarea {
-
-        min-height: 105px;
-        padding: 10px;
-        resize: vertical;
-        line-height: 1.5;
-
     }
 
     .remuneracion-create-input:focus,
-    .remuneracion-create-select:focus,
     .remuneracion-create-textarea:focus {
-
         border-color: #8db5d2;
         box-shadow: 0 0 0 3px rgba(21, 90, 145, .08);
+    }
 
+    .remuneracion-create-calculated {
+        background: #f8fafc;
+        font-weight: 700;
+        color: #172033;
+        cursor: not-allowed;
+    }
+
+    .remuneracion-create-status {
+        display: flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 8px 10px;
+        box-sizing: border-box;
+        border: 1px solid #dce3eb;
+        border-radius: 6px;
+        background: #f8fafc;
+        color: #344054;
+        font-size: 11px;
+        font-weight: 700;
     }
 
     .remuneracion-create-help {
-
         margin-top: 5px;
         color: #98a2b3;
         font-size: 9px;
         line-height: 1.4;
-
     }
 
     .remuneracion-create-error {
-
         margin-top: 5px;
         color: #b9382e;
         font-size: 9px;
-
     }
 
     .remuneracion-create-alert {
-
         margin-bottom: 18px;
         padding: 11px 14px;
         border: 1px solid #f0c8c3;
@@ -200,33 +196,26 @@
         background: #fff5f3;
         color: #b9382e;
         font-size: 10px;
-
     }
 
     .remuneracion-create-summary {
-
-        padding: 15px;
+        padding: 16px;
         border: 1px solid #dce3eb;
         border-radius: 8px;
         background: #f8fafc;
-
     }
 
     .remuneracion-create-summary-title {
-
-        margin: 0 0 12px;
+        margin: 0 0 14px;
         color: #344054;
         font-size: 11px;
         font-weight: 700;
-
     }
 
     .remuneracion-create-summary-grid {
-
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 18px;
-
     }
 
     .remuneracion-create-summary-item {
@@ -234,53 +223,42 @@
     }
 
     .remuneracion-create-summary-label {
-
         margin-bottom: 4px;
         color: #98a2b3;
         font-size: 9px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: .02em;
-
     }
 
     .remuneracion-create-summary-value {
-
         color: #172033;
         font-size: 14px;
         font-weight: 700;
-
     }
 
     .remuneracion-create-upload {
-
         padding: 15px;
         border: 1px dashed #cbd7e3;
         border-radius: 8px;
         background: #f8fafc;
-
     }
 
     .remuneracion-create-upload-title {
-
         margin: 0;
         color: #344054;
         font-size: 11px;
         font-weight: 700;
-
     }
 
     .remuneracion-create-upload-text {
-
         margin: 4px 0 12px;
         color: #98a2b3;
         font-size: 9px;
         line-height: 1.5;
-
     }
 
     .remuneracion-create-file {
-
         width: 100%;
         box-sizing: border-box;
         padding: 8px;
@@ -290,11 +268,16 @@
         color: #344054;
         font-family: inherit;
         font-size: 10px;
+    }
 
+    .remuneracion-create-textarea {
+        min-height: 105px;
+        padding: 10px;
+        resize: vertical;
+        line-height: 1.5;
     }
 
     .remuneracion-create-footer {
-
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -302,11 +285,9 @@
         margin-top: 22px;
         padding-top: 18px;
         border-top: 1px solid #edf1f5;
-
     }
 
     .remuneracion-create-button {
-
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -320,18 +301,14 @@
         font-size: 10px;
         font-weight: 600;
         cursor: pointer;
-
     }
 
     .remuneracion-create-button:hover {
-
         background: #124d7d;
         border-color: #124d7d;
-
     }
 
     .remuneracion-create-cancel {
-
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -345,18 +322,14 @@
         font-size: 10px;
         font-weight: 600;
         text-decoration: none;
-
     }
 
     .remuneracion-create-cancel:hover {
-
         background: #f5f8fb;
         color: #155a91;
-
     }
 
     @media (max-width: 700px) {
-
         .remuneracion-create-header {
             flex-direction: column;
         }
@@ -389,20 +362,14 @@
         .remuneracion-create-footer button {
             width: 100%;
         }
-
     }
-
 </style>
-
 @endpush
-
 
 @section('content')
 
     <div class="remuneracion-create-header">
-
         <div>
-
             <h1 class="remuneracion-create-title">
                 Nueva remuneración
             </h1>
@@ -410,37 +377,26 @@
             <p class="remuneracion-create-subtitle">
                 Registra la remuneración correspondiente al período seleccionado.
             </p>
-
         </div>
 
         <div class="remuneracion-create-actions">
-
             <a
                 href="{{ route('trabajadores.show', $trabajador) }}"
                 class="remuneracion-create-action"
             >
                 ← Volver a la ficha
             </a>
-
         </div>
-
     </div>
 
-
     @if($errors->any())
-
         <div class="remuneracion-create-alert">
-
             <strong>
                 No se pudo guardar la remuneración.
             </strong>
-
             Revisa los campos marcados e inténtalo nuevamente.
-
         </div>
-
     @endif
-
 
     <section class="remuneracion-create-card">
 
@@ -455,19 +411,14 @@
             </p>
 
             <div class="remuneracion-create-worker">
-
                 Trabajador:
-
                 <strong>
                     {{ $trabajador->nombre }}
                 </strong>
-
                 · RUT {{ $trabajador->rut }}
-
             </div>
 
         </div>
-
 
         <form
             action="{{ route(
@@ -484,7 +435,6 @@
             <div class="remuneracion-create-grid">
 
                 {{-- PERÍODO --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -510,18 +460,14 @@
                     </div>
 
                     @error('periodo')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
                 {{-- SUELDO BASE --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -553,19 +499,19 @@
                         required
                     >
 
-                    @error('sueldo_base')
+                    <div class="remuneracion-create-help">
+                        Se carga automáticamente con la remuneración vigente del trabajador.
+                    </div>
 
+                    @error('sueldo_base')
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
                 {{-- BONIFICACIONES --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -586,18 +532,14 @@
                     >
 
                     @error('bonificaciones')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
                 {{-- DESCUENTOS --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -618,18 +560,14 @@
                     >
 
                     @error('descuentos')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
-                {{-- TOTAL LÍQUIDO --}}
-
+                {{-- TOTAL LÍQUIDO CALCULADO --}}
                 <div class="remuneracion-create-field">
 
                     <label
@@ -637,37 +575,29 @@
                         class="remuneracion-create-label"
                     >
                         Total líquido
-                        <span class="remuneracion-create-required">*</span>
                     </label>
 
                     <input
-                        type="number"
+                        type="text"
                         id="total_liquido"
-                        name="total_liquido"
-                        class="remuneracion-create-input"
-                        value="{{ old('total_liquido') }}"
-                        min="0"
-                        step="1"
-                        required
+                        class="remuneracion-create-input remuneracion-create-calculated"
+                        value="$0"
+                        readonly
                     >
 
                     <div class="remuneracion-create-help">
-                        Monto líquido que corresponde pagar al trabajador.
+                        Calculado automáticamente: sueldo base + bonificaciones − descuentos.
                     </div>
 
                     @error('total_liquido')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
                 {{-- MONTO PAGADO --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -692,18 +622,14 @@
                     </div>
 
                     @error('monto_pagado')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
                 {{-- FECHA DE PAGO --}}
-
                 <div class="remuneracion-create-field">
 
                     <label
@@ -726,88 +652,36 @@
                     </div>
 
                     @error('fecha_pago')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
-
-                {{-- ESTADO --}}
-
+                {{-- ESTADO AUTOMÁTICO --}}
                 <div class="remuneracion-create-field">
 
                     <label
-                        for="estado"
                         class="remuneracion-create-label"
                     >
-                        Estado
-                        <span class="remuneracion-create-required">*</span>
+                        Estado de pago
                     </label>
 
-                    <select
+                    <div
                         id="estado"
-                        name="estado"
-                        class="remuneracion-create-select"
-                        required
+                        class="remuneracion-create-status"
                     >
-
-                        <option value="">
-                            Seleccionar estado
-                        </option>
-
-                        <option
-                            value="pendiente"
-                            {{ old('estado', 'pendiente') === 'pendiente'
-                                ? 'selected'
-                                : ''
-                            }}
-                        >
-                            Pendiente
-                        </option>
-
-                        <option
-                            value="parcialmente_pagada"
-                            {{ old('estado') === 'parcialmente_pagada'
-                                ? 'selected'
-                                : ''
-                            }}
-                        >
-                            Parcialmente pagada
-                        </option>
-
-                        <option
-                            value="pagada"
-                            {{ old('estado') === 'pagada'
-                                ? 'selected'
-                                : ''
-                            }}
-                        >
-                            Pagada
-                        </option>
-
-                    </select>
-
-                    <div class="remuneracion-create-help">
-                        El sistema ajustará automáticamente el estado según el monto pagado.
+                        Pendiente
                     </div>
 
-                    @error('estado')
-
-                        <div class="remuneracion-create-error">
-                            {{ $message }}
-                        </div>
-
-                    @enderror
+                    <div class="remuneracion-create-help">
+                        El estado se determina automáticamente según el monto efectivamente pagado.
+                    </div>
 
                 </div>
 
-
                 {{-- RESUMEN --}}
-
                 <div class="remuneracion-create-field remuneracion-create-field-full">
 
                     <div class="remuneracion-create-summary">
@@ -833,7 +707,6 @@
 
                             </div>
 
-
                             <div class="remuneracion-create-summary-item">
 
                                 <div class="remuneracion-create-summary-label">
@@ -848,7 +721,6 @@
                                 </div>
 
                             </div>
-
 
                             <div class="remuneracion-create-summary-item">
 
@@ -871,9 +743,7 @@
 
                 </div>
 
-
                 {{-- DOCUMENTO --}}
-
                 <div class="remuneracion-create-field remuneracion-create-field-full">
 
                     <div class="remuneracion-create-upload">
@@ -898,20 +768,16 @@
                         >
 
                         @error('documento')
-
                             <div class="remuneracion-create-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
 
                     </div>
 
                 </div>
 
-
                 {{-- OBSERVACIONES --}}
-
                 <div class="remuneracion-create-field remuneracion-create-field-full">
 
                     <label
@@ -929,17 +795,14 @@
                     >{{ old('observaciones') }}</textarea>
 
                     @error('observaciones')
-
                         <div class="remuneracion-create-error">
                             {{ $message }}
                         </div>
-
                     @enderror
 
                 </div>
 
             </div>
-
 
             <div class="remuneracion-create-footer">
 
@@ -965,18 +828,27 @@
 
 @endsection
 
-
 @push('scripts')
-
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
+
+        const sueldoBaseInput =
+            document.getElementById('sueldo_base');
+
+        const bonificacionesInput =
+            document.getElementById('bonificaciones');
+
+        const descuentosInput =
+            document.getElementById('descuentos');
+
+        const pagadoInput =
+            document.getElementById('monto_pagado');
 
         const totalInput =
             document.getElementById('total_liquido');
 
-        const pagadoInput =
-            document.getElementById('monto_pagado');
+        const estadoElement =
+            document.getElementById('estado');
 
         const resumenTotal =
             document.getElementById('resumen-total');
@@ -987,61 +859,102 @@
         const resumenSaldo =
             document.getElementById('resumen-saldo');
 
-
-        function formatoMoneda(valor) {
-
-            return new Intl.NumberFormat('es-CL', {
-
-                style: 'currency',
-
-                currency: 'CLP',
-
-                maximumFractionDigits: 0
-
-            }).format(valor);
-
+        function numero(valor) {
+            return parseFloat(valor) || 0;
         }
 
+        function formatoMoneda(valor) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                maximumFractionDigits: 0
+            }).format(Math.max(0, valor));
+        }
 
-        function actualizarResumen() {
+        function actualizarCalculos() {
 
-            const total =
-                parseFloat(totalInput.value) || 0;
+            const sueldoBase =
+                numero(sueldoBaseInput.value);
 
-            const pagado =
-                parseFloat(pagadoInput.value) || 0;
+            const bonificaciones =
+                numero(bonificacionesInput.value);
+
+            const descuentos =
+                numero(descuentosInput.value);
+
+            const montoPagado =
+                numero(pagadoInput.value);
+
+            const totalLiquido =
+                Math.max(
+                    0,
+                    sueldoBase
+                    + bonificaciones
+                    - descuentos
+                );
 
             const saldo =
-                Math.max(0, total - pagado);
+                Math.max(
+                    0,
+                    totalLiquido
+                    - montoPagado
+                );
 
+            totalInput.value =
+                formatoMoneda(totalLiquido);
 
             resumenTotal.textContent =
-                formatoMoneda(total);
+                formatoMoneda(totalLiquido);
 
             resumenPagado.textContent =
-                formatoMoneda(pagado);
+                formatoMoneda(montoPagado);
 
             resumenSaldo.textContent =
                 formatoMoneda(saldo);
 
+            if (montoPagado <= 0) {
+
+                estadoElement.textContent =
+                    'Pendiente';
+
+            } else if (montoPagado < totalLiquido) {
+
+                estadoElement.textContent =
+                    'Parcialmente pagada';
+
+            } else if (montoPagado === totalLiquido) {
+
+                estadoElement.textContent =
+                    'Pagada';
+
+            } else {
+
+                estadoElement.textContent =
+                    'Monto superior al total';
+            }
         }
 
-
-        totalInput.addEventListener(
+        sueldoBaseInput.addEventListener(
             'input',
-            actualizarResumen
+            actualizarCalculos
+        );
+
+        bonificacionesInput.addEventListener(
+            'input',
+            actualizarCalculos
+        );
+
+        descuentosInput.addEventListener(
+            'input',
+            actualizarCalculos
         );
 
         pagadoInput.addEventListener(
             'input',
-            actualizarResumen
+            actualizarCalculos
         );
 
-
-        actualizarResumen();
-
+        actualizarCalculos();
     });
-
 </script>
-
 @endpush

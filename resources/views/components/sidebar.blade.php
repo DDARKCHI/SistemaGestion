@@ -46,16 +46,21 @@
 
     <nav class="sidebar-menu">
 
-        {{-- PRINCIPAL --}}
+
+        {{-- =================================================
+             PRINCIPAL
+        ================================================== --}}
 
         <div class="sidebar-section-title">
             Principal
         </div>
 
 
+        {{-- INICIO --}}
+
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('clientes.index') }}"
+            class="sidebar-item {{ request()->routeIs('clientes.index') && !request()->routeIs('clientes.*') ? 'active' : '' }}"
             title="Inicio"
         >
 
@@ -127,6 +132,7 @@
         </a>
 
 
+
         {{-- =================================================
              FINANZAS
         ================================================== --}}
@@ -135,6 +141,8 @@
             Finanzas
         </div>
 
+
+        {{-- FACTURAS --}}
 
         <a
             href="#"
@@ -153,6 +161,8 @@
         </a>
 
 
+        {{-- FACTORING --}}
+
         <a
             href="#"
             class="sidebar-item"
@@ -169,6 +179,8 @@
 
         </a>
 
+
+        {{-- MORA --}}
 
         <a
             href="#"
@@ -187,6 +199,8 @@
         </a>
 
 
+        {{-- GASTOS --}}
+
         <a
             href="#"
             class="sidebar-item"
@@ -204,6 +218,26 @@
         </a>
 
 
+        {{-- NOTAS DE CRÉDITO --}}
+
+        <a
+            href="{{ route('notas-credito-proveedores.index') }}"
+            class="sidebar-item {{ request()->routeIs('notas-credito-proveedores.*') ? 'active' : '' }}"
+            title="Notas de crédito pendientes"
+        >
+
+            <span class="sidebar-icon">
+                ◫
+            </span>
+
+            <span class="sidebar-label">
+                Notas de crédito
+            </span>
+
+        </a>
+
+
+
         {{-- =================================================
              GESTIÓN
         ================================================== --}}
@@ -213,9 +247,11 @@
         </div>
 
 
+        {{-- PERSONAL --}}
+
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('trabajadores.index') }}"
+            class="sidebar-item {{ request()->routeIs('trabajadores.*') ? 'active' : '' }}"
             title="Personal"
         >
 
@@ -229,6 +265,8 @@
 
         </a>
 
+
+        {{-- TRANSPORTISTAS --}}
 
         <a
             href="#"
@@ -247,9 +285,30 @@
         </a>
 
 
+        {{-- PROVEEDORES --}}
+
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('proveedores.index') }}"
+            class="sidebar-item {{ request()->routeIs('proveedores.*') ? 'active' : '' }}"
+            title="Proveedores"
+        >
+
+            <span class="sidebar-icon">
+                ◈
+            </span>
+
+            <span class="sidebar-label">
+                Proveedores
+            </span>
+
+        </a>
+
+
+        {{-- CONTRATOS --}}
+
+        <a
+            href="{{ route('trabajadores.index') }}"
+            class="sidebar-item {{ request()->routeIs('trabajadores.contratos.*') || request()->routeIs('trabajadores.contratos.modificaciones.*') ? 'active' : '' }}"
             title="Contratos"
         >
 
@@ -263,6 +322,8 @@
 
         </a>
 
+
+        {{-- RECLAMOS Y JUICIOS --}}
 
         <a
             href="#"
@@ -281,6 +342,7 @@
         </a>
 
 
+
         {{-- =================================================
              DOCUMENTACIÓN
         ================================================== --}}
@@ -289,6 +351,8 @@
             Documentación
         </div>
 
+
+        {{-- DOCUMENTOS --}}
 
         <a
             href="{{ route('documentos.index') }}"
@@ -307,6 +371,8 @@
         </a>
 
 
+        {{-- REPORTES --}}
+
         <a
             href="#"
             class="sidebar-item"
@@ -324,6 +390,7 @@
         </a>
 
     </nav>
+
 
 
     {{-- =====================================================
@@ -353,6 +420,7 @@
 </aside>
 
 
+
 {{-- =========================================================
      OVERLAY PARA MÓVIL
 ========================================================== --}}
@@ -361,6 +429,7 @@
     class="sidebar-overlay"
     id="sidebarOverlay"
 ></div>
+
 
 
 <style>
@@ -403,6 +472,7 @@
     }
 
 
+
     /* =========================================================
        CABECERA
     ========================================================== */
@@ -423,6 +493,7 @@
         flex-shrink: 0;
 
     }
+
 
 
     .sidebar-logo {
@@ -452,6 +523,7 @@
     }
 
 
+
     .sidebar-brand-text {
 
         margin-left: 11px;
@@ -467,6 +539,7 @@
     }
 
 
+
     .sidebar-brand-text strong {
 
         display: block;
@@ -478,6 +551,7 @@
         font-weight: 700;
 
     }
+
 
 
     .sidebar-brand-text span {
@@ -492,6 +566,7 @@
         font-size: 9px;
 
     }
+
 
 
     /* =========================================================
@@ -544,6 +619,7 @@
     }
 
 
+
     .sidebar-toggle:hover {
 
         background:
@@ -553,6 +629,7 @@
             rgba(255,255,255,.32);
 
     }
+
 
 
     /* =========================================================
@@ -570,10 +647,6 @@
 
         overflow-x: hidden;
 
-        /*
-         * Firefox
-         */
-
         scrollbar-width: thin;
 
         scrollbar-color:
@@ -581,6 +654,7 @@
             rgba(255,255,255,.04);
 
     }
+
 
 
     /* =========================================================
@@ -594,6 +668,7 @@
     }
 
 
+
     .sidebar-menu::-webkit-scrollbar-track {
 
         background:
@@ -602,6 +677,7 @@
         border-radius: 10px;
 
     }
+
 
 
     .sidebar-menu::-webkit-scrollbar-thumb {
@@ -617,6 +693,7 @@
     }
 
 
+
     .sidebar-menu::-webkit-scrollbar-thumb:hover {
 
         background:
@@ -625,9 +702,6 @@
     }
 
 
-    /*
-     * Ocultar botones de flechas de la scrollbar.
-     */
 
     .sidebar-menu::-webkit-scrollbar-button {
 
@@ -638,6 +712,7 @@
         height: 0;
 
     }
+
 
 
     /* =========================================================
@@ -668,6 +743,7 @@
             opacity .15s ease;
 
     }
+
 
 
     /* =========================================================
@@ -708,6 +784,7 @@
     }
 
 
+
     .sidebar-item:hover {
 
         background:
@@ -716,6 +793,7 @@
         color: #ffffff;
 
     }
+
 
 
     .sidebar-item.active {
@@ -727,6 +805,7 @@
         font-weight: 600;
 
     }
+
 
 
     .sidebar-icon {
@@ -746,6 +825,7 @@
     }
 
 
+
     .sidebar-label {
 
         overflow: hidden;
@@ -757,6 +837,7 @@
             width .22s ease;
 
     }
+
 
 
     /* =========================================================
@@ -784,6 +865,7 @@
         overflow: hidden;
 
     }
+
 
 
     .sidebar-user-avatar {
@@ -814,6 +896,7 @@
     }
 
 
+
     .sidebar-user-info {
 
         overflow: hidden;
@@ -824,6 +907,7 @@
             opacity .15s ease;
 
     }
+
 
 
     .sidebar-user-info strong {
@@ -837,6 +921,7 @@
         font-weight: 600;
 
     }
+
 
 
     .sidebar-user-info span {
@@ -853,6 +938,7 @@
     }
 
 
+
     /* =========================================================
        SIDEBAR CONTRAÍDO
     ========================================================== */
@@ -864,11 +950,13 @@
     }
 
 
+
     body.sidebar-collapsed .main-content {
 
         margin-left: 72px;
 
     }
+
 
 
     body.sidebar-collapsed .sidebar-brand {
@@ -878,6 +966,7 @@
         padding: 0;
 
     }
+
 
 
     body.sidebar-collapsed .sidebar-brand-text {
@@ -891,6 +980,7 @@
     }
 
 
+
     body.sidebar-collapsed .sidebar-toggle {
 
         right: 19px;
@@ -899,6 +989,7 @@
             rotate(180deg);
 
     }
+
 
 
     body.sidebar-collapsed .sidebar-section-title {
@@ -915,6 +1006,7 @@
     }
 
 
+
     body.sidebar-collapsed .sidebar-item {
 
         justify-content: center;
@@ -925,6 +1017,7 @@
     }
 
 
+
     body.sidebar-collapsed .sidebar-label {
 
         width: 0;
@@ -932,6 +1025,7 @@
         opacity: 0;
 
     }
+
 
 
     body.sidebar-collapsed .sidebar-user {
@@ -944,6 +1038,7 @@
     }
 
 
+
     body.sidebar-collapsed .sidebar-user-info {
 
         width: 0;
@@ -951,6 +1046,7 @@
         opacity: 0;
 
     }
+
 
 
     /* =========================================================
@@ -978,6 +1074,7 @@
     }
 
 
+
     /* =========================================================
        TABLET
     ========================================================== */
@@ -991,11 +1088,13 @@
         }
 
 
+
         .main-content {
 
             margin-left: 220px;
 
         }
+
 
 
         body.sidebar-collapsed .main-content {
@@ -1005,6 +1104,7 @@
         }
 
     }
+
 
 
     /* =========================================================
@@ -1026,11 +1126,13 @@
         }
 
 
+
         .main-content {
 
             margin-left: 0 !important;
 
         }
+
 
 
         body.sidebar-mobile-open .sidebar {
@@ -1039,6 +1141,7 @@
                 translateX(0);
 
         }
+
 
 
         .sidebar-overlay {
@@ -1050,6 +1153,7 @@
         }
 
 
+
         body.sidebar-mobile-open .sidebar-overlay {
 
             opacity: 1;
@@ -1057,6 +1161,7 @@
             pointer-events: auto;
 
         }
+
 
 
         .sidebar-toggle {
@@ -1068,6 +1173,7 @@
     }
 
 </style>
+
 
 
 <script>

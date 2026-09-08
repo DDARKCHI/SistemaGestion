@@ -6,6 +6,8 @@ use App\Models\Remuneracion;
 use App\Models\Trabajador;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RemuneracionController extends Controller
@@ -48,12 +50,6 @@ class RemuneracionController extends Controller
                     'min:0',
                 ],
 
-                'total_liquido' => [
-                    'required',
-                    'numeric',
-                    'min:0',
-                ],
-
                 'monto_pagado' => [
                     'nullable',
                     'numeric',
@@ -63,12 +59,6 @@ class RemuneracionController extends Controller
                 'fecha_pago' => [
                     'nullable',
                     'date',
-                ],
-
-                'estado' => [
-                    'required',
-                    'string',
-                    'max:50',
                 ],
 
                 'observaciones' => [
@@ -111,15 +101,6 @@ class RemuneracionController extends Controller
                 'descuentos.min' =>
                     'Los descuentos no pueden ser negativos.',
 
-                'total_liquido.required' =>
-                    'El total líquido es obligatorio.',
-
-                'total_liquido.numeric' =>
-                    'El total líquido debe ser numérico.',
-
-                'total_liquido.min' =>
-                    'El total líquido no puede ser negativo.',
-
                 'monto_pagado.numeric' =>
                     'El monto pagado debe ser numérico.',
 
@@ -128,12 +109,6 @@ class RemuneracionController extends Controller
 
                 'fecha_pago.date' =>
                     'La fecha de pago no es válida.',
-
-                'estado.required' =>
-                    'El estado de la remuneración es obligatorio.',
-
-                'estado.max' =>
-                    'El estado no puede superar los 50 caracteres.',
 
                 'observaciones.string' =>
                     'Las observaciones ingresadas no son válidas.',
@@ -149,6 +124,12 @@ class RemuneracionController extends Controller
             ]
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | Valores por defecto
+        |--------------------------------------------------------------------------
+        */
+
         $datos['trabajador_id'] = $trabajador->id;
 
         $datos['bonificaciones'] =
@@ -160,55 +141,167 @@ class RemuneracionController extends Controller
         $datos['monto_pagado'] =
             $datos['monto_pagado'] ?? 0;
 
-        $datos['saldo_a_pagar'] = max(
-            0,
-            (float) $datos['total_liquido']
-                - (float) $datos['monto_pagado']
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Cálculo automático del total líquido
+        |--------------------------------------------------------------------------
+        */
 
-        if ($datos['saldo_a_pagar'] <= 0) {
+        $sueldoBase = (float) $datos['sueldo_base'];
+        $bonificaciones = (float) $datos['bonificaciones'];
+        $descuentos = (float) $datos['descuentos'];
 
-            $datos['estado'] = 'pagada';
+        $totalLiquido =
+            $sueldoBase
+            + $bonificaciones
+            - $descuentos;
 
-        } elseif ((float) $datos['monto_pagado'] > 0) {
+        if ($totalLiquido < 0) {
+            throw ValidationException::withMessages([
+                'descuentos' =>
+                    'Los descuentos no pueden superar el total de sueldo base más bonificaciones.',
+            ]);
+        }
 
-            $datos['estado'] = 'parcialmente_pagada';
+        $totalLiquido = round($totalLiquido, 2);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cálculo automático del saldo
+        |--------------------------------------------------------------------------
+        */
+
+        $montoPagado = (float) $datos['monto_pagado'];
+
+        if ($montoPagado > $totalLiquido) {
+            throw ValidationException::withMessages([
+                'monto_pagado' =>
+                    'El monto pagado no puede ser superior al total líquido de la remuneración.',
+            ]);
+        }
+
+        $saldoAPagar =
+            round(
+                $totalLiquido - $montoPagado,
+                2
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Estado automático
+        |--------------------------------------------------------------------------
+        */
+
+        if ($montoPagado <= 0) {
+
+            $estado = 'pendiente';
+
+        } elseif ($montoPagado < $totalLiquido) {
+
+            $estado = 'parcialmente_pagada';
 
         } else {
 
-            $datos['estado'] = 'pendiente';
+            $estado = 'pagada';
         }
 
-        $remuneracion = Remuneracion::create($datos);
+        /*
+        |--------------------------------------------------------------------------
+        | Fecha de pago
+        |--------------------------------------------------------------------------
+        |
+        | Si no existe ningún pago, no corresponde registrar una fecha real
+        | de pago.
+        |
+        */
+
+        if ($montoPagado <= 0) {
+            $datos['fecha_pago'] = null;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Valores calculados
+        |--------------------------------------------------------------------------
+        */
+
+        $datos['total_liquido'] = $totalLiquido;
+        $datos['saldo_a_pagar'] = $saldoAPagar;
+        $datos['estado'] = $estado;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Evitar remuneraciones duplicadas
+        |--------------------------------------------------------------------------
+        */
+
+        $remuneracionExistente = Remuneracion::query()
+            ->where('trabajador_id', $trabajador->id)
+            ->where('periodo', $datos['periodo'])
+            ->exists();
+
+        if ($remuneracionExistente) {
+            throw ValidationException::withMessages([
+                'periodo' =>
+                    'Ya existe una remuneración registrada para este trabajador en el período indicado.',
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Guardar remuneración y documento
+        |--------------------------------------------------------------------------
+        */
+
+        DB::transaction(function () use (
+            $datos,
+            $request
+        ) {
+            $remuneracion = Remuneracion::create($datos);
+
+            if ($request->hasFile('documento')) {
+
+                $archivo = $request->file('documento');
+
+                $ruta = $archivo->store(
+                    'remuneraciones',
+                    'public'
+                );
+
+                $remuneracion->documentos()->create([
+                    'nombre' =>
+                        $archivo->getClientOriginalName(),
+
+                    'tipo' =>
+                        'Liquidación / documento de remuneración',
+
+                    'ruta' =>
+                        $ruta,
+
+                    'mime_type' =>
+                        $archivo->getClientMimeType(),
+
+                    'tamano' =>
+                        $archivo->getSize(),
+
+                    'descripcion' =>
+                        'Documento asociado a la remuneración mensual.',
+                ]);
+            }
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mensaje final
+        |--------------------------------------------------------------------------
+        */
+
+        $mensaje =
+            'Remuneración registrada correctamente.';
 
         if ($request->hasFile('documento')) {
-
-            $archivo = $request->file('documento');
-
-            $ruta = $archivo->store(
-                'remuneraciones',
-                'public'
-            );
-
-            $remuneracion->documentos()->create([
-                'nombre' =>
-                    $archivo->getClientOriginalName(),
-
-                'tipo' =>
-                    'Liquidación / documento de remuneración',
-
-                'ruta' =>
-                    $ruta,
-
-                'mime_type' =>
-                    $archivo->getClientMimeType(),
-
-                'tamano' =>
-                    $archivo->getSize(),
-
-                'descripcion' =>
-                    'Documento asociado a la remuneración mensual.',
-            ]);
+            $mensaje .=
+                ' El documento quedó asociado a la remuneración.';
         }
 
         return redirect()
@@ -218,12 +311,7 @@ class RemuneracionController extends Controller
             )
             ->with(
                 'success',
-                'Remuneración registrada correctamente.'
-                . (
-                    $request->hasFile('documento')
-                        ? ' El documento quedó asociado a la remuneración.'
-                        : ''
-                )
+                $mensaje
             );
     }
 }

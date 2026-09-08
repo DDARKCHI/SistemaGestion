@@ -12,21 +12,6 @@
        HEADER
     ========================================================== */
 
-    .operations-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 18px;
-
-        color: #8a94a6;
-        font-size: 12px;
-    }
-
-    .operations-breadcrumb-current {
-        color: #344054;
-    }
-
-
     .operations-header {
         display: flex;
         align-items: flex-start;
@@ -626,18 +611,6 @@
 
 
 @section('content')
-
-    {{-- =========================================================
-         BREADCRUMB
-    ========================================================== --}}
-
-    <div class="operations-breadcrumb">
-
-        <span class="operations-breadcrumb-current">
-            Operaciones
-        </span>
-
-    </div>
 
 
     {{-- =========================================================

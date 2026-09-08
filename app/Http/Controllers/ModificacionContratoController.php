@@ -6,6 +6,7 @@ use App\Models\Contrato;
 use App\Models\Trabajador;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ModificacionContratoController extends Controller
@@ -37,23 +38,39 @@ class ModificacionContratoController extends Controller
 
         $datos = $request->validate(
             [
-                'tipo' => ['required', 'string', 'max:100'],
-                'fecha' => ['required', 'date'],
-                'descripcion' => ['required', 'string'],
+                'tipo' => [
+                    'required',
+                    'string',
+                    'max:100',
+                ],
+
+                'fecha' => [
+                    'required',
+                    'date',
+                ],
+
+                'descripcion' => [
+                    'required',
+                    'string',
+                ],
+
                 'nueva_remuneracion' => [
                     'nullable',
                     'numeric',
                     'min:0',
                 ],
+
                 'nuevo_bono' => [
                     'nullable',
                     'numeric',
                     'min:0',
                 ],
+
                 'observaciones' => [
                     'nullable',
                     'string',
                 ],
+
                 'documento' => [
                     'nullable',
                     'file',
@@ -105,25 +122,117 @@ class ModificacionContratoController extends Controller
 
         $datos['contrato_id'] = $contrato->id;
 
-        $modificacion = $contrato->modificaciones()->create($datos);
+        DB::transaction(function () use (
+            $datos,
+            $request,
+            $trabajador,
+            $contrato
+        ) {
+            /*
+            |--------------------------------------------------------------------------
+            | Guardar la modificación en el historial
+            |--------------------------------------------------------------------------
+            */
+
+            $modificacion = $contrato
+                ->modificaciones()
+                ->create($datos);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Actualizar remuneración vigente
+            |--------------------------------------------------------------------------
+            |
+            | La modificación permanece guardada como historial.
+            | El contrato, en cambio, debe reflejar la nueva remuneración vigente.
+            |
+            */
+
+            if (
+                array_key_exists('nueva_remuneracion', $datos)
+                && $datos['nueva_remuneracion'] !== null
+                && $datos['nueva_remuneracion'] !== ''
+            ) {
+                $nuevaRemuneracion =
+                    round(
+                        (float) $datos['nueva_remuneracion'],
+                        2
+                    );
+
+                /*
+                 * Actualizamos el contrato vigente.
+                 */
+                $contrato->update([
+                    'remuneracion' => $nuevaRemuneracion,
+                ]);
+
+                /*
+                 * También actualizamos la remuneración acordada
+                 * del trabajador para mantener la información actual
+                 * sincronizada.
+                 */
+                $trabajador->update([
+                    'remuneracion_acordada' => $nuevaRemuneracion,
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Documento asociado
+            |--------------------------------------------------------------------------
+            */
+
+            if ($request->hasFile('documento')) {
+                $archivo = $request->file('documento');
+
+                $ruta = $archivo->store(
+                    'modificaciones-contrato',
+                    'public'
+                );
+
+                $modificacion->documentos()->create([
+                    'nombre' =>
+                        $archivo->getClientOriginalName(),
+
+                    'tipo' =>
+                        'Anexo / modificación contractual',
+
+                    'ruta' =>
+                        $ruta,
+
+                    'mime_type' =>
+                        $archivo->getClientMimeType(),
+
+                    'tamano' =>
+                        $archivo->getSize(),
+
+                    'descripcion' =>
+                        'Documento asociado a una modificación contractual.',
+                ]);
+            }
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mensaje de resultado
+        |--------------------------------------------------------------------------
+        */
+
+        $mensaje =
+            'Modificación contractual registrada correctamente.';
+
+        if (
+            array_key_exists('nueva_remuneracion', $datos)
+            && $datos['nueva_remuneracion'] !== null
+            && $datos['nueva_remuneracion'] !== ''
+        ) {
+            $mensaje .=
+                ' La remuneración vigente del contrato y del trabajador fue actualizada.';
+        }
 
         if ($request->hasFile('documento')) {
-            $archivo = $request->file('documento');
-
-            $ruta = $archivo->store(
-                'modificaciones-contrato',
-                'public'
-            );
-
-            $modificacion->documentos()->create([
-                'nombre' => $archivo->getClientOriginalName(),
-                'tipo' => 'Anexo / modificación contractual',
-                'ruta' => $ruta,
-                'mime_type' => $archivo->getClientMimeType(),
-                'tamano' => $archivo->getSize(),
-                'descripcion' =>
-                    'Documento asociado a una modificación contractual.',
-            ]);
+            $mensaje .=
+                ' El documento quedó asociado a la modificación.';
         }
 
         return redirect()
@@ -133,10 +242,7 @@ class ModificacionContratoController extends Controller
             )
             ->with(
                 'success',
-                'Modificación contractual registrada correctamente.'
-                . ($request->hasFile('documento')
-                    ? ' El documento quedó asociado a la modificación.'
-                    : '')
+                $mensaje
             );
     }
 }

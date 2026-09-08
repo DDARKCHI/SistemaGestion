@@ -6,16 +6,35 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EntregaController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ModificacionContratoController;
+use App\Http\Controllers\NotaCreditoProveedorController;
 use App\Http\Controllers\OperacionController;
+use App\Http\Controllers\ProveedorBodegaController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\ProveedorEjecutivoController;
 use App\Http\Controllers\RemuneracionController;
 use App\Http\Controllers\TrabajadorController;
 use Illuminate\Support\Facades\Route;
+
+
+// =========================================================
+// INICIO
+// =========================================================
 
 Route::get('/', function () {
     return redirect()->route('clientes.index');
 });
 
+
+// =========================================================
+// CLIENTES
+// =========================================================
+
 Route::resource('clientes', ClienteController::class);
+
+
+// =========================================================
+// OPERACIONES
+// =========================================================
 
 Route::resource('operaciones', OperacionController::class)
     ->parameters([
@@ -32,10 +51,20 @@ Route::delete(
     [OperacionController::class, 'destroyDocumento']
 )->name('operaciones.documentos.destroy');
 
+
+// =========================================================
+// ENTREGAS
+// =========================================================
+
 Route::resource('entregas', EntregaController::class)
     ->parameters([
         'entregas' => 'entrega',
     ]);
+
+
+// =========================================================
+// TRABAJADORES
+// =========================================================
 
 Route::resource('trabajadores', TrabajadorController::class)
     ->parameters([
@@ -116,6 +145,88 @@ Route::delete(
     'trabajadores/{trabajador}/horarios/{horario}',
     [HorarioController::class, 'destroy']
 )->name('trabajadores.horarios.destroy');
+
+
+// =========================================================
+// PROVEEDORES
+// =========================================================
+
+Route::resource('proveedores', ProveedorController::class)
+    ->parameters([
+        'proveedores' => 'proveedor',
+    ]);
+
+
+// =========================================================
+// BODEGAS DE PROVEEDORES
+// =========================================================
+
+Route::get(
+    'proveedores/{proveedor}/bodegas/create',
+    [ProveedorBodegaController::class, 'create']
+)->name('proveedores.bodegas.create');
+
+Route::post(
+    'proveedores/{proveedor}/bodegas',
+    [ProveedorBodegaController::class, 'store']
+)->name('proveedores.bodegas.store');
+
+Route::get(
+    'proveedores/{proveedor}/bodegas/{bodega}/edit',
+    [ProveedorBodegaController::class, 'edit']
+)->name('proveedores.bodegas.edit');
+
+Route::put(
+    'proveedores/{proveedor}/bodegas/{bodega}',
+    [ProveedorBodegaController::class, 'update']
+)->name('proveedores.bodegas.update');
+
+Route::delete(
+    'proveedores/{proveedor}/bodegas/{bodega}',
+    [ProveedorBodegaController::class, 'destroy']
+)->name('proveedores.bodegas.destroy');
+
+
+// =========================================================
+// EJECUTIVOS DE PROVEEDORES
+// =========================================================
+
+Route::get(
+    'proveedores/{proveedor}/ejecutivos/create',
+    [ProveedorEjecutivoController::class, 'create']
+)->name('proveedores.ejecutivos.create');
+
+Route::post(
+    'proveedores/{proveedor}/ejecutivos',
+    [ProveedorEjecutivoController::class, 'store']
+)->name('proveedores.ejecutivos.store');
+
+Route::get(
+    'proveedores/{proveedor}/ejecutivos/{ejecutivo}/edit',
+    [ProveedorEjecutivoController::class, 'edit']
+)->name('proveedores.ejecutivos.edit');
+
+Route::put(
+    'proveedores/{proveedor}/ejecutivos/{ejecutivo}',
+    [ProveedorEjecutivoController::class, 'update']
+)->name('proveedores.ejecutivos.update');
+
+Route::delete(
+    'proveedores/{proveedor}/ejecutivos/{ejecutivo}',
+    [ProveedorEjecutivoController::class, 'destroy']
+)->name('proveedores.ejecutivos.destroy');
+
+
+// =========================================================
+// NOTAS DE CRÉDITO DE PROVEEDORES
+// =========================================================
+
+Route::resource(
+    'notas-credito-proveedores',
+    NotaCreditoProveedorController::class
+)->parameters([
+    'notas-credito-proveedores' => 'notaCreditoProveedor',
+]);
 
 
 // =========================================================
