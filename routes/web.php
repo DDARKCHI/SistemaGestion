@@ -3,9 +3,14 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\EmpresaFactoringController;
 use App\Http\Controllers\EntregaController;
+use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\FactoringController;
+use App\Http\Controllers\GastoController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ModificacionContratoController;
+use App\Http\Controllers\MoraController;
 use App\Http\Controllers\NotaCreditoProveedorController;
 use App\Http\Controllers\OperacionController;
 use App\Http\Controllers\ProveedorBodegaController;
@@ -59,6 +64,58 @@ Route::delete(
 Route::resource('entregas', EntregaController::class)
     ->parameters([
         'entregas' => 'entrega',
+    ]);
+
+
+// =========================================================
+// FACTURAS
+// =========================================================
+
+Route::resource('facturas', FacturaController::class)
+    ->parameters([
+        'facturas' => 'factura',
+    ]);
+
+
+// =========================================================
+// EMPRESAS DE FACTORING
+// =========================================================
+
+Route::resource(
+    'empresas-factoring',
+    EmpresaFactoringController::class
+)->parameters([
+    'empresas-factoring' => 'empresaFactoring',
+]);
+
+
+// =========================================================
+// OPERACIONES DE FACTORING
+// =========================================================
+
+Route::resource('factorings', FactoringController::class)
+    ->parameters([
+        'factorings' => 'factoring',
+    ]);
+
+
+// =========================================================
+// MORAS
+// =========================================================
+
+Route::resource('moras', MoraController::class)
+    ->parameters([
+        'moras' => 'mora',
+    ]);
+
+
+// =========================================================
+// GASTOS
+// =========================================================
+
+Route::resource('gastos', GastoController::class)
+    ->parameters([
+        'gastos' => 'gasto',
     ]);
 
 

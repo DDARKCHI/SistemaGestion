@@ -15,6 +15,7 @@ class Factoring extends Model
     protected $fillable = [
         'operacion_id',
         'factura_id',
+        'empresa_factoring_id',
         'fecha_curse',
         'estado',
         'monto_factura',
@@ -48,5 +49,16 @@ class Factoring extends Model
     public function factura(): BelongsTo
     {
         return $this->belongsTo(Factura::class);
+    }
+
+    /**
+     * Empresa de factoring asociada.
+     */
+    public function empresaFactoring(): BelongsTo
+    {
+        return $this->belongsTo(
+            EmpresaFactoring::class,
+            'empresa_factoring_id'
+        );
     }
 }
