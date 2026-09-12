@@ -19,12 +19,18 @@ class ServicioTransporte extends Model
         'fecha_servicio',
         'tipo_servicio',
         'monto',
+        'emite_factura',
+        'estado_facturacion',
+        'numero_factura',
+        'fecha_factura',
         'observaciones',
     ];
 
     protected $casts = [
         'fecha_servicio' => 'date',
         'monto' => 'decimal:2',
+        'emite_factura' => 'boolean',
+        'fecha_factura' => 'date',
     ];
 
     /**

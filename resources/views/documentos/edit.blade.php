@@ -5,10 +5,16 @@
 @section('content')
 
 @php
+
     $operacionActual = null;
+    $gastoActual = null;
 
     if ($documento->documentable instanceof \App\Models\Operacion) {
         $operacionActual = $documento->documentable;
+    }
+
+    if ($documento->documentable instanceof \App\Models\Gasto) {
+        $gastoActual = $documento->documentable;
     }
 
     $operacionesJson = $operaciones->map(
@@ -18,6 +24,25 @@
             'cliente' => $operacion->cliente?->razon_social ?? '',
         ]
     )->values()->toJson();
+
+    $gastosJson = $gastos->map(
+        fn ($gasto) => [
+            'id' => $gasto->id,
+            'descripcion' => $gasto->descripcion,
+            'fecha' => $gasto->fecha?->format('d/m/Y') ?? '',
+            'tipo' => $gasto->tipo ?? '',
+            'monto' => number_format(
+                $gasto->monto ?? 0,
+                0,
+                ',',
+                '.'
+            ),
+            'operacion' => $gasto->operacion?->numero_operacion ?? '',
+            'cliente' => $gasto->operacion?->cliente?->razon_social ?? '',
+            'transportista' => $gasto->transportista?->nombre ?? '',
+        ]
+    )->values()->toJson();
+
 @endphp
 
 
@@ -104,59 +129,50 @@
             </div>
 
 
+            {{-- TIPO DE REGISTRO --}}
+
             <div class="field">
 
-                <label for="operacion_busqueda">
-                    Operación
+                <label for="registro_tipo">
+                    Tipo de registro
                     <span class="required">*</span>
                 </label>
 
+                <select
+                    name="registro_tipo"
+                    id="registro_tipo"
+                    class="form-control select-control"
+                >
 
-                <div class="search-select">
-
-                    <div class="input-wrapper">
-
-                        <input
-                            type="text"
-                            id="operacion_busqueda"
-                            class="form-control"
-                            placeholder="Buscar operación o cliente..."
-                            autocomplete="off"
-                            value="{{ $operacionActual
-                                ? $operacionActual->numero_operacion
-                                    . ' — '
-                                    . ($operacionActual->cliente?->razon_social ?? '')
-                                : ''
-                            }}"
-                        >
-
-                        <span class="search-icon">
-                            ⌕
-                        </span>
-
-                    </div>
-
-
-                    <input
-                        type="hidden"
-                        name="operacion_id"
-                        id="operacion_id"
-                        value="{{ old(
-                            'operacion_id',
-                            $operacionActual?->id
-                        ) }}"
+                    <option
+                        value="operacion"
+                        {{ old(
+                            'registro_tipo',
+                            $operacionActual ? 'operacion' : 'gasto'
+                        ) === 'operacion'
+                            ? 'selected'
+                            : ''
+                        }}
                     >
+                        Operación
+                    </option>
 
+                    <option
+                        value="gasto"
+                        {{ old(
+                            'registro_tipo',
+                            $operacionActual ? 'operacion' : 'gasto'
+                        ) === 'gasto'
+                            ? 'selected'
+                            : ''
+                        }}
+                    >
+                        Gasto
+                    </option>
 
-                    <div
-                        id="operaciones_resultados"
-                        class="search-results"
-                    ></div>
+                </select>
 
-                </div>
-
-
-                @error('operacion_id')
+                @error('registro_tipo')
 
                     <div class="field-error">
                         {{ $message }}
@@ -167,34 +183,203 @@
             </div>
 
 
-            @if($operacionActual)
+            {{-- OPERACIÓN --}}
 
-                <div class="selected-operation">
+            <div
+                class="association-selector"
+                id="operacion_selector"
+            >
 
-                    <div class="selected-icon">
-                        OP
+                <div class="field">
+
+                    <label for="operacion_busqueda">
+                        Operación
+                        <span class="required">*</span>
+                    </label>
+
+
+                    <div class="search-select">
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="text"
+                                id="operacion_busqueda"
+                                class="form-control"
+                                placeholder="Buscar operación o cliente..."
+                                autocomplete="off"
+                                value="{{ $operacionActual
+                                    ? $operacionActual->numero_operacion
+                                        . ' — '
+                                        . ($operacionActual->cliente?->razon_social ?? '')
+                                    : ''
+                                }}"
+                            >
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                        </div>
+
+
+                        <input
+                            type="hidden"
+                            name="registro_id"
+                            id="operacion_id"
+                            value="{{ old(
+                                'registro_id',
+                                $operacionActual?->id
+                            ) }}"
+                        >
+
+
+                        <div
+                            id="operaciones_resultados"
+                            class="search-results"
+                        ></div>
+
                     </div>
 
 
-                    <div class="selected-info">
+                    @error('registro_id')
 
-                        <span class="selected-label">
-                            OPERACIÓN ACTUAL
-                        </span>
+                        <div
+                            class="field-error operation-error"
+                        >
+                            {{ $message }}
+                        </div>
 
-                        <strong>
-                            #{{ $operacionActual->numero_operacion }}
-                        </strong>
+                    @enderror
 
-                        <span class="selected-client">
-                            {{ $operacionActual->cliente?->razon_social ?? 'Sin cliente' }}
-                        </span>
+                </div>
+
+
+                @if($operacionActual)
+
+                    <div class="selected-operation">
+
+                        <div class="selected-icon">
+                            OP
+                        </div>
+
+
+                        <div class="selected-info">
+
+                            <span class="selected-label">
+                                OPERACIÓN ACTUAL
+                            </span>
+
+                            <strong>
+                                #{{ $operacionActual->numero_operacion }}
+                            </strong>
+
+                            <span class="selected-client">
+                                {{ $operacionActual->cliente?->razon_social ?? 'Sin cliente' }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+
+            {{-- GASTO --}}
+
+            <div
+                class="association-selector"
+                id="gasto_selector"
+            >
+
+                <div class="field">
+
+                    <label for="gasto_busqueda">
+                        Gasto
+                        <span class="required">*</span>
+                    </label>
+
+
+                    <div class="search-select">
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="text"
+                                id="gasto_busqueda"
+                                class="form-control"
+                                placeholder="Buscar concepto, operación o transportista..."
+                                autocomplete="off"
+                                value="{{ $gastoActual
+                                    ? '#' . $gastoActual->id
+                                        . ' — '
+                                        . ($gastoActual->descripcion ?? 'Sin concepto')
+                                    : ''
+                                }}"
+                            >
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                        </div>
+
+
+                        <input
+                            type="hidden"
+                            id="gasto_id"
+                            value="{{ old(
+                                'registro_id',
+                                $gastoActual?->id
+                            ) }}"
+                        >
+
+
+                        <div
+                            id="gastos_resultados"
+                            class="search-results"
+                        ></div>
 
                     </div>
 
                 </div>
 
-            @else
+
+                @if($gastoActual)
+
+                    <div class="selected-operation">
+
+                        <div class="selected-icon">
+                            GA
+                        </div>
+
+
+                        <div class="selected-info">
+
+                            <span class="selected-label">
+                                GASTO ACTUAL
+                            </span>
+
+                            <strong>
+                                #{{ $gastoActual->id }}
+                            </strong>
+
+                            <span class="selected-client">
+                                {{ $gastoActual->descripcion ?? 'Sin concepto' }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+
+            @if(!$operacionActual && !$gastoActual)
 
                 <div class="no-operation">
 
@@ -203,13 +388,15 @@
                     </span>
 
                     <div>
+
                         <strong>
-                            Sin operación asociada
+                            Sin registro asociado
                         </strong>
 
                         <span>
-                            Selecciona una operación para continuar.
+                            Selecciona una operación o gasto para continuar.
                         </span>
+
                     </div>
 
                 </div>
@@ -457,22 +644,52 @@
 <script>
 
     const operaciones = {!! $operacionesJson !!};
+    const gastos = {!! $gastosJson !!};
 
-    const inputBusqueda =
+    const tipoRegistro =
+        document.getElementById('registro_tipo');
+
+    const operacionSelector =
+        document.getElementById('operacion_selector');
+
+    const gastoSelector =
+        document.getElementById('gasto_selector');
+
+    const inputOperacionBusqueda =
         document.getElementById('operacion_busqueda');
 
     const inputOperacion =
         document.getElementById('operacion_id');
 
-    const resultados =
+    const resultadosOperaciones =
         document.getElementById('operaciones_resultados');
+
+    const inputGastoBusqueda =
+        document.getElementById('gasto_busqueda');
+
+    const inputGasto =
+        document.getElementById('gasto_id');
+
+    const resultadosGastos =
+        document.getElementById('gastos_resultados');
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+
+    }
 
 
     function mostrarOperaciones(texto = '') {
 
         const busqueda =
             texto.trim().toLowerCase();
-
 
         const filtradas =
             operaciones
@@ -483,12 +700,10 @@
                             operacion.numero || ''
                         ).toLowerCase();
 
-
                     const cliente =
                         String(
                             operacion.cliente || ''
                         ).toLowerCase();
-
 
                     return (
                         numero.includes(busqueda) ||
@@ -499,20 +714,21 @@
                 .slice(0, 10);
 
 
-        resultados.innerHTML = '';
+        resultadosOperaciones.innerHTML = '';
 
 
         if (filtradas.length === 0) {
 
-            resultados.innerHTML = `
+            resultadosOperaciones.innerHTML = `
                 <div class="no-results">
                     No se encontraron operaciones.
                 </div>
             `;
 
-            resultados.classList.add('visible');
+            resultadosOperaciones.classList.add('visible');
 
             return;
+
         }
 
 
@@ -521,12 +737,10 @@
             const item =
                 document.createElement('button');
 
-
             item.type = 'button';
 
             item.className =
                 'search-result-item';
-
 
             item.innerHTML = `
                 <span class="result-number">
@@ -550,12 +764,10 @@
                     inputOperacion.value =
                         operacion.id;
 
-
-                    inputBusqueda.value =
+                    inputOperacionBusqueda.value =
                         `${operacion.numero} — ${operacion.cliente}`;
 
-
-                    resultados.classList.remove(
+                    resultadosOperaciones.classList.remove(
                         'visible'
                     );
 
@@ -563,36 +775,215 @@
             );
 
 
-            resultados.appendChild(item);
+            resultadosOperaciones.appendChild(item);
 
         });
 
 
-        resultados.classList.add('visible');
+        resultadosOperaciones.classList.add('visible');
 
     }
 
 
-    inputBusqueda.addEventListener(
+    function mostrarGastos(texto = '') {
+
+        const busqueda =
+            texto.trim().toLowerCase();
+
+        const filtrados =
+            gastos
+                .filter(function (gasto) {
+
+                    const contenido = [
+                        gasto.id,
+                        gasto.descripcion,
+                        gasto.fecha,
+                        gasto.tipo,
+                        gasto.monto,
+                        gasto.operacion,
+                        gasto.cliente,
+                        gasto.transportista
+                    ]
+                        .filter(Boolean)
+                        .join(' ')
+                        .toLowerCase();
+
+                    return contenido.includes(busqueda);
+
+                })
+                .slice(0, 10);
+
+
+        resultadosGastos.innerHTML = '';
+
+
+        if (filtrados.length === 0) {
+
+            resultadosGastos.innerHTML = `
+                <div class="no-results">
+                    No se encontraron gastos.
+                </div>
+            `;
+
+            resultadosGastos.classList.add('visible');
+
+            return;
+
+        }
+
+
+        filtrados.forEach(function (gasto) {
+
+            const item =
+                document.createElement('button');
+
+            item.type = 'button';
+
+            item.className =
+                'search-result-item';
+
+            item.innerHTML = `
+                <span class="result-number">
+                    #${escapeHtml(gasto.id)}
+                    —
+                    ${escapeHtml(
+                        gasto.descripcion || 'Sin concepto'
+                    )}
+                </span>
+
+                <span class="result-client">
+                    ${escapeHtml(
+                        gasto.operacion
+                            ? 'Operación ' + gasto.operacion
+                            : 'Sin operación'
+                    )}
+
+                    ${gasto.transportista
+                        ? ' · ' + escapeHtml(gasto.transportista)
+                        : ''
+                    }
+
+                    · $${escapeHtml(gasto.monto)}
+                </span>
+            `;
+
+
+            item.addEventListener(
+                'click',
+                function () {
+
+                    inputGasto.value =
+                        gasto.id;
+
+                    inputGastoBusqueda.value =
+                        `#${gasto.id} — ${gasto.descripcion || 'Sin concepto'}`;
+
+                    resultadosGastos.classList.remove(
+                        'visible'
+                    );
+
+                }
+            );
+
+
+            resultadosGastos.appendChild(item);
+
+        });
+
+
+        resultadosGastos.classList.add('visible');
+
+    }
+
+
+    function actualizarTipoRegistro() {
+
+        const tipo =
+            tipoRegistro.value;
+
+        if (tipo === 'gasto') {
+
+            operacionSelector.style.display =
+                'none';
+
+            gastoSelector.style.display =
+                'block';
+
+        } else {
+
+            operacionSelector.style.display =
+                'block';
+
+            gastoSelector.style.display =
+                'none';
+
+        }
+
+    }
+
+
+    tipoRegistro.addEventListener(
+        'change',
+        function () {
+
+            inputOperacion.value = '';
+            inputGasto.value = '';
+
+            inputOperacionBusqueda.value = '';
+            inputGastoBusqueda.value = '';
+
+            actualizarTipoRegistro();
+
+        }
+    );
+
+
+    inputOperacionBusqueda.addEventListener(
         'focus',
         function () {
 
             mostrarOperaciones(
-                inputBusqueda.value
+                inputOperacionBusqueda.value
             );
 
         }
     );
 
 
-    inputBusqueda.addEventListener(
+    inputOperacionBusqueda.addEventListener(
         'input',
         function () {
 
             inputOperacion.value = '';
 
             mostrarOperaciones(
-                inputBusqueda.value
+                inputOperacionBusqueda.value
+            );
+
+        }
+    );
+
+
+    inputGastoBusqueda.addEventListener(
+        'focus',
+        function () {
+
+            mostrarGastos(
+                inputGastoBusqueda.value
+            );
+
+        }
+    );
+
+
+    inputGastoBusqueda.addEventListener(
+        'input',
+        function () {
+
+            inputGasto.value = '';
+
+            mostrarGastos(
+                inputGastoBusqueda.value
             );
 
         }
@@ -605,11 +996,24 @@
 
             if (
                 !event.target.closest(
-                    '.search-select'
+                    '#operacion_selector .search-select'
                 )
             ) {
 
-                resultados.classList.remove(
+                resultadosOperaciones.classList.remove(
+                    'visible'
+                );
+
+            }
+
+
+            if (
+                !event.target.closest(
+                    '#gasto_selector .search-select'
+                )
+            ) {
+
+                resultadosGastos.classList.remove(
                     'visible'
                 );
 
@@ -619,16 +1023,7 @@
     );
 
 
-    function escapeHtml(value) {
-
-        return String(value)
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#039;');
-
-    }
+    actualizarTipoRegistro();
 
 </script>
 
@@ -772,6 +1167,12 @@
     }
 
 
+    .select-control {
+        padding-right: 11px;
+        cursor: pointer;
+    }
+
+
     .textarea {
         min-height: 76px;
         resize: vertical;
@@ -859,6 +1260,11 @@
         color: #94a3b8;
         font-size: 12px;
         text-align: center;
+    }
+
+
+    .association-selector {
+        display: none;
     }
 
 

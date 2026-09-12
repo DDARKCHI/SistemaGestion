@@ -32,7 +32,7 @@ class GastoController extends Controller
     /**
      * Mostrar formulario para crear un gasto.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
         $operaciones = Operacion::query()
             ->with('cliente')
@@ -45,9 +45,23 @@ class GastoController extends Controller
             ->orderBy('id')
             ->get();
 
+        $operacionSeleccionada = null;
+
+        if ($request->filled('operacion_id')) {
+
+            $operacionSeleccionada = Operacion::query()
+                ->with('cliente')
+                ->find($request->integer('operacion_id'));
+
+        }
+
         return view(
             'gastos.create',
-            compact('operaciones', 'transportistas')
+            compact(
+                'operaciones',
+                'transportistas',
+                'operacionSeleccionada'
+            )
         );
     }
 
@@ -80,6 +94,7 @@ class GastoController extends Controller
         $gasto->load([
             'operacion.cliente',
             'transportista',
+            'documentos',
         ]);
 
         return view(
@@ -147,22 +162,19 @@ class GastoController extends Controller
      */
     public function destroy(Gasto $gasto): RedirectResponse
     {
-        /*
-         * Actualmente el gasto no tiene relaciones secundarias
-         * que impidan su eliminación.
-         *
-         * Se mantiene el manejo de QueryException para proteger
-         * el registro ante futuras relaciones que puedan agregarse.
-         */
         try {
+
             $gasto->delete();
+
         } catch (QueryException $exception) {
+
             return redirect()
                 ->route('gastos.show', $gasto)
                 ->with(
                     'error',
                     'No se puede eliminar este gasto porque tiene registros asociados.'
                 );
+
         }
 
         return redirect()
@@ -178,28 +190,14 @@ class GastoController extends Controller
      */
     private function validarDatos(Request $request): array
     {
-        return $request->validate(
+        $datos = $request->validate(
             [
-                /*
-                 * La operación ahora es opcional.
-                 *
-                 * Esto permite registrar egresos generales
-                 * y otros gastos que no pertenezcan a una
-                 * operación específica.
-                 */
                 'operacion_id' => [
                     'nullable',
                     'integer',
                     'exists:operaciones,id',
                 ],
 
-                /*
-                 * El transportista también es opcional.
-                 *
-                 * Cuando corresponda, el mismo gasto podrá
-                 * quedar asociado al transportista sin duplicar
-                 * el registro del gasto.
-                 */
                 'transportista_id' => [
                     'nullable',
                     'integer',
@@ -211,31 +209,12 @@ class GastoController extends Controller
                     'date',
                 ],
 
-                /*
-                 * El tipo representa la naturaleza general
-                 * del gasto.
-                 */
                 'tipo' => [
                     'required',
                     'string',
                     'max:255',
                 ],
 
-                /*
-                 * La descripción/concepto es libre.
-                 *
-                 * No se limita a una lista fija de conceptos.
-                 *
-                 * Ejemplos:
-                 * Bencina
-                 * Hospedaje
-                 * Peaje
-                 * Alimentación
-                 * Flete
-                 * Mantenimiento
-                 * Estacionamiento
-                 * Etc.
-                 */
                 'descripcion' => [
                     'required',
                     'string',
@@ -295,17 +274,35 @@ class GastoController extends Controller
 
                 'monto.min' =>
                     'El monto del gasto no puede ser negativo.',
-
-                'observaciones.string' =>
-                    'Las observaciones ingresadas no son válidas.',
             ]
         );
+
+        /*
+         * Los egresos generales no necesitan estar
+         * asociados a una operación.
+         *
+         * El resto de los tipos sí deben tener
+         * una operación asociada.
+         */
+        if (
+            ($datos['tipo'] ?? null) !== 'Egreso general' &&
+            empty($datos['operacion_id'])
+        ) {
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'operacion_id' =>
+                        'Debe seleccionar una operación para este tipo de gasto.',
+                ])
+                ->withInput()
+                ->throwResponse();
+        }
+
+        return $datos;
     }
 
     /**
-     * Normalizar el monto antes de almacenarlo.
-     *
-     * Los montos del sistema se manejarán sin decimales.
+     * Normalizar el monto antes de guardarlo.
      */
     private function normalizarMonto($monto): int
     {

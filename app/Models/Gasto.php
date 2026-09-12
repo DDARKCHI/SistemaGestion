@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Gasto extends Model
 {
@@ -41,5 +42,13 @@ class Gasto extends Model
     public function transportista(): BelongsTo
     {
         return $this->belongsTo(Transportista::class);
+    }
+
+    /**
+     * Documentos asociados al gasto.
+     */
+    public function documentos(): MorphMany
+    {
+        return $this->morphMany(Documento::class, 'documentable');
     }
 }

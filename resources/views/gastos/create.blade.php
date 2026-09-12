@@ -379,7 +379,6 @@
         .gasto-form-group-full {
             grid-column: auto;
         }
-
     }
 
 
@@ -409,7 +408,6 @@
         .gasto-form-footer-actions .btn {
             flex: 1;
         }
-
     }
 
 </style>
@@ -744,11 +742,15 @@
                                 Sin operación
                             </option>
 
+
                             @foreach($operaciones as $operacion)
 
                                 <option
                                     value="{{ $operacion->id }}"
-                                    {{ old('operacion_id') == $operacion->id ? 'selected' : '' }}
+                                    {{ old(
+                                        'operacion_id',
+                                        $operacionSeleccionada?->id
+                                    ) == $operacion->id ? 'selected' : '' }}
                                 >
 
                                     {{ $operacion->numero_operacion }}
@@ -807,6 +809,7 @@
                             <option value="">
                                 Sin transportista
                             </option>
+
 
                             @foreach($transportistas as $transportista)
 
@@ -1392,6 +1395,7 @@ document.addEventListener(
         actualizarOperacion();
 
     }
+
 );
 
 </script>

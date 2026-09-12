@@ -390,7 +390,7 @@
 
 
     /* =========================================================
-       TABLA ENTREGAS
+       TABLAS
     ========================================================== */
 
     .operation-table-wrapper {
@@ -437,6 +437,12 @@
 
     .operation-table-link:hover {
         text-decoration: underline;
+    }
+
+    .operation-table-amount {
+        color: #172033;
+        font-weight: 700;
+        white-space: nowrap;
     }
 
 
@@ -1052,10 +1058,6 @@
         <div class="operation-card-body">
 
 
-            {{-- =================================================
-                 FORMULARIO DE DOCUMENTO
-            ================================================== --}}
-
             <div class="document-upload-box">
 
                 <div class="document-upload-title">
@@ -1187,10 +1189,6 @@
 
             </div>
 
-
-            {{-- =================================================
-                 LISTADO DOCUMENTOS
-            ================================================== --}}
 
             @if($operacion->documentos->count())
 
@@ -1447,6 +1445,172 @@
 
                     <p>
                         Las entregas relacionadas con esta operación aparecerán aquí.
+                    </p>
+
+                </div>
+
+            @endif
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================================
+         GASTOS
+    ========================================================== --}}
+
+    <section class="operation-card">
+
+        <div class="operation-card-header">
+
+            <div>
+
+                <h2 class="operation-card-title">
+                    Gastos asociados
+                </h2>
+
+                <p class="operation-card-description">
+                    Gastos registrados directamente en esta operación
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ route('gastos.create', ['operacion_id' => $operacion->id]) }}"
+                class="btn btn-primary"
+            >
+                + Nuevo gasto
+            </a>
+
+        </div>
+
+
+        <div class="operation-card-body">
+
+            @if($operacion->gastos->count())
+
+                <div class="operation-table-wrapper">
+
+                    <table class="operation-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Fecha
+                                </th>
+
+                                <th>
+                                    Tipo
+                                </th>
+
+                                <th>
+                                    Concepto
+                                </th>
+
+                                <th>
+                                    Transportista
+                                </th>
+
+                                <th>
+                                    Monto
+                                </th>
+
+                                <th>
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach($operacion->gastos as $gasto)
+
+                                <tr>
+
+                                    <td>
+                                        {{ $gasto->fecha?->format('d/m/Y') ?? '—' }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="status status-neutral">
+                                            {{ $gasto->tipo ?: 'Sin especificar' }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="operation-table-number">
+                                            {{ $gasto->descripcion ?: 'Sin descripción' }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+                                        {{ $gasto->transportista?->nombre ?? '—' }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="operation-table-amount">
+                                            ${{ number_format(
+                                                (float) $gasto->monto,
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <a
+                                            href="{{ route('gastos.show', $gasto) }}"
+                                            class="operation-table-link"
+                                        >
+                                            Ver detalle
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            @else
+
+                <div class="operation-empty-state">
+
+                    <div class="operation-empty-icon">
+                        $
+                    </div>
+
+                    <strong>
+                        No hay gastos registrados
+                    </strong>
+
+                    <p>
+                        Los gastos asociados a esta operación aparecerán aquí.
                     </p>
 
                 </div>

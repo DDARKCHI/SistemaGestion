@@ -277,6 +277,65 @@
 
 
     /* =========================================================
+       DOCUMENTOS
+    ========================================================== */
+
+    .gasto-documentos-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .gasto-documento-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 13px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fafbfc;
+    }
+
+    .gasto-documento-info {
+        min-width: 0;
+    }
+
+    .gasto-documento-nombre {
+        margin: 0 0 4px;
+        color: #344054;
+        font-size: 12px;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .gasto-documento-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        color: #98a2b3;
+        font-size: 10px;
+    }
+
+    .gasto-documento-actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+    }
+
+    .gasto-documento-empty {
+        padding: 18px;
+        border: 1px dashed #d7dee8;
+        border-radius: 8px;
+        background: #fafbfc;
+        color: #98a2b3;
+        font-size: 11px;
+        text-align: center;
+    }
+
+
+    /* =========================================================
        ACCIONES
     ========================================================== */
 
@@ -337,6 +396,19 @@
         }
 
         .gasto-show-footer-actions .btn {
+            flex: 1;
+        }
+
+        .gasto-documento-item {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .gasto-documento-actions {
+            width: 100%;
+        }
+
+        .gasto-documento-actions .btn {
             flex: 1;
         }
 
@@ -735,7 +807,7 @@
                         Ver operación
 
                         →
-                        
+
                     </a>
 
                 </div>
@@ -773,6 +845,7 @@
                     </p>
 
                     <span class="gasto-detail-value">
+
                         {{ $gasto->transportista->nombre }}
 
                         @if($gasto->transportista->rut)
@@ -782,6 +855,147 @@
                         @endif
 
                     </span>
+
+                </div>
+
+            @endif
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+         DOCUMENTOS ASOCIADOS
+    ====================================================== --}}
+
+    <section class="gasto-show-card">
+
+        <div class="gasto-show-card-header">
+
+            <div>
+
+                <h2 class="gasto-show-card-title">
+                    Documentos asociados
+                </h2>
+
+                <p class="gasto-show-card-description">
+                    Archivos relacionados directamente con este gasto.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ route('documentos.create', [
+                    'registro_tipo' => 'gasto',
+                    'registro_id' => $gasto->id,
+                ]) }}"
+                class="btn btn-primary"
+            >
+                + Nuevo documento
+            </a>
+
+        </div>
+
+
+        <div class="gasto-show-card-body">
+
+            @if($gasto->documentos->count())
+
+                <div class="gasto-documentos-list">
+
+                    @foreach($gasto->documentos as $documento)
+
+                        <div class="gasto-documento-item">
+
+                            <div class="gasto-documento-info">
+
+                                <p class="gasto-documento-nombre">
+                                    {{ $documento->nombre }}
+                                </p>
+
+                                <div class="gasto-documento-meta">
+
+                                    @if($documento->tipo)
+
+                                        <span>
+                                            Tipo: {{ $documento->tipo }}
+                                        </span>
+
+                                    @endif
+
+                                    @if($documento->mime_type)
+
+                                        <span>
+                                            {{ $documento->mime_type }}
+                                        </span>
+
+                                    @endif
+
+                                    @if($documento->tamano)
+
+                                        <span>
+                                            {{ number_format(
+                                                $documento->tamano / 1024,
+                                                1,
+                                                ',',
+                                                '.'
+                                            ) }} KB
+                                        </span>
+
+                                    @endif
+
+                                    @if($documento->created_at)
+
+                                        <span>
+                                            {{ $documento->created_at->format('d/m/Y H:i') }}
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="gasto-documento-actions">
+
+                                <a
+                                    href="{{ asset('storage/' . $documento->ruta) }}"
+                                    target="_blank"
+                                    class="btn"
+                                >
+                                    Ver
+                                </a>
+
+                                <a
+                                    href="{{ route('documentos.show', $documento) }}"
+                                    class="btn"
+                                >
+                                    Detalle
+                                </a>
+
+                                <a
+                                    href="{{ route('documentos.edit', $documento) }}"
+                                    class="btn btn-primary"
+                                >
+                                    Editar
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    @endforeach
+
+                </div>
+
+            @else
+
+                <div class="gasto-documento-empty">
+
+                    Este gasto todavía no tiene documentos asociados.
 
                 </div>
 
