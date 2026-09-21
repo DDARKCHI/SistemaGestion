@@ -20,6 +20,7 @@ use App\Http\Controllers\RemuneracionController;
 use App\Http\Controllers\ServicioTransporteController;
 use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\TransportistaController;
+use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -295,6 +296,16 @@ Route::resource(
 Route::resource('transportistas', TransportistaController::class)
     ->parameters([
         'transportistas' => 'transportista',
+    ]);
+
+
+// =========================================================
+// VEHÍCULOS
+// =========================================================
+
+Route::resource('vehiculos', VehiculoController::class)
+    ->parameters([
+        'vehiculos' => 'vehiculo',
     ]);
 
 
