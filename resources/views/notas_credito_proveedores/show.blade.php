@@ -26,8 +26,6 @@
 
     }
 
-
-
     .credit-note-detail-breadcrumb {
 
         display: flex;
@@ -44,8 +42,6 @@
 
     }
 
-
-
     .credit-note-detail-breadcrumb a {
 
         color: #155a91;
@@ -56,8 +52,6 @@
 
     }
 
-
-
     .credit-note-detail-breadcrumb a:hover {
 
         color: #124d7d;
@@ -65,8 +59,6 @@
         text-decoration: underline;
 
     }
-
-
 
     .credit-note-detail-title {
 
@@ -84,8 +76,6 @@
 
     }
 
-
-
     .credit-note-detail-subtitle {
 
         margin: 7px 0 0;
@@ -95,8 +85,6 @@
         font-size: 13px;
 
     }
-
-
 
     .credit-note-detail-actions {
 
@@ -109,7 +97,6 @@
         flex-shrink: 0;
 
     }
-
 
 
     /* =========================================================
@@ -147,8 +134,6 @@
 
     }
 
-
-
     .credit-note-detail-button-primary {
 
         border: 1px solid #155a91;
@@ -158,8 +143,6 @@
         color: #ffffff;
 
     }
-
-
 
     .credit-note-detail-button-primary:hover {
 
@@ -171,8 +154,6 @@
 
     }
 
-
-
     .credit-note-detail-button-secondary {
 
         border: 1px solid #dce3eb;
@@ -183,8 +164,6 @@
 
     }
 
-
-
     .credit-note-detail-button-secondary:hover {
 
         background: #f5f8fb;
@@ -194,7 +173,6 @@
         color: #155a91;
 
     }
-
 
 
     /* =========================================================
@@ -213,8 +191,6 @@
 
     }
 
-
-
     .credit-note-detail-success {
 
         border: 1px solid #cfe5d7;
@@ -224,8 +200,6 @@
         color: #287443;
 
     }
-
-
 
     .credit-note-detail-error {
 
@@ -238,7 +212,6 @@
     }
 
 
-
     /* =========================================================
        RESUMEN
     ========================================================== */
@@ -247,15 +220,13 @@
 
         display: grid;
 
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
 
         gap: 14px;
 
         margin-bottom: 20px;
 
     }
-
-
 
     .credit-note-detail-summary-card {
 
@@ -272,8 +243,6 @@
 
     }
 
-
-
     .credit-note-detail-summary-label {
 
         color: #667085;
@@ -287,8 +256,6 @@
         letter-spacing: .03em;
 
     }
-
-
 
     .credit-note-detail-summary-value {
 
@@ -304,8 +271,6 @@
 
     }
 
-
-
     .credit-note-detail-summary-description {
 
         margin-top: 6px;
@@ -316,8 +281,6 @@
 
     }
 
-
-
     .credit-note-detail-summary-card.amount {
 
         border-color: #d4e5f2;
@@ -326,16 +289,12 @@
 
     }
 
-
-
     .credit-note-detail-summary-card.amount
     .credit-note-detail-summary-value {
 
         color: #155a91;
 
     }
-
-
 
     .credit-note-detail-summary-card.pending {
 
@@ -345,16 +304,12 @@
 
     }
 
-
-
     .credit-note-detail-summary-card.pending
     .credit-note-detail-summary-value {
 
         color: #a15c00;
 
     }
-
-
 
     .credit-note-detail-summary-card.recovered {
 
@@ -364,15 +319,12 @@
 
     }
 
-
-
     .credit-note-detail-summary-card.recovered
     .credit-note-detail-summary-value {
 
         color: #287443;
 
     }
-
 
 
     /* =========================================================
@@ -394,8 +346,6 @@
 
     }
 
-
-
     .credit-note-detail-card-header {
 
         min-height: 66px;
@@ -414,8 +364,6 @@
 
     }
 
-
-
     .credit-note-detail-card-title {
 
         margin: 0;
@@ -428,8 +376,6 @@
 
     }
 
-
-
     .credit-note-detail-card-description {
 
         margin: 4px 0 0;
@@ -440,14 +386,11 @@
 
     }
 
-
-
     .credit-note-detail-body {
 
         padding: 22px 20px;
 
     }
-
 
 
     /* =========================================================
@@ -468,8 +411,6 @@
 
     }
 
-
-
     .credit-note-detail-provider-label {
 
         margin-bottom: 5px;
@@ -486,8 +427,6 @@
 
     }
 
-
-
     .credit-note-detail-provider-name {
 
         color: #155a91;
@@ -497,8 +436,6 @@
         font-weight: 700;
 
     }
-
-
 
     .credit-note-detail-provider-rut {
 
@@ -510,8 +447,6 @@
 
     }
 
-
-
     .credit-note-detail-provider-rut strong {
 
         color: #344054;
@@ -519,7 +454,6 @@
         font-weight: 600;
 
     }
-
 
 
     /* =========================================================
@@ -536,8 +470,6 @@
 
     }
 
-
-
     .credit-note-detail-field {
 
         min-height: 70px;
@@ -547,8 +479,6 @@
         border-bottom: 1px solid #edf1f5;
 
     }
-
-
 
     .credit-note-detail-field-label {
 
@@ -566,8 +496,6 @@
 
     }
 
-
-
     .credit-note-detail-field-value {
 
         color: #344054;
@@ -578,8 +506,6 @@
 
     }
 
-
-
     .credit-note-detail-field-value.strong {
 
         color: #172033;
@@ -587,8 +513,6 @@
         font-weight: 600;
 
     }
-
-
 
     .credit-note-detail-field-value.amount {
 
@@ -600,14 +524,11 @@
 
     }
 
-
-
     .credit-note-detail-field-full {
 
         grid-column: 1 / -1;
 
     }
-
 
 
     /* =========================================================
@@ -632,8 +553,6 @@
 
     }
 
-
-
     .credit-note-detail-status-pending {
 
         background: #fff5e8;
@@ -642,8 +561,6 @@
 
     }
 
-
-
     .credit-note-detail-status-recovered {
 
         background: #f1faf4;
@@ -651,7 +568,6 @@
         color: #287443;
 
     }
-
 
 
     /* =========================================================
@@ -678,8 +594,6 @@
 
     }
 
-
-
     .credit-note-detail-footer-text {
 
         margin: 0;
@@ -692,15 +606,11 @@
 
     }
 
-
-
     .credit-note-detail-delete-form {
 
         margin: 0;
 
     }
-
-
 
     .credit-note-detail-delete-button {
 
@@ -726,8 +636,6 @@
 
     }
 
-
-
     .credit-note-detail-delete-button:hover {
 
         background: #fff5f3;
@@ -737,10 +645,19 @@
     }
 
 
-
     /* =========================================================
        RESPONSIVE
     ========================================================== */
+
+    @media (max-width: 1000px) {
+
+        .credit-note-detail-summary {
+
+            grid-template-columns: repeat(2, 1fr);
+
+        }
+
+    }
 
     @media (max-width: 800px) {
 
@@ -750,15 +667,11 @@
 
         }
 
-
-
         .credit-note-detail-actions {
 
             width: 100%;
 
         }
-
-
 
         .credit-note-detail-actions a {
 
@@ -766,15 +679,11 @@
 
         }
 
-
-
         .credit-note-detail-summary {
 
             grid-template-columns: 1fr;
 
         }
-
-
 
         .credit-note-detail-grid {
 
@@ -782,15 +691,11 @@
 
         }
 
-
-
         .credit-note-detail-field-full {
 
             grid-column: auto;
 
         }
-
-
 
         .credit-note-detail-footer {
 
@@ -920,7 +825,8 @@
         </div>
 
 
-        <div class="credit-note-detail-summary-card
+        <div
+            class="credit-note-detail-summary-card
             {{ $notaCreditoProveedor->estado === 'pendiente' ? 'pending' : 'recovered' }}"
         >
 
@@ -931,9 +837,13 @@
             <div class="credit-note-detail-summary-value">
 
                 @if($notaCreditoProveedor->estado === 'pendiente')
+
                     Pendiente
+
                 @else
+
                     Recuperada
+
                 @endif
 
             </div>
@@ -948,7 +858,7 @@
         <div class="credit-note-detail-summary-card">
 
             <div class="credit-note-detail-summary-label">
-                Fecha
+                Fecha emisión
             </div>
 
             <div class="credit-note-detail-summary-value">
@@ -956,7 +866,34 @@
             </div>
 
             <div class="credit-note-detail-summary-description">
-                Fecha registrada
+                Fecha registrada de la nota
+            </div>
+
+        </div>
+
+
+        <div class="credit-note-detail-summary-card">
+
+            <div class="credit-note-detail-summary-label">
+                Fecha recuperación
+            </div>
+
+            <div class="credit-note-detail-summary-value">
+                {{ $notaCreditoProveedor->fecha_recuperacion?->format('d/m/Y') ?? '—' }}
+            </div>
+
+            <div class="credit-note-detail-summary-description">
+
+                @if($notaCreditoProveedor->fecha_recuperacion)
+
+                    Fecha en que fue recuperada
+
+                @else
+
+                    Aún no recuperada
+
+                @endif
+
             </div>
 
         </div>
@@ -1042,7 +979,7 @@
                 <div class="credit-note-detail-field">
 
                     <div class="credit-note-detail-field-label">
-                        Fecha
+                        Fecha de emisión
                     </div>
 
                     <div class="credit-note-detail-field-value">
@@ -1088,6 +1025,31 @@
                             <span class="credit-note-detail-status credit-note-detail-status-recovered">
                                 Recuperada
                             </span>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+
+                {{-- FECHA DE RECUPERACIÓN --}}
+
+                <div class="credit-note-detail-field">
+
+                    <div class="credit-note-detail-field-label">
+                        Fecha de recuperación
+                    </div>
+
+                    <div class="credit-note-detail-field-value">
+
+                        @if($notaCreditoProveedor->fecha_recuperacion)
+
+                            {{ $notaCreditoProveedor->fecha_recuperacion->format('d/m/Y') }}
+
+                        @else
+
+                            No recuperada
 
                         @endif
 

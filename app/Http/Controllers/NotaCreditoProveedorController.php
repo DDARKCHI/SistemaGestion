@@ -29,14 +29,37 @@ class NotaCreditoProveedorController extends Controller
             ->when(
                 $buscar !== '',
                 function ($query) use ($buscar) {
-                    $query->where(function ($query) use ($buscar) {
-                        $query->where('numero_nota', 'like', '%' . $buscar . '%')
-                            ->orWhere('motivo', 'like', '%' . $buscar . '%')
-                            ->orWhereHas('proveedor', function ($query) use ($buscar) {
-                                $query->where('nombre', 'like', '%' . $buscar . '%')
-                                    ->orWhere('rut', 'like', '%' . $buscar . '%');
-                            });
-                    });
+                    $query->where(
+                        function ($query) use ($buscar) {
+                            $query
+                                ->where(
+                                    'numero_nota',
+                                    'like',
+                                    '%' . $buscar . '%'
+                                )
+                                ->orWhere(
+                                    'motivo',
+                                    'like',
+                                    '%' . $buscar . '%'
+                                )
+                                ->orWhereHas(
+                                    'proveedor',
+                                    function ($query) use ($buscar) {
+                                        $query
+                                            ->where(
+                                                'nombre',
+                                                'like',
+                                                '%' . $buscar . '%'
+                                            )
+                                            ->orWhere(
+                                                'rut',
+                                                'like',
+                                                '%' . $buscar . '%'
+                                            );
+                                    }
+                                );
+                        }
+                    );
                 }
             )
             ->orderByDesc('fecha')
@@ -100,10 +123,19 @@ class NotaCreditoProveedorController extends Controller
     {
         $datos = $this->validarDatos($request);
 
-        $notaCredito = NotaCreditoProveedor::create($datos);
+        $datos = $this->prepararFechaRecuperacion(
+            $datos
+        );
+
+        $notaCredito = NotaCreditoProveedor::create(
+            $datos
+        );
 
         return redirect()
-            ->route('notas-credito-proveedores.show', $notaCredito)
+            ->route(
+                'notas-credito-proveedores.show',
+                $notaCredito
+            )
             ->with(
                 'success',
                 'Nota de crédito registrada correctamente.'
@@ -161,6 +193,11 @@ class NotaCreditoProveedorController extends Controller
             $notaCreditoProveedor
         );
 
+        $datos = $this->prepararFechaRecuperacion(
+            $datos,
+            $notaCreditoProveedor
+        );
+
         $notaCreditoProveedor->update($datos);
 
         return redirect()
@@ -211,7 +248,10 @@ class NotaCreditoProveedorController extends Controller
                     'required',
                     'string',
                     'max:50',
-                    'unique:nota_credito_proveedores,numero_nota,' . $notaId . ',id,proveedor_id,' . $request->input('proveedor_id'),
+                    'unique:nota_credito_proveedores,numero_nota,' .
+                        $notaId .
+                        ',id,proveedor_id,' .
+                        $request->input('proveedor_id'),
                 ],
 
                 'fecha' => [
@@ -242,30 +282,86 @@ class NotaCreditoProveedorController extends Controller
                 ],
             ],
             [
-                'proveedor_id.required' => 'Debe seleccionar un proveedor.',
-                'proveedor_id.integer' => 'El proveedor seleccionado no es válido.',
-                'proveedor_id.exists' => 'El proveedor seleccionado no existe.',
+                'proveedor_id.required' =>
+                    'Debe seleccionar un proveedor.',
 
-                'numero_nota.required' => 'El número de la nota de crédito es obligatorio.',
-                'numero_nota.string' => 'El número de la nota de crédito no es válido.',
-                'numero_nota.max' => 'El número de la nota de crédito no puede superar los 50 caracteres.',
-                'numero_nota.unique' => 'Este número de nota de crédito ya está registrado para el proveedor seleccionado.',
+                'proveedor_id.integer' =>
+                    'El proveedor seleccionado no es válido.',
 
-                'fecha.required' => 'La fecha de la nota de crédito es obligatoria.',
-                'fecha.date' => 'La fecha ingresada no es válida.',
+                'proveedor_id.exists' =>
+                    'El proveedor seleccionado no existe.',
 
-                'monto.required' => 'El monto de la nota de crédito es obligatorio.',
-                'monto.numeric' => 'El monto ingresado no es válido.',
-                'monto.min' => 'El monto no puede ser negativo.',
+                'numero_nota.required' =>
+                    'El número de la nota de crédito es obligatorio.',
 
-                'motivo.string' => 'El motivo ingresado no es válido.',
-                'motivo.max' => 'El motivo no puede superar los 500 caracteres.',
+                'numero_nota.string' =>
+                    'El número de la nota de crédito no es válido.',
 
-                'estado.required' => 'El estado de la nota de crédito es obligatorio.',
-                'estado.in' => 'El estado seleccionado no es válido.',
+                'numero_nota.max' =>
+                    'El número de la nota de crédito no puede superar los 50 caracteres.',
 
-                'observaciones.string' => 'Las observaciones ingresadas no son válidas.',
+                'numero_nota.unique' =>
+                    'Este número de nota de crédito ya está registrado para el proveedor seleccionado.',
+
+                'fecha.required' =>
+                    'La fecha de la nota de crédito es obligatoria.',
+
+                'fecha.date' =>
+                    'La fecha ingresada no es válida.',
+
+                'monto.required' =>
+                    'El monto de la nota de crédito es obligatorio.',
+
+                'monto.numeric' =>
+                    'El monto ingresado no es válido.',
+
+                'monto.min' =>
+                    'El monto no puede ser negativo.',
+
+                'motivo.string' =>
+                    'El motivo ingresado no es válido.',
+
+                'motivo.max' =>
+                    'El motivo no puede superar los 500 caracteres.',
+
+                'estado.required' =>
+                    'El estado de la nota de crédito es obligatorio.',
+
+                'estado.in' =>
+                    'El estado seleccionado no es válido.',
+
+                'observaciones.string' =>
+                    'Las observaciones ingresadas no son válidas.',
             ]
         );
+    }
+
+    /**
+     * Preparar automáticamente la fecha de recuperación.
+     */
+    private function prepararFechaRecuperacion(
+        array $datos,
+        ?NotaCreditoProveedor $notaCreditoProveedor = null
+    ): array {
+        if ($datos['estado'] === 'pendiente') {
+            $datos['fecha_recuperacion'] = null;
+
+            return $datos;
+        }
+
+        if (
+            $notaCreditoProveedor &&
+            $notaCreditoProveedor->estado === 'recuperada' &&
+            $notaCreditoProveedor->fecha_recuperacion
+        ) {
+            $datos['fecha_recuperacion'] =
+                $notaCreditoProveedor->fecha_recuperacion;
+
+            return $datos;
+        }
+
+        $datos['fecha_recuperacion'] = now()->toDateString();
+
+        return $datos;
     }
 }

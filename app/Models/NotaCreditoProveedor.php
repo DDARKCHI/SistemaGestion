@@ -19,11 +19,13 @@ class NotaCreditoProveedor extends Model
         'monto',
         'motivo',
         'estado',
+        'fecha_recuperacion',
         'observaciones',
     ];
 
     protected $casts = [
         'fecha' => 'date',
+        'fecha_recuperacion' => 'date',
         'monto' => 'decimal:2',
     ];
 

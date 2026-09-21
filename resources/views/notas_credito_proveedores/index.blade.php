@@ -26,8 +26,6 @@
 
     }
 
-
-
     .credit-notes-title {
 
         margin: 0;
@@ -44,8 +42,6 @@
 
     }
 
-
-
     .credit-notes-subtitle {
 
         margin: 7px 0 0;
@@ -55,8 +51,6 @@
         font-size: 13px;
 
     }
-
-
 
     .credit-notes-header-actions {
 
@@ -69,7 +63,6 @@
         flex-shrink: 0;
 
     }
-
 
 
     /* =========================================================
@@ -110,8 +103,6 @@
 
     }
 
-
-
     .credit-notes-header-actions .btn-primary:hover {
 
         background: #124d7d;
@@ -121,7 +112,6 @@
         color: #ffffff;
 
     }
-
 
 
     /* =========================================================
@@ -140,8 +130,6 @@
 
     }
 
-
-
     .credit-notes-success {
 
         border: 1px solid #cfe5d7;
@@ -152,8 +140,6 @@
 
     }
 
-
-
     .credit-notes-error {
 
         border: 1px solid #e9c1bc;
@@ -163,7 +149,6 @@
         color: #a52f26;
 
     }
-
 
 
     /* =========================================================
@@ -182,8 +167,6 @@
 
     }
 
-
-
     .credit-notes-summary-card {
 
         background: #ffffff;
@@ -199,8 +182,6 @@
 
     }
 
-
-
     .credit-notes-summary-label {
 
         color: #667085;
@@ -214,8 +195,6 @@
         letter-spacing: .03em;
 
     }
-
-
 
     .credit-notes-summary-value {
 
@@ -231,8 +210,6 @@
 
     }
 
-
-
     .credit-notes-summary-description {
 
         margin-top: 6px;
@@ -243,8 +220,6 @@
 
     }
 
-
-
     .credit-notes-summary-card.pending {
 
         border-color: #f0d9aa;
@@ -253,15 +228,12 @@
 
     }
 
-
-
-    .credit-notes-summary-card.pending .credit-notes-summary-value {
+    .credit-notes-summary-card.pending
+    .credit-notes-summary-value {
 
         color: #a15c00;
 
     }
-
-
 
     .credit-notes-summary-card.recovered {
 
@@ -271,15 +243,12 @@
 
     }
 
-
-
-    .credit-notes-summary-card.recovered .credit-notes-summary-value {
+    .credit-notes-summary-card.recovered
+    .credit-notes-summary-value {
 
         color: #287443;
 
     }
-
-
 
     .credit-notes-summary-card.amount {
 
@@ -289,14 +258,12 @@
 
     }
 
-
-
-    .credit-notes-summary-card.amount .credit-notes-summary-value {
+    .credit-notes-summary-card.amount
+    .credit-notes-summary-value {
 
         color: #155a91;
 
     }
-
 
 
     /* =========================================================
@@ -318,8 +285,6 @@
 
     }
 
-
-
     .credit-notes-card-header {
 
         min-height: 66px;
@@ -338,15 +303,11 @@
 
     }
 
-
-
     .credit-notes-card-heading {
 
         min-width: 0;
 
     }
-
-
 
     .credit-notes-card-title {
 
@@ -360,8 +321,6 @@
 
     }
 
-
-
     .credit-notes-card-description {
 
         margin: 4px 0 0;
@@ -371,7 +330,6 @@
         font-size: 10px;
 
     }
-
 
 
     /* =========================================================
@@ -390,8 +348,6 @@
 
     }
 
-
-
     .credit-notes-search {
 
         position: relative;
@@ -399,8 +355,6 @@
         width: 260px;
 
     }
-
-
 
     .credit-notes-search input {
 
@@ -428,15 +382,11 @@
 
     }
 
-
-
     .credit-notes-search input::placeholder {
 
         color: #a1aab7;
 
     }
-
-
 
     .credit-notes-search input:focus {
 
@@ -446,8 +396,6 @@
             0 0 0 3px rgba(21,90,145,.08);
 
     }
-
-
 
     .credit-notes-search-icon {
 
@@ -466,8 +414,6 @@
         pointer-events: none;
 
     }
-
-
 
     .credit-notes-select {
 
@@ -493,8 +439,6 @@
 
     }
 
-
-
     .credit-notes-select:focus {
 
         border-color: #155a91;
@@ -503,8 +447,6 @@
             0 0 0 3px rgba(21,90,145,.08);
 
     }
-
-
 
     .credit-notes-filter-button {
 
@@ -535,8 +477,6 @@
 
     }
 
-
-
     .credit-notes-filter-button:hover {
 
         background: #f5f8fb;
@@ -546,7 +486,6 @@
         color: #155a91;
 
     }
-
 
 
     /* =========================================================
@@ -561,19 +500,15 @@
 
     }
 
-
-
     .credit-notes-table {
 
         width: 100%;
 
         border-collapse: collapse;
 
-        min-width: 1050px;
+        min-width: 1150px;
 
     }
-
-
 
     .credit-notes-table th {
 
@@ -599,8 +534,6 @@
 
     }
 
-
-
     .credit-notes-table td {
 
         padding: 14px 18px;
@@ -615,15 +548,11 @@
 
     }
 
-
-
     .credit-notes-table tbody tr {
 
         transition: background .12s ease;
 
     }
-
-
 
     .credit-notes-table tbody tr:hover {
 
@@ -631,14 +560,11 @@
 
     }
 
-
-
     .credit-notes-table tbody tr:last-child td {
 
         border-bottom: none;
 
     }
-
 
 
     /* =========================================================
@@ -654,8 +580,6 @@
         font-weight: 600;
 
     }
-
-
 
     .credit-notes-provider-rut {
 
@@ -680,7 +604,6 @@
     }
 
 
-
     /* =========================================================
        NÚMERO Y DATOS
     ========================================================== */
@@ -697,8 +620,6 @@
 
     }
 
-
-
     .credit-notes-number:hover {
 
         color: #124d7d;
@@ -706,8 +627,6 @@
         text-decoration: underline;
 
     }
-
-
 
     .credit-notes-date {
 
@@ -717,7 +636,19 @@
 
     }
 
+    .credit-notes-recovery-date {
 
+        color: #667085;
+
+        white-space: nowrap;
+
+    }
+
+    .credit-notes-recovery-date.empty {
+
+        color: #98a2b3;
+
+    }
 
     .credit-notes-amount {
 
@@ -731,8 +662,6 @@
 
     }
 
-
-
     .credit-notes-reason {
 
         max-width: 230px;
@@ -744,7 +673,6 @@
         line-height: 1.4;
 
     }
-
 
 
     /* =========================================================
@@ -773,8 +701,6 @@
 
     }
 
-
-
     .credit-notes-status-pending {
 
         background: #fff5e8;
@@ -783,8 +709,6 @@
 
     }
 
-
-
     .credit-notes-status-recovered {
 
         background: #f1faf4;
@@ -792,7 +716,6 @@
         color: #287443;
 
     }
-
 
 
     /* =========================================================
@@ -810,8 +733,6 @@
         white-space: nowrap;
 
     }
-
-
 
     .credit-notes-action {
 
@@ -850,8 +771,6 @@
 
     }
 
-
-
     .credit-notes-action:hover {
 
         background: #f5f8fb;
@@ -861,8 +780,6 @@
         color: #155a91;
 
     }
-
-
 
     .credit-notes-action-primary {
 
@@ -874,8 +791,6 @@
 
     }
 
-
-
     .credit-notes-action-primary:hover {
 
         background: #dfeef8;
@@ -886,15 +801,11 @@
 
     }
 
-
-
     .credit-notes-action-danger {
 
         color: #a52f26;
 
     }
-
-
 
     .credit-notes-action-danger:hover {
 
@@ -905,7 +816,6 @@
         color: #8f251e;
 
     }
-
 
 
     /* =========================================================
@@ -930,8 +840,6 @@
 
     }
 
-
-
     .credit-notes-count {
 
         color: #98a2b3;
@@ -939,8 +847,6 @@
         font-size: 10px;
 
     }
-
-
 
     .credit-notes-count strong {
 
@@ -950,8 +856,6 @@
 
     }
 
-
-
     .credit-notes-footer-description {
 
         color: #98a2b3;
@@ -959,7 +863,6 @@
         font-size: 10px;
 
     }
-
 
 
     /* =========================================================
@@ -973,8 +876,6 @@
         text-align: center;
 
     }
-
-
 
     .credit-notes-empty-icon {
 
@@ -1000,8 +901,6 @@
 
     }
 
-
-
     .credit-notes-empty-title {
 
         margin: 0;
@@ -1013,8 +912,6 @@
         font-weight: 700;
 
     }
-
-
 
     .credit-notes-empty-text {
 
@@ -1029,8 +926,6 @@
         line-height: 1.5;
 
     }
-
-
 
     .credit-notes-empty .btn-primary {
 
@@ -1062,8 +957,6 @@
 
     }
 
-
-
     .credit-notes-empty .btn-primary:hover {
 
         background: #124d7d;
@@ -1073,7 +966,6 @@
         color: #ffffff;
 
     }
-
 
 
     /* =========================================================
@@ -1088,8 +980,6 @@
 
         }
 
-
-
         .credit-notes-card-header {
 
             align-items: stretch;
@@ -1098,15 +988,11 @@
 
         }
 
-
-
         .credit-notes-filters {
 
             width: 100%;
 
         }
-
-
 
         .credit-notes-search {
 
@@ -1118,8 +1004,6 @@
 
     }
 
-
-
     @media (max-width: 700px) {
 
         .credit-notes-header {
@@ -1128,15 +1012,11 @@
 
         }
 
-
-
         .credit-notes-header-actions {
 
             width: 100%;
 
         }
-
-
 
         .credit-notes-header-actions .btn {
 
@@ -1144,15 +1024,11 @@
 
         }
 
-
-
         .credit-notes-summary {
 
             grid-template-columns: 1fr;
 
         }
-
-
 
         .credit-notes-filters {
 
@@ -1162,19 +1038,13 @@
 
         }
 
-
-
         .credit-notes-search,
-
         .credit-notes-select,
-
         .credit-notes-filter-button {
 
             width: 100%;
 
         }
-
-
 
         .credit-notes-card-footer {
 
@@ -1441,7 +1311,11 @@
                             </th>
 
                             <th>
-                                Fecha
+                                Fecha emisión
+                            </th>
+
+                            <th>
+                                Fecha recuperación
                             </th>
 
                             <th>
@@ -1500,11 +1374,31 @@
                                 </td>
 
 
-                                {{-- FECHA --}}
+                                {{-- FECHA EMISIÓN --}}
 
                                 <td class="credit-notes-date">
 
                                     {{ $notaCredito->fecha?->format('d/m/Y') ?? '—' }}
+
+                                </td>
+
+
+                                {{-- FECHA RECUPERACIÓN --}}
+
+                                <td
+                                    class="credit-notes-recovery-date
+                                    {{ !$notaCredito->fecha_recuperacion ? 'empty' : '' }}"
+                                >
+
+                                    @if($notaCredito->fecha_recuperacion)
+
+                                        {{ $notaCredito->fecha_recuperacion->format('d/m/Y') }}
+
+                                    @else
+
+                                        —
+
+                                    @endif
 
                                 </td>
 
