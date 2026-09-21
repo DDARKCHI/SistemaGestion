@@ -29,8 +29,8 @@ use Illuminate\Support\Facades\Route;
 // =========================================================
 
 Route::get('/', function () {
-    return redirect()->route('clientes.index');
-});
+    return view('inicio');
+})->name('inicio');
 
 
 // =========================================================
@@ -313,10 +313,12 @@ Route::resource('vehiculos', VehiculoController::class)
 // SERVICIOS DE TRANSPORTE
 // =========================================================
 
-Route::resource('servicios-transporte', ServicioTransporteController::class)
-    ->parameters([
-        'servicios-transporte' => 'servicioTransporte',
-    ]);
+Route::resource(
+    'servicios-transporte',
+    ServicioTransporteController::class
+)->parameters([
+    'servicios-transporte' => 'servicioTransporte',
+]);
 
 
 // =========================================================

@@ -41,7 +41,7 @@
 
 
     {{-- =====================================================
-         MENU
+         MENÚ
     ====================================================== --}}
 
     <nav class="sidebar-menu">
@@ -58,21 +58,21 @@
 
         {{-- INICIO --}}
 
-        <a
-            href="{{ route('clientes.index') }}"
-            class="sidebar-item {{ request()->routeIs('clientes.index') && !request()->routeIs('clientes.*') ? 'active' : '' }}"
-            title="Inicio"
-        >
+<a
+    href="{{ route('inicio') }}"
+    class="sidebar-item {{ request()->routeIs('inicio') ? 'active' : '' }}"
+    title="Inicio"
+>
 
-            <span class="sidebar-icon">
-                ⌂
-            </span>
+    <span class="sidebar-icon">
+        ⌂
+    </span>
 
-            <span class="sidebar-label">
-                Inicio
-            </span>
+    <span class="sidebar-label">
+        Inicio
+    </span>
 
-        </a>
+</a>
 
 
         {{-- OPERACIONES --}}
@@ -132,7 +132,6 @@
         </a>
 
 
-
         {{-- =================================================
              FINANZAS
         ================================================== --}}
@@ -145,8 +144,8 @@
         {{-- FACTURAS --}}
 
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('facturas.index') }}"
+            class="sidebar-item {{ request()->routeIs('facturas.*') ? 'active' : '' }}"
             title="Facturas"
         >
 
@@ -164,8 +163,8 @@
         {{-- FACTORING --}}
 
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('factorings.index') }}"
+            class="sidebar-item {{ request()->routeIs('factorings.*') ? 'active' : '' }}"
             title="Factoring"
         >
 
@@ -180,11 +179,30 @@
         </a>
 
 
+        {{-- EMPRESAS DE FACTORING --}}
+
+        <a
+            href="{{ route('empresas-factoring.index') }}"
+            class="sidebar-item {{ request()->routeIs('empresas-factoring.*') ? 'active' : '' }}"
+            title="Empresas de factoring"
+        >
+
+            <span class="sidebar-icon">
+                ◆
+            </span>
+
+            <span class="sidebar-label">
+                Empresas factoring
+            </span>
+
+        </a>
+
+
         {{-- MORA --}}
 
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('moras.index') }}"
+            class="sidebar-item {{ request()->routeIs('moras.*') ? 'active' : '' }}"
             title="Mora"
         >
 
@@ -202,8 +220,8 @@
         {{-- GASTOS --}}
 
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('gastos.index') }}"
+            class="sidebar-item {{ request()->routeIs('gastos.*') ? 'active' : '' }}"
             title="Gastos"
         >
 
@@ -223,7 +241,7 @@
         <a
             href="{{ route('notas-credito-proveedores.index') }}"
             class="sidebar-item {{ request()->routeIs('notas-credito-proveedores.*') ? 'active' : '' }}"
-            title="Notas de crédito pendientes"
+            title="Notas de crédito de proveedores"
         >
 
             <span class="sidebar-icon">
@@ -237,17 +255,40 @@
         </a>
 
 
+        {{-- CUADRATURAS - PENDIENTE --}}
 
-        {{-- =================================================
-             GESTIÓN
-        ================================================== --}}
+        <div
+            class="sidebar-item sidebar-item-disabled"
+            title="Módulo pendiente de implementación"
+        >
 
-        <div class="sidebar-section-title">
-            Gestión
+            <span class="sidebar-icon">
+                ≡
+            </span>
+
+            <span class="sidebar-label sidebar-label-with-badge">
+                <span>
+                    Cuadraturas
+                </span>
+
+                <span class="sidebar-pending-badge">
+                    Pendiente
+                </span>
+            </span>
+
         </div>
 
 
-        {{-- PERSONAL --}}
+        {{-- =================================================
+             PERSONAL
+        ================================================== --}}
+
+        <div class="sidebar-section-title">
+            Personal
+        </div>
+
+
+        {{-- TRABAJADORES --}}
 
         <a
             href="{{ route('trabajadores.index') }}"
@@ -260,17 +301,51 @@
             </span>
 
             <span class="sidebar-label">
-                Personal
+                Trabajadores
             </span>
 
         </a>
 
 
+        {{-- CONTRATOS --}}
+
+        <a
+            href="{{ route('trabajadores.index') }}"
+            class="sidebar-item
+                {{
+                    request()->routeIs('trabajadores.contratos.*') ||
+                    request()->routeIs('trabajadores.contratos.modificaciones.*')
+                        ? 'active'
+                        : ''
+                }}"
+            title="Contratos"
+        >
+
+            <span class="sidebar-icon">
+                ▧
+            </span>
+
+            <span class="sidebar-label">
+                Contratos
+            </span>
+
+        </a>
+
+
+        {{-- =================================================
+             TRANSPORTE
+        ================================================== --}}
+
+        <div class="sidebar-section-title">
+            Transporte
+        </div>
+
+
         {{-- TRANSPORTISTAS --}}
 
         <a
-            href="#"
-            class="sidebar-item"
+            href="{{ route('transportistas.index') }}"
+            class="sidebar-item {{ request()->routeIs('transportistas.*') ? 'active' : '' }}"
             title="Transportistas"
         >
 
@@ -283,6 +358,53 @@
             </span>
 
         </a>
+
+
+        {{-- VEHÍCULOS --}}
+
+        <a
+            href="{{ route('vehiculos.index') }}"
+            class="sidebar-item {{ request()->routeIs('vehiculos.*') ? 'active' : '' }}"
+            title="Vehículos"
+        >
+
+            <span class="sidebar-icon">
+                ▱
+            </span>
+
+            <span class="sidebar-label">
+                Vehículos
+            </span>
+
+        </a>
+
+
+        {{-- SERVICIOS DE TRANSPORTE --}}
+
+        <a
+            href="{{ route('servicios-transporte.index') }}"
+            class="sidebar-item {{ request()->routeIs('servicios-transporte.*') ? 'active' : '' }}"
+            title="Servicios de transporte"
+        >
+
+            <span class="sidebar-icon">
+                ⇄
+            </span>
+
+            <span class="sidebar-label">
+                Servicios transporte
+            </span>
+
+        </a>
+
+
+        {{-- =================================================
+             PROVEEDORES
+        ================================================== --}}
+
+        <div class="sidebar-section-title">
+            Proveedores
+        </div>
 
 
         {{-- PROVEEDORES --}}
@@ -304,43 +426,39 @@
         </a>
 
 
-        {{-- CONTRATOS --}}
+        {{-- =================================================
+             GESTIÓN
+        ================================================== --}}
 
-        <a
-            href="{{ route('trabajadores.index') }}"
-            class="sidebar-item {{ request()->routeIs('trabajadores.contratos.*') || request()->routeIs('trabajadores.contratos.modificaciones.*') ? 'active' : '' }}"
-            title="Contratos"
-        >
-
-            <span class="sidebar-icon">
-                ▧
-            </span>
-
-            <span class="sidebar-label">
-                Contratos
-            </span>
-
-        </a>
+        <div class="sidebar-section-title">
+            Gestión
+        </div>
 
 
-        {{-- RECLAMOS Y JUICIOS --}}
+        {{-- RECLAMOS Y JUICIOS - PENDIENTE --}}
 
-        <a
-            href="#"
-            class="sidebar-item"
-            title="Reclamos y Juicios"
+        <div
+            class="sidebar-item sidebar-item-disabled"
+            title="Módulo pendiente de implementación"
         >
 
             <span class="sidebar-icon">
                 ◌
             </span>
 
-            <span class="sidebar-label">
-                Reclamos y Juicios
+            <span class="sidebar-label sidebar-label-with-badge">
+
+                <span>
+                    Reclamos y Juicios
+                </span>
+
+                <span class="sidebar-pending-badge">
+                    Pendiente
+                </span>
+
             </span>
 
-        </a>
-
+        </div>
 
 
         {{-- =================================================
@@ -371,26 +489,32 @@
         </a>
 
 
-        {{-- REPORTES --}}
+        {{-- REPORTES - PENDIENTE --}}
 
-        <a
-            href="#"
-            class="sidebar-item"
-            title="Reportes"
+        <div
+            class="sidebar-item sidebar-item-disabled"
+            title="Módulo pendiente de implementación"
         >
 
             <span class="sidebar-icon">
                 ▦
             </span>
 
-            <span class="sidebar-label">
-                Reportes
+            <span class="sidebar-label sidebar-label-with-badge">
+
+                <span>
+                    Reportes
+                </span>
+
+                <span class="sidebar-pending-badge">
+                    Pendiente
+                </span>
+
             </span>
 
-        </a>
+        </div>
 
     </nav>
-
 
 
     {{-- =====================================================
@@ -420,7 +544,6 @@
 </aside>
 
 
-
 {{-- =========================================================
      OVERLAY PARA MÓVIL
 ========================================================== --}}
@@ -429,7 +552,6 @@
     class="sidebar-overlay"
     id="sidebarOverlay"
 ></div>
-
 
 
 <style>
@@ -472,7 +594,6 @@
     }
 
 
-
     /* =========================================================
        CABECERA
     ========================================================== */
@@ -493,8 +614,6 @@
         flex-shrink: 0;
 
     }
-
-
 
     .sidebar-logo {
 
@@ -522,8 +641,6 @@
 
     }
 
-
-
     .sidebar-brand-text {
 
         margin-left: 11px;
@@ -538,8 +655,6 @@
 
     }
 
-
-
     .sidebar-brand-text strong {
 
         display: block;
@@ -551,8 +666,6 @@
         font-weight: 700;
 
     }
-
-
 
     .sidebar-brand-text span {
 
@@ -566,7 +679,6 @@
         font-size: 9px;
 
     }
-
 
 
     /* =========================================================
@@ -618,8 +730,6 @@
 
     }
 
-
-
     .sidebar-toggle:hover {
 
         background:
@@ -631,9 +741,8 @@
     }
 
 
-
     /* =========================================================
-       MENU
+       MENÚ
     ========================================================== */
 
     .sidebar-menu {
@@ -656,9 +765,8 @@
     }
 
 
-
     /* =========================================================
-       SCROLLBAR CHROME / EDGE / SAFARI
+       SCROLLBAR
     ========================================================== */
 
     .sidebar-menu::-webkit-scrollbar {
@@ -666,8 +774,6 @@
         width: 7px;
 
     }
-
-
 
     .sidebar-menu::-webkit-scrollbar-track {
 
@@ -677,8 +783,6 @@
         border-radius: 10px;
 
     }
-
-
 
     .sidebar-menu::-webkit-scrollbar-thumb {
 
@@ -692,16 +796,12 @@
 
     }
 
-
-
     .sidebar-menu::-webkit-scrollbar-thumb:hover {
 
         background:
             rgba(255,255,255,.42);
 
     }
-
-
 
     .sidebar-menu::-webkit-scrollbar-button {
 
@@ -712,7 +812,6 @@
         height: 0;
 
     }
-
 
 
     /* =========================================================
@@ -743,7 +842,6 @@
             opacity .15s ease;
 
     }
-
 
 
     /* =========================================================
@@ -783,8 +881,6 @@
 
     }
 
-
-
     .sidebar-item:hover {
 
         background:
@@ -793,8 +889,6 @@
         color: #ffffff;
 
     }
-
-
 
     .sidebar-item.active {
 
@@ -805,8 +899,6 @@
         font-weight: 600;
 
     }
-
-
 
     .sidebar-icon {
 
@@ -824,9 +916,11 @@
 
     }
 
-
-
     .sidebar-label {
+
+        flex: 1;
+
+        min-width: 0;
 
         overflow: hidden;
 
@@ -838,6 +932,71 @@
 
     }
 
+
+    /* =========================================================
+       ITEMS PENDIENTES
+    ========================================================== */
+
+    .sidebar-item-disabled {
+
+        cursor: default;
+
+        color:
+            rgba(255,255,255,.58);
+
+    }
+
+    .sidebar-item-disabled:hover {
+
+        background:
+            rgba(255,255,255,.035);
+
+        color:
+            rgba(255,255,255,.58);
+
+    }
+
+    .sidebar-item-disabled .sidebar-icon {
+
+        opacity: .58;
+
+    }
+
+    .sidebar-label-with-badge {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 8px;
+
+    }
+
+    .sidebar-pending-badge {
+
+        padding: 2px 5px;
+
+        border-radius: 4px;
+
+        background:
+            rgba(255,255,255,.10);
+
+        color:
+            rgba(255,255,255,.62);
+
+        font-size: 7px;
+
+        font-weight: 600;
+
+        text-transform: uppercase;
+
+        letter-spacing: .03em;
+
+        flex-shrink: 0;
+
+    }
 
 
     /* =========================================================
@@ -866,8 +1025,6 @@
 
     }
 
-
-
     .sidebar-user-avatar {
 
         width: 35px;
@@ -895,8 +1052,6 @@
 
     }
 
-
-
     .sidebar-user-info {
 
         overflow: hidden;
@@ -907,8 +1062,6 @@
             opacity .15s ease;
 
     }
-
-
 
     .sidebar-user-info strong {
 
@@ -921,8 +1074,6 @@
         font-weight: 600;
 
     }
-
-
 
     .sidebar-user-info span {
 
@@ -938,7 +1089,6 @@
     }
 
 
-
     /* =========================================================
        SIDEBAR CONTRAÍDO
     ========================================================== */
@@ -949,15 +1099,11 @@
 
     }
 
-
-
     body.sidebar-collapsed .main-content {
 
         margin-left: 72px;
 
     }
-
-
 
     body.sidebar-collapsed .sidebar-brand {
 
@@ -966,8 +1112,6 @@
         padding: 0;
 
     }
-
-
 
     body.sidebar-collapsed .sidebar-brand-text {
 
@@ -979,8 +1123,6 @@
 
     }
 
-
-
     body.sidebar-collapsed .sidebar-toggle {
 
         right: 19px;
@@ -989,8 +1131,6 @@
             rotate(180deg);
 
     }
-
-
 
     body.sidebar-collapsed .sidebar-section-title {
 
@@ -1005,8 +1145,6 @@
 
     }
 
-
-
     body.sidebar-collapsed .sidebar-item {
 
         justify-content: center;
@@ -1016,17 +1154,21 @@
 
     }
 
-
-
     body.sidebar-collapsed .sidebar-label {
 
         width: 0;
 
         opacity: 0;
 
+        flex: 0;
+
     }
 
+    body.sidebar-collapsed .sidebar-pending-badge {
 
+        display: none;
+
+    }
 
     body.sidebar-collapsed .sidebar-user {
 
@@ -1037,8 +1179,6 @@
 
     }
 
-
-
     body.sidebar-collapsed .sidebar-user-info {
 
         width: 0;
@@ -1046,7 +1186,6 @@
         opacity: 0;
 
     }
-
 
 
     /* =========================================================
@@ -1074,7 +1213,6 @@
     }
 
 
-
     /* =========================================================
        TABLET
     ========================================================== */
@@ -1087,15 +1225,11 @@
 
         }
 
-
-
         .main-content {
 
             margin-left: 220px;
 
         }
-
-
 
         body.sidebar-collapsed .main-content {
 
@@ -1104,7 +1238,6 @@
         }
 
     }
-
 
 
     /* =========================================================
@@ -1125,15 +1258,11 @@
 
         }
 
-
-
         .main-content {
 
             margin-left: 0 !important;
 
         }
-
-
 
         body.sidebar-mobile-open .sidebar {
 
@@ -1141,8 +1270,6 @@
                 translateX(0);
 
         }
-
-
 
         .sidebar-overlay {
 
@@ -1152,8 +1279,6 @@
 
         }
 
-
-
         body.sidebar-mobile-open .sidebar-overlay {
 
             opacity: 1;
@@ -1161,8 +1286,6 @@
             pointer-events: auto;
 
         }
-
-
 
         .sidebar-toggle {
 
@@ -1173,7 +1296,6 @@
     }
 
 </style>
-
 
 
 <script>
@@ -1268,12 +1390,12 @@
 
             /*
              * Cerrar menú móvil
-             * al seleccionar una opción.
+             * al seleccionar una opción real.
              */
 
             const sidebarLinks =
                 document.querySelectorAll(
-                    '.sidebar-item'
+                    '.sidebar-item[href]'
                 );
 
 

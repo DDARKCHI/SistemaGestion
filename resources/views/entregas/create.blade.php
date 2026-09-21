@@ -1,952 +1,1578 @@
-<!DOCTYPE html>
-<html lang="es">
+@extends('layouts.app')
 
-<head>
+@section('title', 'Nueva entrega')
 
-    <meta charset="UTF-8">
+@section('topbar_title', 'Gestión de entregas')
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@push('styles')
 
-    <title>Nueva entrega - Sistema de Gestión</title>
+<style>
 
-    <style>
+    /* =========================================================
+       HEADER
+    ========================================================== */
 
-        * {
-            box-sizing: border-box;
-        }
+    .delivery-form-header {
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f6f8;
-            color: #1f2937;
-        }
+        display: flex;
 
-        .contenedor {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+        align-items: flex-start;
 
-        .encabezado {
-            margin-bottom: 25px;
-        }
+        justify-content: space-between;
 
-        .titulo {
-            margin: 0;
-            font-size: 30px;
-        }
+        gap: 20px;
 
-        .subtitulo {
-            margin: 8px 0 0;
-            color: #6b7280;
-        }
+        margin-bottom: 24px;
 
-        .tarjeta {
-            background-color: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
+    }
 
-        .formulario {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+    .delivery-form-title {
 
-        .campo {
-            display: flex;
+        margin: 0;
+
+        color: #172033;
+
+        font-size: 27px;
+
+        line-height: 1.2;
+
+        font-weight: 700;
+
+        letter-spacing: -.025em;
+
+    }
+
+    .delivery-form-subtitle {
+
+        margin: 7px 0 0;
+
+        color: #667085;
+
+        font-size: 13px;
+
+    }
+
+    .delivery-form-back {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        min-height: 37px;
+
+        padding: 8px 14px;
+
+        border: 1px solid #dce3eb;
+
+        border-radius: 6px;
+
+        background: #ffffff;
+
+        color: #344054;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+        text-decoration: none;
+
+        transition:
+            background .12s ease,
+            border-color .12s ease,
+            color .12s ease;
+
+    }
+
+    .delivery-form-back:hover {
+
+        background: #f5f8fb;
+
+        border-color: #cbd7e3;
+
+        color: #155a91;
+
+    }
+
+
+    /* =========================================================
+       CARD
+    ========================================================== */
+
+    .delivery-form-card {
+
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 10px;
+
+        box-shadow:
+            0 2px 8px rgba(16,47,80,.05);
+
+        overflow: hidden;
+
+    }
+
+    .delivery-form-section {
+
+        padding: 22px 20px;
+
+        border-bottom: 1px solid #edf1f5;
+
+    }
+
+    .delivery-form-section:last-of-type {
+
+        border-bottom: none;
+
+    }
+
+    .delivery-form-section-title {
+
+        margin: 0;
+
+        color: #172033;
+
+        font-size: 14px;
+
+        font-weight: 700;
+
+    }
+
+    .delivery-form-section-description {
+
+        margin: 4px 0 18px;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+
+    }
+
+
+    /* =========================================================
+       ERRORES
+    ========================================================== */
+
+    .delivery-form-alert {
+
+        margin-bottom: 18px;
+
+        padding: 12px 14px;
+
+        border: 1px solid #e9c1bc;
+
+        border-radius: 7px;
+
+        background: #fff5f3;
+
+        color: #a52f26;
+
+        font-size: 11px;
+
+    }
+
+    .delivery-form-alert strong {
+
+        display: block;
+
+        margin-bottom: 5px;
+
+    }
+
+    .delivery-form-alert ul {
+
+        margin: 6px 0 0;
+
+        padding-left: 18px;
+
+    }
+
+
+    /* =========================================================
+       SIN OPERACIONES
+    ========================================================== */
+
+    .delivery-no-operations {
+
+        padding: 15px 17px;
+
+        border: 1px solid #f0d9aa;
+
+        border-radius: 8px;
+
+        background: #fffaf2;
+
+        color: #8a5600;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+
+    }
+
+    .delivery-no-operations strong {
+
+        display: block;
+
+        margin-bottom: 4px;
+
+        color: #a15c00;
+
+    }
+
+
+    /* =========================================================
+       FORMULARIO
+    ========================================================== */
+
+    .delivery-form-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px 22px;
+
+    }
+
+    .delivery-form-group {
+
+        min-width: 0;
+
+    }
+
+    .delivery-form-group-full {
+
+        grid-column: 1 / -1;
+
+    }
+
+    .delivery-form-label {
+
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #344054;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+    }
+
+    .delivery-form-required {
+
+        color: #c0392b;
+
+    }
+
+    .delivery-form-control {
+
+        width: 100%;
+
+        min-height: 39px;
+
+        padding: 9px 11px;
+
+        box-sizing: border-box;
+
+        border: 1px solid #d8e0e8;
+
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        color: #344054;
+
+        font-family: inherit;
+
+        font-size: 11px;
+
+        outline: none;
+
+        transition:
+            border-color .12s ease,
+            box-shadow .12s ease;
+
+    }
+
+    .delivery-form-control:focus {
+
+        border-color: #155a91;
+
+        box-shadow:
+            0 0 0 3px rgba(21,90,145,.08);
+
+    }
+
+    textarea.delivery-form-control {
+
+        min-height: 100px;
+
+        resize: vertical;
+
+    }
+
+    .delivery-form-help {
+
+        margin-top: 5px;
+
+        color: #98a2b3;
+
+        font-size: 9px;
+
+        line-height: 1.4;
+
+    }
+
+    .delivery-form-error {
+
+        margin-top: 5px;
+
+        color: #a52f26;
+
+        font-size: 9px;
+
+    }
+
+
+    /* =========================================================
+       BUSCADOR OPERACIÓN
+    ========================================================== */
+
+    .delivery-operation-search {
+
+        position: relative;
+
+    }
+
+    .delivery-operation-search-icon {
+
+        position: absolute;
+
+        right: 12px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #98a2b3;
+
+        font-size: 14px;
+
+        pointer-events: none;
+
+    }
+
+    .delivery-operation-search input {
+
+        padding-right: 36px;
+
+    }
+
+    .delivery-operation-results {
+
+        position: absolute;
+
+        z-index: 50;
+
+        top: calc(100% + 5px);
+
+        left: 0;
+
+        right: 0;
+
+        max-height: 260px;
+
+        overflow-y: auto;
+
+        display: none;
+
+        border: 1px solid #d8e0e8;
+
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        box-shadow:
+            0 8px 20px rgba(16,47,80,.10);
+
+    }
+
+    .delivery-operation-result {
+
+        width: 100%;
+
+        padding: 11px 13px;
+
+        border: none;
+
+        border-bottom: 1px solid #edf1f5;
+
+        background: #ffffff;
+
+        text-align: left;
+
+        cursor: pointer;
+
+        font-family: inherit;
+
+    }
+
+    .delivery-operation-result:last-child {
+
+        border-bottom: none;
+
+    }
+
+    .delivery-operation-result:hover {
+
+        background: #f7fafc;
+
+    }
+
+    .delivery-operation-number {
+
+        display: block;
+
+        color: #172033;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+    }
+
+    .delivery-operation-client {
+
+        display: block;
+
+        margin-top: 3px;
+
+        color: #667085;
+
+        font-size: 9px;
+
+    }
+
+    .delivery-operation-empty {
+
+        padding: 12px 13px;
+
+        color: #98a2b3;
+
+        font-size: 10px;
+
+    }
+
+    .delivery-operation-selected {
+
+        display: none;
+
+        margin-top: 8px;
+
+        padding: 10px 12px;
+
+        border: 1px solid #d4e5f2;
+
+        border-radius: 7px;
+
+        background: #f7fbfe;
+
+        color: #344054;
+
+        font-size: 10px;
+
+    }
+
+    .delivery-operation-selected strong {
+
+        color: #155a91;
+
+    }
+
+    .delivery-operation-change {
+
+        margin-left: 7px;
+
+        padding: 0;
+
+        border: none;
+
+        background: transparent;
+
+        color: #155a91;
+
+        font-family: inherit;
+
+        font-size: 9px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+    }
+
+    .delivery-operation-change:hover {
+
+        text-decoration: underline;
+
+    }
+
+
+    /* =========================================================
+       FOOTER
+    ========================================================== */
+
+    .delivery-form-footer {
+
+        min-height: 68px;
+
+        padding: 13px 20px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        border-top: 1px solid #edf1f5;
+
+        background: #fbfcfd;
+
+    }
+
+    .delivery-form-footer-note {
+
+        color: #98a2b3;
+
+        font-size: 9px;
+
+    }
+
+    .delivery-form-footer-actions {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+    }
+
+    .delivery-form-button {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        min-height: 37px;
+
+        padding: 8px 14px;
+
+        border-radius: 6px;
+
+        font-family: inherit;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        transition:
+            background .12s ease,
+            border-color .12s ease,
+            color .12s ease;
+
+    }
+
+    .delivery-form-button-secondary {
+
+        border: 1px solid #dce3eb;
+
+        background: #ffffff;
+
+        color: #344054;
+
+    }
+
+    .delivery-form-button-secondary:hover {
+
+        background: #f5f8fb;
+
+        border-color: #cbd7e3;
+
+        color: #155a91;
+
+    }
+
+    .delivery-form-button-primary {
+
+        border: 1px solid #155a91;
+
+        background: #155a91;
+
+        color: #ffffff;
+
+    }
+
+    .delivery-form-button-primary:hover {
+
+        background: #124d7d;
+
+        border-color: #124d7d;
+
+        color: #ffffff;
+
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================== */
+
+    @media (max-width: 800px) {
+
+        .delivery-form-header {
+
             flex-direction: column;
+
         }
 
-        .campo-completo {
-            grid-column: 1 / -1;
-        }
+        .delivery-form-back {
 
-        label {
-            margin-bottom: 7px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #374151;
-        }
-
-        input,
-        select,
-        textarea {
             width: 100%;
-            padding: 11px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: white;
+
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #2563eb;
+        .delivery-form-grid {
+
+            grid-template-columns: 1fr;
+
         }
 
-        textarea {
-            min-height: 110px;
-            resize: vertical;
+        .delivery-form-group-full {
+
+            grid-column: auto;
+
         }
 
-        .requerido {
-            color: #dc2626;
+        .delivery-form-footer {
+
+            align-items: stretch;
+
+            flex-direction: column;
+
         }
 
-        .ayuda {
-            margin-top: 6px;
-            color: #6b7280;
-            font-size: 12px;
-        }
+        .delivery-form-footer-actions {
 
-        .error {
-            margin-top: 6px;
-            color: #dc2626;
-            font-size: 13px;
-        }
-
-        .acciones {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .boton {
-            display: inline-block;
-            padding: 11px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .boton-principal {
-            background-color: #2563eb;
-            color: white;
-        }
-
-        .boton-principal:hover {
-            background-color: #1d4ed8;
-        }
-
-        .boton-secundario {
-            background-color: #e5e7eb;
-            color: #374151;
-        }
-
-        .boton-secundario:hover {
-            background-color: #d1d5db;
-        }
-
-        .resumen-errores {
-            margin-bottom: 25px;
-            padding: 15px 18px;
-            border-radius: 6px;
-            background-color: #fee2e2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-        }
-
-        .resumen-errores strong {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .resumen-errores ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .sin-operaciones {
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            background-color: #fff7ed;
-            border: 1px solid #fed7aa;
-            color: #9a3412;
-        }
-
-        .sin-operaciones strong {
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        /* BUSCADOR DE OPERACIONES */
-
-        .buscador-operacion {
-            position: relative;
-        }
-
-        .buscador-operacion input {
-            padding-right: 40px;
-        }
-
-        .icono-busqueda {
-            position: absolute;
-            right: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6b7280;
-            pointer-events: none;
-            font-size: 17px;
-        }
-
-        .resultados-operaciones {
-            position: absolute;
-            z-index: 1000;
-            top: calc(100% + 5px);
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
-            max-height: 260px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .resultado-operacion {
             width: 100%;
-            padding: 13px 15px;
-            border: none;
-            border-bottom: 1px solid #f0f0f0;
-            background: white;
-            text-align: left;
-            cursor: pointer;
-            font-family: Arial, Helvetica, sans-serif;
-        }
 
-        .resultado-operacion:last-child {
-            border-bottom: none;
-        }
-
-        .resultado-operacion:hover {
-            background-color: #f3f6fb;
-        }
-
-        .resultado-numero {
-            display: block;
-            font-size: 14px;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .resultado-cliente {
-            display: block;
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .sin-resultados {
-            padding: 14px 15px;
-            color: #6b7280;
-            font-size: 13px;
-        }
-
-        .operacion-seleccionada {
-            display: none;
-            margin-top: 8px;
-            padding: 10px 12px;
-            border-radius: 6px;
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-            font-size: 13px;
-        }
-
-        .operacion-seleccionada strong {
-            color: #1e3a8a;
-        }
-
-        .limpiar-operacion {
-            margin-left: 8px;
-            border: none;
-            background: transparent;
-            color: #2563eb;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .limpiar-operacion:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 700px) {
-
-            .formulario {
-                grid-template-columns: 1fr;
-            }
-
-            .campo-completo {
-                grid-column: auto;
-            }
-
-            .tarjeta {
-                padding: 20px;
-            }
-
-            .acciones {
-                flex-direction: column-reverse;
-            }
-
-            .acciones .boton {
-                width: 100%;
-                text-align: center;
-            }
+            flex-direction: column-reverse;
 
         }
 
-    </style>
+        .delivery-form-footer-actions a,
+        .delivery-form-footer-actions button {
 
-</head>
+            width: 100%;
 
-<body>
+        }
 
-<div class="contenedor">
+    }
 
-    <div class="encabezado">
+</style>
 
-        <h1 class="titulo">
-            Nueva entrega
-        </h1>
+@endpush
 
-        <p class="subtitulo">
-            Registra una entrega asociada a una operación.
-        </p>
+
+@section('content')
+
+    {{-- =====================================================
+         HEADER
+    ====================================================== --}}
+
+    <div class="delivery-form-header">
+
+        <div>
+
+            <h1 class="delivery-form-title">
+                Nueva entrega
+            </h1>
+
+            <p class="delivery-form-subtitle">
+                Registra una entrega asociada a una operación.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ route('entregas.index') }}"
+            class="delivery-form-back"
+        >
+            ← Volver a entregas
+        </a>
 
     </div>
 
-    <div class="tarjeta">
 
-        @if ($errors->any())
+    {{-- =====================================================
+         ERRORES
+    ====================================================== --}}
 
-            <div class="resumen-errores">
+    @if($errors->any())
 
-                <strong>
-                    Se encontraron los siguientes errores:
-                </strong>
+        <div class="delivery-form-alert">
 
-                <ul>
+            <strong>
+                No se pudo guardar la entrega.
+            </strong>
 
-                    @foreach ($errors->all() as $error)
+            <ul>
 
-                        <li>
-                            {{ $error }}
-                        </li>
+                @foreach($errors->all() as $error)
 
-                    @endforeach
+                    <li>
+                        {{ $error }}
+                    </li>
 
-                </ul>
+                @endforeach
 
-            </div>
+            </ul>
 
-        @endif
+        </div>
+
+    @endif
 
 
-        @if ($operaciones->count() === 0)
+    {{-- =====================================================
+         SIN OPERACIONES
+    ====================================================== --}}
 
-            <div class="sin-operaciones">
+    @if($operaciones->count() === 0)
 
-                <strong>
-                    No hay operaciones registradas.
-                </strong>
+        <div class="delivery-form-card">
 
-                <span>
+            <section class="delivery-form-section">
+
+                <div class="delivery-no-operations">
+
+                    <strong>
+                        No hay operaciones registradas.
+                    </strong>
+
                     Para crear una entrega primero debes registrar una operación.
-                </span>
-
-            </div>
-
-            <div class="acciones">
-
-                <a
-                    href="{{ route('entregas.index') }}"
-                    class="boton boton-secundario"
-                >
-                    Volver
-                </a>
-
-                <a
-                    href="{{ route('operaciones.create') }}"
-                    class="boton boton-principal"
-                >
-                    Registrar operación
-                </a>
-
-            </div>
-
-        @else
-
-            <form
-                action="{{ route('entregas.store') }}"
-                method="POST"
-            >
-
-                @csrf
-
-                <div class="formulario">
-
-
-                    {{-- OPERACIÓN --}}
-
-                    <div class="campo campo-completo">
-
-                        <label for="busqueda_operacion">
-
-                            Operación
-                            <span class="requerido">*</span>
-
-                        </label>
-
-
-                        <div class="buscador-operacion">
-
-                            <input
-                                type="text"
-                                id="busqueda_operacion"
-                                placeholder="Buscar por número de operación o cliente..."
-                                autocomplete="off"
-                            >
-
-                            <span class="icono-busqueda">
-                                🔍
-                            </span>
-
-
-                            <div
-                                id="resultados_operaciones"
-                                class="resultados-operaciones"
-                            >
-
-                                @foreach ($operaciones as $operacion)
-
-                                    <button
-                                        type="button"
-                                        class="resultado-operacion"
-                                        data-id="{{ $operacion->id }}"
-                                        data-numero="{{ $operacion->numero_operacion }}"
-                                        data-cliente="{{ $operacion->cliente->razon_social }}"
-                                    >
-
-                                        <span class="resultado-numero">
-                                            {{ $operacion->numero_operacion }}
-                                        </span>
-
-                                        <span class="resultado-cliente">
-                                            {{ $operacion->cliente->razon_social }}
-
-                                            @if ($operacion->fecha_curse)
-                                                · Curse:
-                                                {{ $operacion->fecha_curse->format('d/m/Y') }}
-                                            @endif
-                                        </span>
-
-                                    </button>
-
-                                @endforeach
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- ESTE ES EL VALOR QUE REALMENTE SE ENVÍA AL CONTROLADOR --}}
-
-                        <input
-                            type="hidden"
-                            id="operacion_id"
-                            name="operacion_id"
-                            value="{{ old('operacion_id') }}"
-                            required
-                        >
-
-
-                        <div
-                            id="operacion_seleccionada"
-                            class="operacion-seleccionada"
-                        >
-
-                            <strong>
-                                Operación seleccionada:
-                            </strong>
-
-                            <span id="texto_operacion_seleccionada"></span>
-
-                            <button
-                                type="button"
-                                id="limpiar_operacion"
-                                class="limpiar-operacion"
-                            >
-                                Cambiar
-                            </button>
-
-                        </div>
-
-
-                        <div class="ayuda">
-                            Busca y selecciona la operación a la que pertenece esta entrega.
-                        </div>
-
-
-                        @error('operacion_id')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    {{-- NÚMERO DE ENTREGA --}}
-
-                    <div class="campo">
-
-                        <label for="numero_entrega">
-
-                            Número de entrega
-                            <span class="requerido">*</span>
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="numero_entrega"
-                            name="numero_entrega"
-                            value="{{ old('numero_entrega') }}"
-                            required
-                            maxlength="255"
-                            placeholder="Ej: ENT-001"
-                        >
-
-                        @error('numero_entrega')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    {{-- FECHA --}}
-
-                    <div class="campo">
-
-                        <label for="fecha_entrega">
-                            Fecha de entrega
-                        </label>
-
-                        <input
-                            type="date"
-                            id="fecha_entrega"
-                            name="fecha_entrega"
-                            value="{{ old('fecha_entrega') }}"
-                        >
-
-                        @error('fecha_entrega')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    {{-- ESTADO --}}
-
-                    <div class="campo">
-
-                        <label for="estado">
-
-                            Estado
-                            <span class="requerido">*</span>
-
-                        </label>
-
-                        <select
-                            id="estado"
-                            name="estado"
-                            required
-                        >
-
-                            <option
-                                value="pendiente"
-                                {{ old('estado', 'pendiente') === 'pendiente' ? 'selected' : '' }}
-                            >
-                                Pendiente
-                            </option>
-
-                            <option
-                                value="en_transito"
-                                {{ old('estado') === 'en_transito' ? 'selected' : '' }}
-                            >
-                                En tránsito
-                            </option>
-
-                            <option
-                                value="entregada"
-                                {{ old('estado') === 'entregada' ? 'selected' : '' }}
-                            >
-                                Entregada
-                            </option>
-
-                            <option
-                                value="rechazada"
-                                {{ old('estado') === 'rechazada' ? 'selected' : '' }}
-                            >
-                                Rechazada
-                            </option>
-
-                        </select>
-
-                        @error('estado')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    {{-- DESCRIPCIÓN --}}
-
-                    <div class="campo campo-completo">
-
-                        <label for="descripcion">
-                            Descripción
-                        </label>
-
-                        <textarea
-                            id="descripcion"
-                            name="descripcion"
-                            placeholder="Descripción de la entrega..."
-                        >{{ old('descripcion') }}</textarea>
-
-                        @error('descripcion')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    {{-- OBSERVACIONES --}}
-
-                    <div class="campo campo-completo">
-
-                        <label for="observaciones">
-                            Observaciones
-                        </label>
-
-                        <textarea
-                            id="observaciones"
-                            name="observaciones"
-                            placeholder="Observaciones adicionales..."
-                        >{{ old('observaciones') }}</textarea>
-
-                        @error('observaciones')
-
-                            <div class="error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
 
                 </div>
 
+            </section>
 
-                <div class="acciones">
+
+            <div class="delivery-form-footer">
+
+                <div class="delivery-form-footer-note">
+                    Registra una operación antes de continuar.
+                </div>
+
+                <div class="delivery-form-footer-actions">
 
                     <a
                         href="{{ route('entregas.index') }}"
-                        class="boton boton-secundario"
+                        class="delivery-form-button delivery-form-button-secondary"
                     >
-                        Cancelar
+                        Volver
                     </a>
 
-                    <button
-                        type="submit"
-                        class="boton boton-principal"
+                    <a
+                        href="{{ route('operaciones.create') }}"
+                        class="delivery-form-button delivery-form-button-primary"
                     >
-                        Guardar entrega
-                    </button>
+                        Registrar operación
+                    </a>
 
                 </div>
 
-            </form>
+            </div>
 
-        @endif
+        </div>
 
-    </div>
+    @else
 
-</div>
 
+        {{-- =====================================================
+             FORMULARIO
+        ====================================================== --}}
+
+        <form
+            action="{{ route('entregas.store') }}"
+            method="POST"
+            id="deliveryCreateForm"
+        >
+
+            @csrf
+
+
+            <div class="delivery-form-card">
+
+
+                {{-- =================================================
+                     OPERACIÓN
+                ================================================== --}}
+
+                <section class="delivery-form-section">
+
+                    <h2 class="delivery-form-section-title">
+                        Operación asociada
+                    </h2>
+
+                    <p class="delivery-form-section-description">
+                        Selecciona la operación a la que pertenece esta entrega.
+                    </p>
+
+
+                    <div class="delivery-form-grid">
+
+                        <div class="delivery-form-group delivery-form-group-full">
+
+                            <label
+                                for="busqueda_operacion"
+                                class="delivery-form-label"
+                            >
+                                Operación
+                                <span class="delivery-form-required">*</span>
+                            </label>
+
+
+                            <div class="delivery-operation-search">
+
+                                <input
+                                    type="text"
+                                    id="busqueda_operacion"
+                                    class="delivery-form-control"
+                                    placeholder="Buscar por número de operación o cliente..."
+                                    autocomplete="off"
+                                >
+
+                                <span class="delivery-operation-search-icon">
+                                    ⌕
+                                </span>
+
+
+                                <div
+                                    id="resultados_operaciones"
+                                    class="delivery-operation-results"
+                                >
+
+                                    @foreach($operaciones as $operacion)
+
+                                        <button
+                                            type="button"
+                                            class="delivery-operation-result"
+                                            data-id="{{ $operacion->id }}"
+                                            data-numero="{{ $operacion->numero_operacion }}"
+                                            data-cliente="{{ $operacion->cliente?->razon_social ?? 'Sin cliente' }}"
+                                        >
+
+                                            <span class="delivery-operation-number">
+                                                {{ $operacion->numero_operacion }}
+                                            </span>
+
+                                            <span class="delivery-operation-client">
+
+                                                {{ $operacion->cliente?->razon_social ?? 'Sin cliente' }}
+
+                                                @if($operacion->fecha_curse)
+
+                                                    · Curse:
+                                                    {{ $operacion->fecha_curse->format('d/m/Y') }}
+
+                                                @endif
+
+                                            </span>
+
+                                        </button>
+
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+
+
+                            <input
+                                type="hidden"
+                                id="operacion_id"
+                                name="operacion_id"
+                                value="{{ old('operacion_id') }}"
+                                required
+                            >
+
+
+                            <div
+                                id="operacion_seleccionada"
+                                class="delivery-operation-selected"
+                            >
+
+                                <strong>
+                                    Operación seleccionada:
+                                </strong>
+
+                                <span id="texto_operacion_seleccionada"></span>
+
+                                <button
+                                    type="button"
+                                    id="limpiar_operacion"
+                                    class="delivery-operation-change"
+                                >
+                                    Cambiar
+                                </button>
+
+                            </div>
+
+
+                            <div class="delivery-form-help">
+                                Busca por número de operación o nombre del cliente.
+                            </div>
+
+
+                            @error('operacion_id')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     DATOS DE LA ENTREGA
+                ================================================== --}}
+
+                <section class="delivery-form-section">
+
+                    <h2 class="delivery-form-section-title">
+                        Información de la entrega
+                    </h2>
+
+                    <p class="delivery-form-section-description">
+                        Ingresa los datos principales de la entrega.
+                    </p>
+
+
+                    <div class="delivery-form-grid">
+
+
+                        {{-- NÚMERO --}}
+
+                        <div class="delivery-form-group">
+
+                            <label
+                                for="numero_entrega"
+                                class="delivery-form-label"
+                            >
+                                Número de entrega
+                                <span class="delivery-form-required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="numero_entrega"
+                                name="numero_entrega"
+                                class="delivery-form-control"
+                                value="{{ old('numero_entrega') }}"
+                                maxlength="255"
+                                required
+                                placeholder="Ej. ENT-001"
+                            >
+
+                            @error('numero_entrega')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- FECHA --}}
+
+                        <div class="delivery-form-group">
+
+                            <label
+                                for="fecha_entrega"
+                                class="delivery-form-label"
+                            >
+                                Fecha de entrega
+                            </label>
+
+                            <input
+                                type="date"
+                                id="fecha_entrega"
+                                name="fecha_entrega"
+                                class="delivery-form-control"
+                                value="{{ old('fecha_entrega') }}"
+                            >
+
+                            @error('fecha_entrega')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- ESTADO --}}
+
+                        <div class="delivery-form-group">
+
+                            <label
+                                for="estado"
+                                class="delivery-form-label"
+                            >
+                                Estado
+                                <span class="delivery-form-required">*</span>
+                            </label>
+
+                            <select
+                                id="estado"
+                                name="estado"
+                                class="delivery-form-control"
+                                required
+                            >
+
+                                <option
+                                    value="pendiente"
+                                    {{ old('estado', 'pendiente') === 'pendiente' ? 'selected' : '' }}
+                                >
+                                    Pendiente
+                                </option>
+
+                                <option
+                                    value="en_transito"
+                                    {{ old('estado') === 'en_transito' ? 'selected' : '' }}
+                                >
+                                    En tránsito
+                                </option>
+
+                                <option
+                                    value="entregada"
+                                    {{ old('estado') === 'entregada' ? 'selected' : '' }}
+                                >
+                                    Entregada
+                                </option>
+
+                                <option
+                                    value="rechazada"
+                                    {{ old('estado') === 'rechazada' ? 'selected' : '' }}
+                                >
+                                    Rechazada
+                                </option>
+
+                            </select>
+
+                            @error('estado')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- DESCRIPCIÓN --}}
+
+                        <div class="delivery-form-group delivery-form-group-full">
+
+                            <label
+                                for="descripcion"
+                                class="delivery-form-label"
+                            >
+                                Descripción
+                            </label>
+
+                            <textarea
+                                id="descripcion"
+                                name="descripcion"
+                                class="delivery-form-control"
+                                placeholder="Descripción de la entrega..."
+                            >{{ old('descripcion') }}</textarea>
+
+                            @error('descripcion')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+
+                        {{-- OBSERVACIONES --}}
+
+                        <div class="delivery-form-group delivery-form-group-full">
+
+                            <label
+                                for="observaciones"
+                                class="delivery-form-label"
+                            >
+                                Observaciones
+                            </label>
+
+                            <textarea
+                                id="observaciones"
+                                name="observaciones"
+                                class="delivery-form-control"
+                                placeholder="Observaciones adicionales..."
+                            >{{ old('observaciones') }}</textarea>
+
+                            @error('observaciones')
+
+                                <div class="delivery-form-error">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {{-- =================================================
+                     FOOTER
+                ================================================== --}}
+
+                <div class="delivery-form-footer">
+
+                    <div class="delivery-form-footer-note">
+                        Los campos marcados con * son obligatorios.
+                    </div>
+
+                    <div class="delivery-form-footer-actions">
+
+                        <a
+                            href="{{ route('entregas.index') }}"
+                            class="delivery-form-button delivery-form-button-secondary"
+                        >
+                            Cancelar
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="delivery-form-button delivery-form-button-primary"
+                        >
+                            Guardar entrega
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    @endif
+
+@endsection
+
+
+@push('scripts')
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const buscador = document.getElementById('busqueda_operacion');
-
-        const resultados = document.getElementById('resultados_operaciones');
-
-        const operacionId = document.getElementById('operacion_id');
-
-        const operacionSeleccionada =
-            document.getElementById('operacion_seleccionada');
-
-        const textoSeleccionada =
-            document.getElementById('texto_operacion_seleccionada');
-
-        const limpiar =
-            document.getElementById('limpiar_operacion');
-
-        const opciones =
-            document.querySelectorAll('.resultado-operacion');
-
-
-        if (!buscador) {
-            return;
-        }
-
-
-        function mostrarResultados() {
-
-            const texto =
-                buscador.value.toLowerCase().trim();
-
-            let cantidad = 0;
-
-
-            opciones.forEach(function (opcion) {
-
-                const numero =
-                    opcion.dataset.numero.toLowerCase();
-
-                const cliente =
-                    opcion.dataset.cliente.toLowerCase();
-
-                const coincide =
-                    numero.includes(texto) ||
-                    cliente.includes(texto);
-
-
-                if (coincide) {
-
-                    opcion.style.display = 'block';
-
-                    cantidad++;
-
-                } else {
-
-                    opcion.style.display = 'none';
-
-                }
-
-            });
-
-
-            let sinResultados =
-                resultados.querySelector('.sin-resultados');
-
-
-            if (sinResultados) {
-                sinResultados.remove();
-            }
-
-
-            if (cantidad === 0) {
-
-                sinResultados =
-                    document.createElement('div');
-
-                sinResultados.className =
-                    'sin-resultados';
-
-                sinResultados.textContent =
-                    'No se encontraron operaciones.';
-
-                resultados.appendChild(sinResultados);
-
-            }
-
-
-            resultados.style.display = 'block';
-
-        }
-
-
-        buscador.addEventListener('focus', function () {
-
-            mostrarResultados();
-
-        });
-
-
-        buscador.addEventListener('input', function () {
-
-            operacionId.value = '';
-
-            operacionSeleccionada.style.display = 'none';
-
-            mostrarResultados();
-
-        });
-
-
-        opciones.forEach(function (opcion) {
-
-            opcion.addEventListener('click', function () {
-
-                const id =
-                    opcion.dataset.id;
-
-                const numero =
-                    opcion.dataset.numero;
-
-                const cliente =
-                    opcion.dataset.cliente;
-
-
-                operacionId.value = id;
-
-                buscador.value =
-                    numero + ' - ' + cliente;
-
-                textoSeleccionada.textContent =
-                    numero + ' - ' + cliente;
-
-                operacionSeleccionada.style.display =
-                    'block';
-
-                resultados.style.display =
-                    'none';
-
-            });
-
-        });
-
-
-        limpiar.addEventListener('click', function () {
-
-            operacionId.value = '';
-
-            buscador.value = '';
-
-            operacionSeleccionada.style.display =
-                'none';
-
-            buscador.focus();
-
-            mostrarResultados();
-
-        });
-
-
-        document.addEventListener('click', function (evento) {
-
-            if (
-                !buscador.contains(evento.target) &&
-                !resultados.contains(evento.target)
-            ) {
-
-                resultados.style.display =
-                    'none';
-
-            }
-
-        });
-
-
-        // Recuperar operación seleccionada después de una validación fallida.
-
-        const valorAnterior =
-            operacionId.value;
-
-
-        if (valorAnterior) {
-
-            const opcionAnterior =
-                document.querySelector(
-                    '.resultado-operacion[data-id="' +
-                    valorAnterior +
-                    '"]'
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            const buscador =
+                document.getElementById(
+                    'busqueda_operacion'
+                );
+
+            const resultados =
+                document.getElementById(
+                    'resultados_operaciones'
+                );
+
+            const operacionId =
+                document.getElementById(
+                    'operacion_id'
+                );
+
+            const operacionSeleccionada =
+                document.getElementById(
+                    'operacion_seleccionada'
+                );
+
+            const textoSeleccionada =
+                document.getElementById(
+                    'texto_operacion_seleccionada'
+                );
+
+            const limpiar =
+                document.getElementById(
+                    'limpiar_operacion'
+                );
+
+            const opciones =
+                document.querySelectorAll(
+                    '.delivery-operation-result'
+                );
+
+            const formulario =
+                document.getElementById(
+                    'deliveryCreateForm'
                 );
 
 
-            if (opcionAnterior) {
+            if (
+                !buscador ||
+                !resultados ||
+                !operacionId
+            ) {
 
-                const numero =
-                    opcionAnterior.dataset.numero;
+                return;
 
-                const cliente =
-                    opcionAnterior.dataset.cliente;
+            }
 
 
-                buscador.value =
-                    numero + ' - ' + cliente;
+            function mostrarResultados() {
 
-                textoSeleccionada.textContent =
-                    numero + ' - ' + cliente;
+                const texto =
+                    buscador.value
+                        .toLowerCase()
+                        .trim();
 
-                operacionSeleccionada.style.display =
+
+                let cantidad = 0;
+
+
+                opciones.forEach(
+                    function (opcion) {
+
+                        const numero =
+                            (
+                                opcion.dataset.numero ||
+                                ''
+                            ).toLowerCase();
+
+                        const cliente =
+                            (
+                                opcion.dataset.cliente ||
+                                ''
+                            ).toLowerCase();
+
+
+                        const coincide =
+                            numero.includes(texto) ||
+                            cliente.includes(texto);
+
+
+                        opcion.style.display =
+                            coincide
+                                ? 'block'
+                                : 'none';
+
+
+                        if (coincide) {
+
+                            cantidad++;
+
+                        }
+
+                    }
+                );
+
+
+                const anterior =
+                    resultados.querySelector(
+                        '.delivery-operation-empty'
+                    );
+
+
+                if (anterior) {
+
+                    anterior.remove();
+
+                }
+
+
+                if (cantidad === 0) {
+
+                    const sinResultados =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    sinResultados.className =
+                        'delivery-operation-empty';
+
+
+                    sinResultados.textContent =
+                        'No se encontraron operaciones.';
+
+
+                    resultados.appendChild(
+                        sinResultados
+                    );
+
+                }
+
+
+                resultados.style.display =
                     'block';
 
             }
 
-        }
+
+            buscador.addEventListener(
+                'focus',
+                function () {
+
+                    mostrarResultados();
+
+                }
+            );
 
 
-        // Evitar enviar el formulario sin operación seleccionada.
+            buscador.addEventListener(
+                'input',
+                function () {
 
-        document.querySelector('form').addEventListener(
-            'submit',
-            function (evento) {
+                    operacionId.value = '';
 
-                if (!operacionId.value) {
+                    if (operacionSeleccionada) {
 
-                    evento.preventDefault();
+                        operacionSeleccionada.style.display =
+                            'none';
 
-                    alert(
-                        'Debes seleccionar una operación.'
+                    }
+
+                    mostrarResultados();
+
+                }
+            );
+
+
+            opciones.forEach(
+                function (opcion) {
+
+                    opcion.addEventListener(
+                        'click',
+                        function () {
+
+                            const id =
+                                opcion.dataset.id;
+
+                            const numero =
+                                opcion.dataset.numero;
+
+                            const cliente =
+                                opcion.dataset.cliente;
+
+
+                            operacionId.value =
+                                id;
+
+
+                            buscador.value =
+                                numero +
+                                ' - ' +
+                                cliente;
+
+
+                            if (
+                                textoSeleccionada &&
+                                operacionSeleccionada
+                            ) {
+
+                                textoSeleccionada.textContent =
+                                    numero +
+                                    ' - ' +
+                                    cliente;
+
+
+                                operacionSeleccionada.style.display =
+                                    'block';
+
+                            }
+
+
+                            resultados.style.display =
+                                'none';
+
+                        }
                     );
 
-                    buscador.focus();
+                }
+            );
+
+
+            if (limpiar) {
+
+                limpiar.addEventListener(
+                    'click',
+                    function () {
+
+                        operacionId.value = '';
+
+                        buscador.value = '';
+
+
+                        if (operacionSeleccionada) {
+
+                            operacionSeleccionada.style.display =
+                                'none';
+
+                        }
+
+
+                        buscador.focus();
+
+                        mostrarResultados();
+
+                    }
+                );
+
+            }
+
+
+            document.addEventListener(
+                'click',
+                function (evento) {
+
+                    if (
+                        !buscador.contains(evento.target) &&
+                        !resultados.contains(evento.target)
+                    ) {
+
+                        resultados.style.display =
+                            'none';
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * Recuperar operación después
+             * de una validación fallida.
+             */
+
+            const valorAnterior =
+                operacionId.value;
+
+
+            if (valorAnterior) {
+
+                const opcionAnterior =
+                    document.querySelector(
+                        '.delivery-operation-result[data-id="' +
+                        valorAnterior +
+                        '"]'
+                    );
+
+
+                if (opcionAnterior) {
+
+                    const numero =
+                        opcionAnterior.dataset.numero;
+
+                    const cliente =
+                        opcionAnterior.dataset.cliente;
+
+
+                    buscador.value =
+                        numero +
+                        ' - ' +
+                        cliente;
+
+
+                    if (
+                        textoSeleccionada &&
+                        operacionSeleccionada
+                    ) {
+
+                        textoSeleccionada.textContent =
+                            numero +
+                            ' - ' +
+                            cliente;
+
+
+                        operacionSeleccionada.style.display =
+                            'block';
+
+                    }
 
                 }
 
             }
-        );
 
-    });
+
+            /*
+             * Evitar guardar sin operación.
+             */
+
+            if (formulario) {
+
+                formulario.addEventListener(
+                    'submit',
+                    function (evento) {
+
+                        if (!operacionId.value) {
+
+                            evento.preventDefault();
+
+
+                            alert(
+                                'Debes seleccionar una operación.'
+                            );
+
+
+                            buscador.focus();
+
+                        }
+
+                    }
+                );
+
+            }
+
+        }
+    );
 
 </script>
 
-</body>
-
-</html>
+@endpush
