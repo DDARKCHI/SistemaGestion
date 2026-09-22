@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\DetalleVacacionController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EmpresaFactoringController;
 use App\Http\Controllers\EntregaController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\RemuneracionController;
 use App\Http\Controllers\ServicioTransporteController;
 use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\TransportistaController;
+use App\Http\Controllers\VacacionController;
 use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
@@ -205,6 +207,66 @@ Route::delete(
     'trabajadores/{trabajador}/horarios/{horario}',
     [HorarioController::class, 'destroy']
 )->name('trabajadores.horarios.destroy');
+
+
+// =========================================================
+// VACACIONES
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/vacaciones/create',
+    [VacacionController::class, 'create']
+)->name('trabajadores.vacaciones.create');
+
+Route::post(
+    'trabajadores/{trabajador}/vacaciones',
+    [VacacionController::class, 'store']
+)->name('trabajadores.vacaciones.store');
+
+Route::get(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/edit',
+    [VacacionController::class, 'edit']
+)->name('trabajadores.vacaciones.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}',
+    [VacacionController::class, 'update']
+)->name('trabajadores.vacaciones.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}',
+    [VacacionController::class, 'destroy']
+)->name('trabajadores.vacaciones.destroy');
+
+
+// =========================================================
+// DETALLES DE VACACIONES
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/create',
+    [DetalleVacacionController::class, 'create']
+)->name('trabajadores.vacaciones.detalles.create');
+
+Route::post(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles',
+    [DetalleVacacionController::class, 'store']
+)->name('trabajadores.vacaciones.detalles.store');
+
+Route::get(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}/edit',
+    [DetalleVacacionController::class, 'edit']
+)->name('trabajadores.vacaciones.detalles.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}',
+    [DetalleVacacionController::class, 'update']
+)->name('trabajadores.vacaciones.detalles.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}',
+    [DetalleVacacionController::class, 'destroy']
+)->name('trabajadores.vacaciones.detalles.destroy');
 
 
 // =========================================================

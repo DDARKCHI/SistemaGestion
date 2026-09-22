@@ -927,7 +927,9 @@
     @endif
 
 
-    {{-- CONTRATOS --}}
+    {{-- =====================================================
+         CONTRATOS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -948,7 +950,10 @@
             <div class="worker-section-header-actions">
 
                 <a
-                    href="{{ route('trabajadores.contratos.create', $trabajador) }}"
+                    href="{{ route(
+                        'trabajadores.contratos.create',
+                        $trabajador
+                    ) }}"
                     class="worker-section-add"
                 >
                     + Nuevo contrato
@@ -978,9 +983,11 @@
                             </div>
 
                             <div class="contract-summary-value">
+
                                 <strong>
                                     {{ $contrato->tipo }}
                                 </strong>
+
                             </div>
 
                         </div>
@@ -1046,9 +1053,11 @@
                             </div>
 
                             <div class="contract-summary-value">
+
                                 <span class="worker-badge">
                                     {{ $contrato->estado }}
                                 </span>
+
                             </div>
 
                         </div>
@@ -1085,7 +1094,9 @@
                             @foreach($contrato->documentos as $documento)
 
                                 <a
-                                    href="{{ asset('storage/' . $documento->ruta) }}"
+                                    href="{{ asset(
+                                        'storage/' . $documento->ruta
+                                    ) }}"
                                     target="_blank"
                                     class="contract-document"
                                 >
@@ -1138,9 +1149,11 @@
 
 
                                     <div>
+
                                         <div class="contract-history-type">
                                             {{ $modificacion->tipo }}
                                         </div>
+
                                     </div>
 
 
@@ -1156,7 +1169,9 @@
 
                                             <div class="contract-history-values">
 
-                                                @if($modificacion->nueva_remuneracion !== null)
+                                                @if(
+                                                    $modificacion->nueva_remuneracion !== null
+                                                )
 
                                                     Nueva remuneración:
                                                     ${{ number_format(
@@ -1169,9 +1184,13 @@
                                                 @endif
 
 
-                                                @if($modificacion->nuevo_bono !== null)
+                                                @if(
+                                                    $modificacion->nuevo_bono !== null
+                                                )
 
-                                                    @if($modificacion->nueva_remuneracion !== null)
+                                                    @if(
+                                                        $modificacion->nueva_remuneracion !== null
+                                                    )
                                                         ·
                                                     @endif
 
@@ -1196,10 +1215,16 @@
 
                                         @if($modificacion->documentos->count())
 
-                                            @foreach($modificacion->documentos as $documento)
+                                            @foreach(
+                                                $modificacion->documentos
+                                                as $documento
+                                            )
 
                                                 <a
-                                                    href="{{ asset('storage/' . $documento->ruta) }}"
+                                                    href="{{ asset(
+                                                        'storage/' .
+                                                        $documento->ruta
+                                                    ) }}"
                                                     target="_blank"
                                                     class="contract-document"
                                                 >
@@ -1225,7 +1250,10 @@
                         @else
 
                             <div class="contract-no-history">
-                                Todavía no existen modificaciones o anexos asociados a este contrato.
+
+                                Todavía no existen modificaciones o anexos
+                                asociados a este contrato.
+
                             </div>
 
                         @endif
@@ -1259,7 +1287,9 @@
     </section>
 
 
-    {{-- HORARIOS --}}
+    {{-- =====================================================
+         HORARIOS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -1280,7 +1310,10 @@
             <div class="worker-section-header-actions">
 
                 <a
-                    href="{{ route('trabajadores.horarios.create', $trabajador) }}"
+                    href="{{ route(
+                        'trabajadores.horarios.create',
+                        $trabajador
+                    ) }}"
                     class="worker-section-add"
                 >
                     + Nuevo horario
@@ -1302,6 +1335,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Tipo</th>
                             <th>Día</th>
@@ -1313,6 +1347,7 @@
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -1322,14 +1357,22 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $horario->tipo }}</strong>
+                                    <strong>
+                                        {{ $horario->tipo }}
+                                    </strong>
                                 </td>
 
-                                <td>{{ $horario->dia }}</td>
+                                <td>
+                                    {{ $horario->dia }}
+                                </td>
 
-                                <td>{{ $horario->hora_inicio ?: '—' }}</td>
+                                <td>
+                                    {{ $horario->hora_inicio ?: '—' }}
+                                </td>
 
-                                <td>{{ $horario->hora_termino ?: '—' }}</td>
+                                <td>
+                                    {{ $horario->hora_termino ?: '—' }}
+                                </td>
 
                                 <td>
                                     {{ $horario->horas_diarias !== null
@@ -1393,6 +1436,7 @@
                                             Editar
                                         </a>
 
+
                                         <form
                                             action="{{ route(
                                                 'trabajadores.horarios.destroy',
@@ -1455,7 +1499,9 @@
     </section>
 
 
-    {{-- REMUNERACIONES --}}
+    {{-- =====================================================
+         REMUNERACIONES
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -1476,7 +1522,10 @@
             <div class="worker-section-header-actions">
 
                 <a
-                    href="{{ route('trabajadores.remuneraciones.create', $trabajador) }}"
+                    href="{{ route(
+                        'trabajadores.remuneraciones.create',
+                        $trabajador
+                    ) }}"
                     class="worker-section-add"
                 >
                     + Nueva remuneración
@@ -1498,6 +1547,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Período</th>
                             <th>Sueldo base</th>
@@ -1510,6 +1560,7 @@
                             <th>Estado</th>
                             <th>Documentos</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -1519,7 +1570,9 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $remuneracion->periodo }}</strong>
+                                    <strong>
+                                        {{ $remuneracion->periodo }}
+                                    </strong>
                                 </td>
 
                                 <td>
@@ -1571,7 +1624,9 @@
 
                                 <td>
 
-                                    @if((float) $remuneracion->saldo_a_pagar > 0)
+                                    @if(
+                                        (float) $remuneracion->saldo_a_pagar > 0
+                                    )
 
                                         <span class="worker-badge worker-badge-warning">
                                             ${{ number_format(
@@ -1607,7 +1662,9 @@
                                             Pagada
                                         </span>
 
-                                    @elseif($remuneracion->estado === 'parcialmente_pagada')
+                                    @elseif(
+                                        $remuneracion->estado === 'parcialmente_pagada'
+                                    )
 
                                         <span class="worker-badge worker-badge-warning">
                                             Pago parcial
@@ -1629,10 +1686,16 @@
 
                                         <div class="worker-document-list">
 
-                                            @foreach($remuneracion->documentos as $documento)
+                                            @foreach(
+                                                $remuneracion->documentos
+                                                as $documento
+                                            )
 
                                                 <a
-                                                    href="{{ asset('storage/' . $documento->ruta) }}"
+                                                    href="{{ asset(
+                                                        'storage/' .
+                                                        $documento->ruta
+                                                    ) }}"
                                                     target="_blank"
                                                     class="worker-document"
                                                     title="{{ $documento->nombre }}"
@@ -1687,7 +1750,9 @@
     </section>
 
 
-    {{-- VACACIONES --}}
+    {{-- =====================================================
+         VACACIONES
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -1733,6 +1798,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Período</th>
                             <th>Días correspondientes</th>
@@ -1743,6 +1809,7 @@
                             <th>Observaciones</th>
                             <th>Acciones</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -1758,21 +1825,23 @@
                                 </td>
 
                                 <td>
-                                    {{ rtrim(rtrim(number_format((float) $vacacion->dias_correspondientes, 2, '.', ''), '0'), '.') }}
+                                    {{ $vacacion->dias_correspondientes }}
                                 </td>
 
                                 <td>
-                                    {{ rtrim(rtrim(number_format((float) $vacacion->dias_tomados, 2, '.', ''), '0'), '.') }}
+                                    {{ $vacacion->dias_tomados }}
                                 </td>
 
                                 <td>
-                                    {{ rtrim(rtrim(number_format((float) $vacacion->dias_reservados, 2, '.', ''), '0'), '.') }}
+                                    {{ $vacacion->dias_reservados }}
                                 </td>
 
                                 <td>
+
                                     <strong>
-                                        {{ rtrim(rtrim(number_format((float) $vacacion->dias_restantes, 2, '.', ''), '0'), '.') }}
+                                        {{ $vacacion->dias_restantes }}
                                     </strong>
+
                                 </td>
 
                                 <td>
@@ -1783,7 +1852,9 @@
                                             Tomadas
                                         </span>
 
-                                    @elseif($vacacion->estado === 'parcialmente_tomadas')
+                                    @elseif(
+                                        $vacacion->estado === 'parcialmente_tomadas'
+                                    )
 
                                         <span class="worker-badge worker-badge-warning">
                                             Parcialmente tomadas
@@ -1809,19 +1880,6 @@
 
                                         <a
                                             href="{{ route(
-                                                'trabajadores.vacaciones.detalles.create',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'vacacion' => $vacacion,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Registrar días
-                                        </a>
-
-                                        <a
-                                            href="{{ route(
                                                 'trabajadores.vacaciones.edit',
                                                 [
                                                     'trabajador' => $trabajador,
@@ -1830,8 +1888,9 @@
                                             ) }}"
                                             class="worker-action"
                                         >
-                                            Editar período
+                                            Editar
                                         </a>
+
 
                                         <form
                                             action="{{ route(
@@ -1842,7 +1901,7 @@
                                                 ]
                                             ) }}"
                                             method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este período de vacaciones? También se eliminarán todos los días tomados o reservados asociados.');"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar este período de vacaciones? Esta acción no se puede deshacer.');"
                                             style="display:inline;"
                                         >
 
@@ -1863,188 +1922,6 @@
                                 </td>
 
                             </tr>
-
-
-                            @if($vacacion->detalles->count())
-
-                                <tr>
-
-                                    <td
-                                        colspan="8"
-                                        style="padding: 0; background: #fbfcfe;"
-                                    >
-
-                                        <div style="padding: 14px 18px 18px;">
-
-                                            <div
-                                                style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px;"
-                                            >
-
-                                                <div
-                                                    style="color: #344054; font-size: 10px; font-weight: 700;"
-                                                >
-                                                    Historial del período
-                                                </div>
-
-                                                <span class="worker-section-count">
-                                                    {{ $vacacion->detalles->count() }}
-                                                </span>
-
-                                            </div>
-
-                                            <div
-                                                class="worker-table-wrapper"
-                                                style="border: 1px solid #e2e8f0; border-radius: 7px; background: #ffffff;"
-                                            >
-
-                                                <table
-                                                    class="worker-table"
-                                                    style="min-width: 650px;"
-                                                >
-
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tipo</th>
-                                                            <th>Desde</th>
-                                                            <th>Hasta</th>
-                                                            <th>Días</th>
-                                                            <th>Observaciones</th>
-                                                            <th>Acciones</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-
-                                                        @foreach($vacacion->detalles as $detalleVacacion)
-
-                                                            <tr>
-
-                                                                <td>
-
-                                                                    @if($detalleVacacion->tipo === 'tomada')
-
-                                                                        <span class="worker-badge worker-badge-success">
-                                                                            Tomadas
-                                                                        </span>
-
-                                                                    @elseif($detalleVacacion->tipo === 'reservada')
-
-                                                                        <span class="worker-badge worker-badge-warning">
-                                                                            Reservadas
-                                                                        </span>
-
-                                                                    @else
-
-                                                                        <span class="worker-badge">
-                                                                            {{ $detalleVacacion->tipo }}
-                                                                        </span>
-
-                                                                    @endif
-
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ $detalleVacacion->fecha_inicio
-                                                                        ? $detalleVacacion->fecha_inicio->format('d/m/Y')
-                                                                        : '—'
-                                                                    }}
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ $detalleVacacion->fecha_termino
-                                                                        ? $detalleVacacion->fecha_termino->format('d/m/Y')
-                                                                        : '—'
-                                                                    }}
-                                                                </td>
-
-                                                                <td>
-                                                                    <strong>
-                                                                        {{ rtrim(rtrim(number_format((float) $detalleVacacion->dias, 2, '.', ''), '0'), '.') }}
-                                                                    </strong>
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ $detalleVacacion->observaciones ?: '—' }}
-                                                                </td>
-
-                                                                <td>
-
-                                                                    <div class="worker-action-list">
-
-                                                                        <a
-                                                                            href="{{ route(
-                                                                                'trabajadores.vacaciones.detalles.edit',
-                                                                                [
-                                                                                    'trabajador' => $trabajador,
-                                                                                    'vacacion' => $vacacion,
-                                                                                    'detalleVacacion' => $detalleVacacion,
-                                                                                ]
-                                                                            ) }}"
-                                                                            class="worker-action"
-                                                                        >
-                                                                            Editar
-                                                                        </a>
-
-                                                                        <form
-                                                                            action="{{ route(
-                                                                                'trabajadores.vacaciones.detalles.destroy',
-                                                                                [
-                                                                                    'trabajador' => $trabajador,
-                                                                                    'vacacion' => $vacacion,
-                                                                                    'detalleVacacion' => $detalleVacacion,
-                                                                                ]
-                                                                            ) }}"
-                                                                            method="POST"
-                                                                            onsubmit="return confirm('¿Estás seguro de eliminar este registro de vacaciones? El saldo del período será recalculado automáticamente.');"
-                                                                            style="display:inline;"
-                                                                        >
-
-                                                                            @csrf
-                                                                            @method('DELETE')
-
-                                                                            <button
-                                                                                type="submit"
-                                                                                class="worker-action worker-action-danger"
-                                                                            >
-                                                                                Eliminar
-                                                                            </button>
-
-                                                                        </form>
-
-                                                                    </div>
-
-                                                                </td>
-
-                                                            </tr>
-
-                                                        @endforeach
-
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            @else
-
-                                <tr>
-
-                                    <td
-                                        colspan="8"
-                                        style="padding: 11px 18px; background: #fbfcfe; color: #98a2b3; font-size: 9px;"
-                                    >
-                                        Todavía no hay días tomados o reservados registrados para este período.
-                                    </td>
-
-                                </tr>
-
-                            @endif
 
                         @endforeach
 
@@ -2067,7 +1944,8 @@
                 </h3>
 
                 <p class="worker-empty-text">
-                    Registra el primer período de vacaciones para controlar los días correspondientes, utilizados, reservados y pendientes.
+                    Registra el primer período de vacaciones para controlar
+                    los días correspondientes, utilizados, reservados y pendientes.
                 </p>
 
             </div>
@@ -2077,7 +1955,9 @@
     </section>
 
 
-    {{-- AUSENCIAS --}}
+    {{-- =====================================================
+         AUSENCIAS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -2109,6 +1989,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Desde</th>
                             <th>Hasta</th>
@@ -2117,6 +1998,7 @@
                             <th>Estado</th>
                             <th>Justificación</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -2139,9 +2021,13 @@
                                     }}
                                 </td>
 
-                                <td>{{ $ausencia->dias }}</td>
+                                <td>
+                                    {{ $ausencia->dias }}
+                                </td>
 
-                                <td>{{ $ausencia->tipo }}</td>
+                                <td>
+                                    {{ $ausencia->tipo }}
+                                </td>
 
                                 <td>
                                     <span class="worker-badge">
@@ -2186,7 +2072,9 @@
     </section>
 
 
-    {{-- PERMISOS --}}
+    {{-- =====================================================
+         PERMISOS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -2218,6 +2106,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Tipo</th>
                             <th>Desde</th>
@@ -2226,6 +2115,7 @@
                             <th>Estado</th>
                             <th>Motivo</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -2235,7 +2125,9 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $permiso->tipo }}</strong>
+                                    <strong>
+                                        {{ $permiso->tipo }}
+                                    </strong>
                                 </td>
 
                                 <td>
@@ -2252,7 +2144,9 @@
                                     }}
                                 </td>
 
-                                <td>{{ $permiso->horas ?? '—' }}</td>
+                                <td>
+                                    {{ $permiso->horas ?? '—' }}
+                                </td>
 
                                 <td>
                                     <span class="worker-badge">
@@ -2297,7 +2191,9 @@
     </section>
 
 
-    {{-- FALTAS --}}
+    {{-- =====================================================
+         FALTAS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -2329,6 +2225,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Fecha</th>
                             <th>Tipo</th>
@@ -2336,6 +2233,7 @@
                             <th>Estado</th>
                             <th>Sanción</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -2351,9 +2249,13 @@
                                     }}
                                 </td>
 
-                                <td>{{ $falta->tipo }}</td>
+                                <td>
+                                    {{ $falta->tipo }}
+                                </td>
 
-                                <td>{{ $falta->descripcion ?: '—' }}</td>
+                                <td>
+                                    {{ $falta->descripcion ?: '—' }}
+                                </td>
 
                                 <td>
                                     <span class="worker-badge">
@@ -2398,7 +2300,9 @@
     </section>
 
 
-    {{-- CUADRATURAS --}}
+    {{-- =====================================================
+         CUADRATURAS
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -2430,6 +2334,7 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Operación</th>
                             <th>Período</th>
@@ -2439,6 +2344,7 @@
                             <th>Saldo en contra</th>
                             <th>Estado</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -2448,17 +2354,23 @@
                             <tr>
 
                                 <td>
+
                                     <strong>
                                         {{ $cuadratura->operacion
                                             ? $cuadratura->operacion->numero_operacion
                                             : '—'
                                         }}
                                     </strong>
+
                                 </td>
 
-                                <td>{{ $cuadratura->periodo }}</td>
+                                <td>
+                                    {{ $cuadratura->periodo }}
+                                </td>
 
-                                <td>{{ $cuadratura->total_horas }}</td>
+                                <td>
+                                    {{ $cuadratura->total_horas }}
+                                </td>
 
                                 <td>
                                     ${{ number_format(
@@ -2526,7 +2438,9 @@
     </section>
 
 
-    {{-- DOCUMENTOS --}}
+    {{-- =====================================================
+         DOCUMENTOS DEL TRABAJADOR
+    ====================================================== --}}
 
     <section class="worker-section">
 
@@ -2558,12 +2472,14 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Documento</th>
                             <th>Tipo</th>
                             <th>Archivo</th>
                             <th>Descripción</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -2573,12 +2489,18 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $documento->nombre }}</strong>
+                                    <strong>
+                                        {{ $documento->nombre }}
+                                    </strong>
                                 </td>
 
-                                <td>{{ $documento->tipo ?: '—' }}</td>
+                                <td>
+                                    {{ $documento->tipo ?: '—' }}
+                                </td>
 
-                                <td>{{ $documento->mime_type ?: '—' }}</td>
+                                <td>
+                                    {{ $documento->mime_type ?: '—' }}
+                                </td>
 
                                 <td>
                                     {{ $documento->descripcion ?: 'Sin descripción' }}
