@@ -2077,7 +2077,7 @@
     </section>
 
 
-    {{-- AUSENCIAS --}}
+       {{-- AUSENCIAS --}}
 
     <section class="worker-section">
 
@@ -2095,9 +2095,20 @@
 
             </div>
 
-            <span class="worker-section-count">
-                {{ $trabajador->ausencias->count() }}
-            </span>
+            <div class="worker-section-header-actions">
+
+                <a
+                    href="{{ route('trabajadores.ausencias.create', $trabajador) }}"
+                    class="worker-section-add"
+                >
+                    + Nueva ausencia
+                </a>
+
+                <span class="worker-section-count">
+                    {{ $trabajador->ausencias->count() }}
+                </span>
+
+            </div>
 
         </div>
 
@@ -2116,6 +2127,8 @@
                             <th>Tipo</th>
                             <th>Estado</th>
                             <th>Justificación</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
 
@@ -2139,18 +2152,111 @@
                                     }}
                                 </td>
 
-                                <td>{{ $ausencia->dias }}</td>
+                                <td>
 
-                                <td>{{ $ausencia->tipo }}</td>
+                                    <strong>
+                                        {{ rtrim(
+                                            rtrim(
+                                                number_format(
+                                                    (float) $ausencia->dias,
+                                                    2,
+                                                    '.',
+                                                    ''
+                                                ),
+                                                '0'
+                                            ),
+                                            '.'
+                                        ) }}
+                                    </strong>
+
+                                </td>
 
                                 <td>
-                                    <span class="worker-badge">
-                                        {{ $ausencia->estado }}
-                                    </span>
+                                    {{ $ausencia->tipo ?: 'Sin registro' }}
+                                </td>
+
+                                <td>
+
+                                    @if($ausencia->estado === 'justificada')
+
+                                        <span class="worker-badge worker-badge-success">
+                                            Justificada
+                                        </span>
+
+                                    @elseif($ausencia->estado === 'injustificada')
+
+                                        <span class="worker-badge worker-badge-danger">
+                                            Injustificada
+                                        </span>
+
+                                    @elseif($ausencia->estado === 'pendiente')
+
+                                        <span class="worker-badge worker-badge-warning">
+                                            Pendiente
+                                        </span>
+
+                                    @else
+
+                                        <span class="worker-badge">
+                                            {{ $ausencia->estado }}
+                                        </span>
+
+                                    @endif
+
                                 </td>
 
                                 <td>
                                     {{ $ausencia->justificacion ?: 'Sin registro' }}
+                                </td>
+
+                                <td>
+                                    {{ $ausencia->observaciones ?: '—' }}
+                                </td>
+
+                                <td>
+
+                                    <div class="worker-action-list">
+
+                                        <a
+                                            href="{{ route(
+                                                'trabajadores.ausencias.edit',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'ausencia' => $ausencia,
+                                                ]
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            action="{{ route(
+                                                'trabajadores.ausencias.destroy',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'ausencia' => $ausencia,
+                                                ]
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar esta ausencia? Esta acción no se puede deshacer.');"
+                                            style="display:inline;"
+                                        >
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="worker-action worker-action-danger"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
 
                             </tr>
@@ -2185,7 +2291,6 @@
 
     </section>
 
-
     {{-- PERMISOS --}}
 
     <section class="worker-section">
@@ -2204,9 +2309,20 @@
 
             </div>
 
-            <span class="worker-section-count">
-                {{ $trabajador->permisos->count() }}
-            </span>
+            <div class="worker-section-header-actions">
+
+                <a
+                    href="{{ route('trabajadores.permisos.create', $trabajador) }}"
+                    class="worker-section-add"
+                >
+                    + Nuevo permiso
+                </a>
+
+                <span class="worker-section-count">
+                    {{ $trabajador->permisos->count() }}
+                </span>
+
+            </div>
 
         </div>
 
@@ -2222,9 +2338,11 @@
                             <th>Tipo</th>
                             <th>Desde</th>
                             <th>Hasta</th>
+                            <th>Horario</th>
                             <th>Horas</th>
                             <th>Estado</th>
                             <th>Motivo</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
 
@@ -2235,7 +2353,16 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $permiso->tipo }}</strong>
+
+                                    <strong>
+                                        {{ $permiso->tipo === 'dia_completo'
+                                            ? 'Día completo'
+                                            : ($permiso->tipo === 'horas'
+                                                ? 'Por horas'
+                                                : $permiso->tipo)
+                                        }}
+                                    </strong>
+
                                 </td>
 
                                 <td>
@@ -2252,16 +2379,129 @@
                                     }}
                                 </td>
 
-                                <td>{{ $permiso->horas ?? '—' }}</td>
+                                <td>
+
+                                    @if(
+                                        $permiso->tipo === 'horas'
+                                        && $permiso->hora_inicio
+                                        && $permiso->hora_termino
+                                    )
+
+                                        {{ substr($permiso->hora_inicio, 0, 5) }}
+                                        -
+                                        {{ substr($permiso->hora_termino, 0, 5) }}
+
+                                    @else
+
+                                        —
+
+                                    @endif
+
+                                </td>
 
                                 <td>
-                                    <span class="worker-badge">
-                                        {{ $permiso->estado }}
-                                    </span>
+
+                                    @if($permiso->cantidad_horas !== null)
+
+                                        {{ rtrim(
+                                            rtrim(
+                                                number_format(
+                                                    (float) $permiso->cantidad_horas,
+                                                    2,
+                                                    '.',
+                                                    ''
+                                                ),
+                                                '0'
+                                            ),
+                                            '.'
+                                        ) }}
+
+                                    @else
+
+                                        —
+
+                                    @endif
+
+                                </td>
+
+                                <td>
+
+                                    @if($permiso->estado === 'justificado')
+
+                                        <span class="worker-badge worker-badge-success">
+                                            Justificado
+                                        </span>
+
+                                    @elseif($permiso->estado === 'injustificado')
+
+                                        <span class="worker-badge worker-badge-danger">
+                                            Injustificado
+                                        </span>
+
+                                    @elseif($permiso->estado === 'pendiente')
+
+                                        <span class="worker-badge worker-badge-warning">
+                                            Pendiente
+                                        </span>
+
+                                    @else
+
+                                        <span class="worker-badge">
+                                            {{ $permiso->estado }}
+                                        </span>
+
+                                    @endif
+
                                 </td>
 
                                 <td>
                                     {{ $permiso->motivo ?: 'Sin registro' }}
+                                </td>
+
+                                <td>
+
+                                    <div class="worker-action-list">
+
+                                        <a
+                                            href="{{ route(
+                                                'trabajadores.permisos.edit',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'permiso' => $permiso,
+                                                ]
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            action="{{ route(
+                                                'trabajadores.permisos.destroy',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'permiso' => $permiso,
+                                                ]
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar este permiso? Esta acción no se puede deshacer.');"
+                                            style="display:inline;"
+                                        >
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="worker-action worker-action-danger"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
 
                             </tr>
@@ -2297,7 +2537,7 @@
     </section>
 
 
-    {{-- FALTAS --}}
+       {{-- FALTAS --}}
 
     <section class="worker-section">
 
@@ -2310,14 +2550,25 @@
                 </h2>
 
                 <p class="worker-section-description">
-                    Registro de faltas, estados y sanciones.
+                    Registro de faltas, estados y sanciones del trabajador.
                 </p>
 
             </div>
 
-            <span class="worker-section-count">
-                {{ $trabajador->faltas->count() }}
-            </span>
+            <div class="worker-section-header-actions">
+
+                <a
+                    href="{{ route('trabajadores.faltas.create', $trabajador) }}"
+                    class="worker-section-add"
+                >
+                    + Nueva falta
+                </a>
+
+                <span class="worker-section-count">
+                    {{ $trabajador->faltas->count() }}
+                </span>
+
+            </div>
 
         </div>
 
@@ -2335,6 +2586,8 @@
                             <th>Descripción</th>
                             <th>Estado</th>
                             <th>Sanción</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
 
@@ -2345,24 +2598,112 @@
                             <tr>
 
                                 <td>
-                                    {{ $falta->fecha
-                                        ? $falta->fecha->format('d/m/Y')
-                                        : '—'
-                                    }}
+
+                                    <strong>
+                                        {{ $falta->fecha
+                                            ? $falta->fecha->format('d/m/Y')
+                                            : '—'
+                                        }}
+                                    </strong>
+
                                 </td>
 
-                                <td>{{ $falta->tipo }}</td>
-
-                                <td>{{ $falta->descripcion ?: '—' }}</td>
+                                <td>
+                                    {{ $falta->tipo ?: 'Sin registro' }}
+                                </td>
 
                                 <td>
-                                    <span class="worker-badge">
-                                        {{ $falta->estado }}
-                                    </span>
+                                    {{ $falta->descripcion ?: '—' }}
+                                </td>
+
+                                <td>
+
+                                    @if($falta->estado === 'cerrada')
+
+                                        <span class="worker-badge worker-badge-success">
+                                            Cerrada
+                                        </span>
+
+                                    @elseif($falta->estado === 'sancionada')
+
+                                        <span class="worker-badge worker-badge-danger">
+                                            Sancionada
+                                        </span>
+
+                                    @elseif($falta->estado === 'pendiente')
+
+                                        <span class="worker-badge worker-badge-warning">
+                                            Pendiente
+                                        </span>
+
+                                    @elseif($falta->estado === 'registrada')
+
+                                        <span class="worker-badge">
+                                            Registrada
+                                        </span>
+
+                                    @else
+
+                                        <span class="worker-badge">
+                                            {{ $falta->estado }}
+                                        </span>
+
+                                    @endif
+
                                 </td>
 
                                 <td>
                                     {{ $falta->sancion ?: 'Sin sanción' }}
+                                </td>
+
+                                <td>
+                                    {{ $falta->observaciones ?: '—' }}
+                                </td>
+
+                                <td>
+
+                                    <div class="worker-action-list">
+
+                                        <a
+                                            href="{{ route(
+                                                'trabajadores.faltas.edit',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'falta' => $falta,
+                                                ]
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            action="{{ route(
+                                                'trabajadores.faltas.destroy',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'falta' => $falta,
+                                                ]
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar esta falta? Esta acción no se puede deshacer.');"
+                                            style="display:inline;"
+                                        >
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="worker-action worker-action-danger"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
 
                             </tr>
@@ -2388,7 +2729,7 @@
                 </h3>
 
                 <p class="worker-empty-text">
-                    Las faltas y sus eventuales sanciones quedarán registradas en esta sección.
+                    Las faltas, sanciones y su estado quedarán registradas en esta sección.
                 </p>
 
             </div>
@@ -2398,7 +2739,7 @@
     </section>
 
 
-    {{-- CUADRATURAS --}}
+       {{-- CUADRATURAS --}}
 
     <section class="worker-section">
 
@@ -2411,14 +2752,25 @@
                 </h2>
 
                 <p class="worker-section-description">
-                    Resumen de horas, ingresos, gastos y saldos por operación.
+                    Totales asociados al trabajador y a las operaciones.
                 </p>
 
             </div>
 
-            <span class="worker-section-count">
-                {{ $trabajador->cuadraturas->count() }}
-            </span>
+            <div class="worker-section-header-actions">
+
+                <a
+                    href="{{ route('trabajadores.cuadraturas.create', $trabajador) }}"
+                    class="worker-section-add"
+                >
+                    + Nueva cuadratura
+                </a>
+
+                <span class="worker-section-count">
+                    {{ $trabajador->cuadraturas->count() }}
+                </span>
+
+            </div>
 
         </div>
 
@@ -2433,11 +2785,16 @@
                         <tr>
                             <th>Operación</th>
                             <th>Período</th>
+                            <th>Fecha</th>
                             <th>Horas</th>
-                            <th>Gastos</th>
+                            <th>Depositado</th>
+                            <th>Gastos facturados</th>
+                            <th>Con boleta</th>
+                            <th>Sin comprobante</th>
                             <th>Saldo a favor</th>
                             <th>Saldo en contra</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
 
@@ -2450,19 +2807,41 @@
                                 <td>
                                     <strong>
                                         {{ $cuadratura->operacion
-                                            ? $cuadratura->operacion->numero_operacion
+                                            ? ($cuadratura->operacion->numero_operacion ?? 'Operación #' . $cuadratura->operacion->id)
                                             : '—'
                                         }}
                                     </strong>
                                 </td>
 
-                                <td>{{ $cuadratura->periodo }}</td>
+                                <td>
+                                    {{ $cuadratura->periodo }}
+                                </td>
 
-                                <td>{{ $cuadratura->total_horas }}</td>
+                                <td>
+                                    {{ $cuadratura->fecha
+                                        ? $cuadratura->fecha->format('d/m/Y')
+                                        : '—'
+                                    }}
+                                </td>
+
+                                <td>
+                                    {{ rtrim(
+                                        rtrim(
+                                            number_format(
+                                                (float) $cuadratura->total_horas,
+                                                2,
+                                                '.',
+                                                ''
+                                            ),
+                                            '0'
+                                        ),
+                                        '.'
+                                    ) }}
+                                </td>
 
                                 <td>
                                     ${{ number_format(
-                                        (float) $cuadratura->total_gastos,
+                                        (float) $cuadratura->dinero_depositado,
                                         0,
                                         ',',
                                         '.'
@@ -2471,7 +2850,7 @@
 
                                 <td>
                                     ${{ number_format(
-                                        (float) $cuadratura->saldo_a_favor,
+                                        (float) $cuadratura->gastos_facturados,
                                         0,
                                         ',',
                                         '.'
@@ -2480,7 +2859,7 @@
 
                                 <td>
                                     ${{ number_format(
-                                        (float) $cuadratura->saldo_en_contra,
+                                        (float) $cuadratura->gastos_con_boleta,
                                         0,
                                         ',',
                                         '.'
@@ -2488,9 +2867,130 @@
                                 </td>
 
                                 <td>
-                                    <span class="worker-badge">
-                                        {{ $cuadratura->estado }}
-                                    </span>
+                                    ${{ number_format(
+                                        (float) $cuadratura->gastos_sin_comprobante,
+                                        0,
+                                        ',',
+                                        '.'
+                                    ) }}
+                                </td>
+
+                                <td>
+
+                                    @if((float) $cuadratura->saldo_a_favor > 0)
+
+                                        <span class="worker-badge worker-badge-success">
+                                            ${{ number_format(
+                                                (float) $cuadratura->saldo_a_favor,
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                        </span>
+
+                                    @else
+
+                                        $0
+
+                                    @endif
+
+                                </td>
+
+                                <td>
+
+                                    @if((float) $cuadratura->saldo_en_contra > 0)
+
+                                        <span class="worker-badge worker-badge-danger">
+                                            ${{ number_format(
+                                                (float) $cuadratura->saldo_en_contra,
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                        </span>
+
+                                    @else
+
+                                        $0
+
+                                    @endif
+
+                                </td>
+
+                                <td>
+
+                                    @if($cuadratura->estado === 'cerrada')
+
+                                        <span class="worker-badge worker-badge-success">
+                                            Cerrada
+                                        </span>
+
+                                    @elseif($cuadratura->estado === 'cuadrada')
+
+                                        <span class="worker-badge worker-badge-success">
+                                            Cuadrada
+                                        </span>
+
+                                    @elseif($cuadratura->estado === 'pendiente')
+
+                                        <span class="worker-badge worker-badge-warning">
+                                            Pendiente
+                                        </span>
+
+                                    @else
+
+                                        <span class="worker-badge">
+                                            {{ $cuadratura->estado }}
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+                                <td>
+
+                                    <div class="worker-action-list">
+
+                                        <a
+                                            href="{{ route(
+                                                'trabajadores.cuadraturas.edit',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'cuadratura' => $cuadratura,
+                                                ]
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        <form
+                                            action="{{ route(
+                                                'trabajadores.cuadraturas.destroy',
+                                                [
+                                                    'trabajador' => $trabajador,
+                                                    'cuadratura' => $cuadratura,
+                                                ]
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar esta cuadratura? Esta acción no se puede deshacer.');"
+                                            style="display:inline;"
+                                        >
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="worker-action worker-action-danger"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
 
                             </tr>
@@ -2516,7 +3016,7 @@
                 </h3>
 
                 <p class="worker-empty-text">
-                    Las cuadraturas se relacionarán con las operaciones y permitirán controlar ingresos, gastos y saldos a favor o en contra.
+                    Aquí se registrarán los totales de cada cuadratura asociados al trabajador y a una operación.
                 </p>
 
             </div>
@@ -2524,7 +3024,6 @@
         @endif
 
     </section>
-
 
     {{-- DOCUMENTOS --}}
 

@@ -1,19 +1,23 @@
 <?php
 
+use App\Http\Controllers\AusenciaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\CuadraturaController;
 use App\Http\Controllers\DetalleVacacionController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EmpresaFactoringController;
 use App\Http\Controllers\EntregaController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\FactoringController;
+use App\Http\Controllers\FaltaController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ModificacionContratoController;
 use App\Http\Controllers\MoraController;
 use App\Http\Controllers\NotaCreditoProveedorController;
 use App\Http\Controllers\OperacionController;
+use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\ProveedorBodegaController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\ProveedorEjecutivoController;
@@ -267,6 +271,126 @@ Route::delete(
     'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}',
     [DetalleVacacionController::class, 'destroy']
 )->name('trabajadores.vacaciones.detalles.destroy');
+
+
+// =========================================================
+// PERMISOS
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/permisos/create',
+    [PermisoController::class, 'create']
+)->name('trabajadores.permisos.create');
+
+Route::post(
+    'trabajadores/{trabajador}/permisos',
+    [PermisoController::class, 'store']
+)->name('trabajadores.permisos.store');
+
+Route::get(
+    'trabajadores/{trabajador}/permisos/{permiso}/edit',
+    [PermisoController::class, 'edit']
+)->name('trabajadores.permisos.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/permisos/{permiso}',
+    [PermisoController::class, 'update']
+)->name('trabajadores.permisos.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/permisos/{permiso}',
+    [PermisoController::class, 'destroy']
+)->name('trabajadores.permisos.destroy');
+
+
+// =========================================================
+// AUSENCIAS
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/ausencias/create',
+    [AusenciaController::class, 'create']
+)->name('trabajadores.ausencias.create');
+
+Route::post(
+    'trabajadores/{trabajador}/ausencias',
+    [AusenciaController::class, 'store']
+)->name('trabajadores.ausencias.store');
+
+Route::get(
+    'trabajadores/{trabajador}/ausencias/{ausencia}/edit',
+    [AusenciaController::class, 'edit']
+)->name('trabajadores.ausencias.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/ausencias/{ausencia}',
+    [AusenciaController::class, 'update']
+)->name('trabajadores.ausencias.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/ausencias/{ausencia}',
+    [AusenciaController::class, 'destroy']
+)->name('trabajadores.ausencias.destroy');
+
+
+// =========================================================
+// FALTAS
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/faltas/create',
+    [FaltaController::class, 'create']
+)->name('trabajadores.faltas.create');
+
+Route::post(
+    'trabajadores/{trabajador}/faltas',
+    [FaltaController::class, 'store']
+)->name('trabajadores.faltas.store');
+
+Route::get(
+    'trabajadores/{trabajador}/faltas/{falta}/edit',
+    [FaltaController::class, 'edit']
+)->name('trabajadores.faltas.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/faltas/{falta}',
+    [FaltaController::class, 'update']
+)->name('trabajadores.faltas.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/faltas/{falta}',
+    [FaltaController::class, 'destroy']
+)->name('trabajadores.faltas.destroy');
+
+
+// =========================================================
+// CUADRATURAS
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/cuadraturas/create',
+    [CuadraturaController::class, 'create']
+)->name('trabajadores.cuadraturas.create');
+
+Route::post(
+    'trabajadores/{trabajador}/cuadraturas',
+    [CuadraturaController::class, 'store']
+)->name('trabajadores.cuadraturas.store');
+
+Route::get(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}/edit',
+    [CuadraturaController::class, 'edit']
+)->name('trabajadores.cuadraturas.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
+    [CuadraturaController::class, 'update']
+)->name('trabajadores.cuadraturas.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
+    [CuadraturaController::class, 'destroy']
+)->name('trabajadores.cuadraturas.destroy');
 
 
 // =========================================================

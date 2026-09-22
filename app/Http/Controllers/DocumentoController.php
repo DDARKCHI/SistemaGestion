@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documento;
 use App\Models\Gasto;
 use App\Models\Operacion;
+use App\Models\Trabajador;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,9 +13,6 @@ use Illuminate\View\View;
 
 class DocumentoController extends Controller
 {
-    /**
-     * Mostrar todos los documentos.
-     */
     public function index(): View
     {
         $documentos = Documento::with('documentable')
@@ -24,9 +22,6 @@ class DocumentoController extends Controller
         return view('documentos.index', compact('documentos'));
     }
 
-    /**
-     * Mostrar formulario para subir un documento.
-     */
     public function create(): View
     {
         $operaciones = Operacion::with('cliente')
@@ -42,24 +37,26 @@ class DocumentoController extends Controller
             ->orderByDesc('id')
             ->get();
 
+        $trabajadores = Trabajador::orderBy('nombre')
+            ->orderBy('id')
+            ->get();
+
         return view(
             'documentos.create',
             compact(
                 'operaciones',
-                'gastos'
+                'gastos',
+                'trabajadores'
             )
         );
     }
 
-    /**
-     * Guardar un nuevo documento.
-     */
     public function store(Request $request): RedirectResponse
     {
         $datos = $request->validate([
             'registro_tipo' => [
                 'required',
-                'in:operacion,gasto',
+                'in:operacion,gasto,trabajador',
             ],
 
             'registro_id' => [
@@ -140,6 +137,15 @@ class DocumentoController extends Controller
                 $datos['observaciones'] ?? null,
         ]);
 
+        if ($modelo instanceof Trabajador) {
+            return redirect()
+                ->route('trabajadores.show', $modelo)
+                ->with(
+                    'success',
+                    'Documento del trabajador subido correctamente.'
+                );
+        }
+
         return redirect()
             ->route('documentos.index')
             ->with(
@@ -148,9 +154,6 @@ class DocumentoController extends Controller
             );
     }
 
-    /**
-     * Mostrar información del documento.
-     */
     public function show(Documento $documento): View
     {
         $documento->load([
@@ -163,9 +166,6 @@ class DocumentoController extends Controller
         );
     }
 
-    /**
-     * Mostrar formulario de edición.
-     */
     public function edit(Documento $documento): View
     {
         $operaciones = Operacion::with('cliente')
@@ -181,6 +181,10 @@ class DocumentoController extends Controller
             ->orderByDesc('id')
             ->get();
 
+        $trabajadores = Trabajador::orderBy('nombre')
+            ->orderBy('id')
+            ->get();
+
         $documento->load([
             'documentable',
         ]);
@@ -190,14 +194,12 @@ class DocumentoController extends Controller
             compact(
                 'documento',
                 'operaciones',
-                'gastos'
+                'gastos',
+                'trabajadores'
             )
         );
     }
 
-    /**
-     * Actualizar información del documento.
-     */
     public function update(
         Request $request,
         Documento $documento
@@ -205,7 +207,7 @@ class DocumentoController extends Controller
         $datos = $request->validate([
             'registro_tipo' => [
                 'required',
-                'in:operacion,gasto',
+                'in:operacion,gasto,trabajador',
             ],
 
             'registro_id' => [
@@ -266,9 +268,7 @@ class DocumentoController extends Controller
             $datos['observaciones'] ?? null;
 
         if ($request->hasFile('archivo')) {
-
-            $archivo =
-                $request->file('archivo');
+            $archivo = $request->file('archivo');
 
             if (
                 $documento->ruta &&
@@ -301,6 +301,15 @@ class DocumentoController extends Controller
 
         $documento->save();
 
+        if ($modelo instanceof Trabajador) {
+            return redirect()
+                ->route('trabajadores.show', $modelo)
+                ->with(
+                    'success',
+                    'Documento del trabajador actualizado correctamente.'
+                );
+        }
+
         return redirect()
             ->route(
                 'documentos.show',
@@ -312,12 +321,11 @@ class DocumentoController extends Controller
             );
     }
 
-    /**
-     * Eliminar documento y archivo físico.
-     */
     public function destroy(
         Documento $documento
     ): RedirectResponse {
+        $documentable = $documento->documentable;
+
         if (
             $documento->ruta &&
             Storage::disk('public')->exists(
@@ -331,6 +339,15 @@ class DocumentoController extends Controller
 
         $documento->delete();
 
+        if ($documentable instanceof Trabajador) {
+            return redirect()
+                ->route('trabajadores.show', $documentable)
+                ->with(
+                    'success',
+                    'Documento del trabajador eliminado correctamente.'
+                );
+        }
+
         return redirect()
             ->route('documentos.index')
             ->with(
@@ -339,21 +356,19 @@ class DocumentoController extends Controller
             );
     }
 
-    /**
-     * Obtener el modelo asociado según el tipo
-     * de registro seleccionado.
-     */
     private function obtenerModeloAsociado(
         string $tipo,
         int $id
     ): ?object {
         return match ($tipo) {
-
             'operacion' =>
                 Operacion::find($id),
 
             'gasto' =>
                 Gasto::find($id),
+
+            'trabajador' =>
+                Trabajador::find($id),
 
             default =>
                 null,

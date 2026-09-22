@@ -16,38 +16,34 @@ class Cuadratura extends Model
         'trabajador_id',
         'operacion_id',
         'periodo',
+        'fecha',
         'total_horas',
-        'total_ingresos',
-        'total_descuentos',
-        'total_gastos',
+        'dinero_depositado',
+        'gastos_facturados',
+        'gastos_con_boleta',
+        'gastos_sin_comprobante',
         'saldo_a_favor',
         'saldo_en_contra',
-        'total_liquidado',
         'estado',
         'observaciones',
     ];
 
     protected $casts = [
+        'fecha' => 'date',
         'total_horas' => 'decimal:2',
-        'total_ingresos' => 'decimal:2',
-        'total_descuentos' => 'decimal:2',
-        'total_gastos' => 'decimal:2',
+        'dinero_depositado' => 'decimal:2',
+        'gastos_facturados' => 'decimal:2',
+        'gastos_con_boleta' => 'decimal:2',
+        'gastos_sin_comprobante' => 'decimal:2',
         'saldo_a_favor' => 'decimal:2',
         'saldo_en_contra' => 'decimal:2',
-        'total_liquidado' => 'decimal:2',
     ];
 
-    /**
-     * Trabajador asociado a la cuadratura.
-     */
     public function trabajador(): BelongsTo
     {
         return $this->belongsTo(Trabajador::class);
     }
 
-    /**
-     * Operación asociada a la cuadratura.
-     */
     public function operacion(): BelongsTo
     {
         return $this->belongsTo(Operacion::class);
