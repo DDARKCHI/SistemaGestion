@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Ausencia;
 use App\Models\Trabajador;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 class AusenciaController extends Controller
 {
     public function create(Trabajador $trabajador): View
     {
-        return view('ausencias.create', compact('trabajador'));
+        return view(
+            'ausencias.create',
+            compact('trabajador')
+        );
     }
 
     public function store(
@@ -87,12 +93,23 @@ class AusenciaController extends Controller
             ]
         );
 
-        $datos['trabajador_id'] = $trabajador->id;
+        $datos['trabajador_id'] =
+            $trabajador->id;
 
-        Ausencia::create($datos);
+        $ausencia =
+            Ausencia::create($datos);
+
+        $this->enviarNotificacion(
+            $trabajador,
+            $ausencia,
+            'registrada'
+        );
 
         return redirect()
-            ->route('trabajadores.show', $trabajador)
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
             ->with(
                 'success',
                 'Ausencia registrada correctamente.'
@@ -198,8 +215,19 @@ class AusenciaController extends Controller
 
         $ausencia->update($datos);
 
+        $ausencia->refresh();
+
+        $this->enviarNotificacion(
+            $trabajador,
+            $ausencia,
+            'actualizada'
+        );
+
         return redirect()
-            ->route('trabajadores.show', $trabajador)
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
             ->with(
                 'success',
                 'Ausencia actualizada correctamente.'
@@ -219,7 +247,10 @@ class AusenciaController extends Controller
         $ausencia->delete();
 
         return redirect()
-            ->route('trabajadores.show', $trabajador)
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
             ->with(
                 'success',
                 'Ausencia eliminada correctamente.'
@@ -236,5 +267,95 @@ class AusenciaController extends Controller
             (int) $trabajador->id,
             404
         );
+    }
+
+    private function enviarNotificacion(
+        Trabajador $trabajador,
+        Ausencia $ausencia,
+        string $accion
+    ): void {
+
+        if (!$trabajador->correo) {
+            return;
+        }
+
+        try {
+            $estado = match ($ausencia->estado) {
+                'justificada' =>
+                    'Justificada',
+
+                'injustificada' =>
+                    'Injustificada',
+
+                default =>
+                    'Pendiente',
+            };
+
+            $fechaInicio =
+                $ausencia->fecha_inicio
+                    ? Carbon::parse(
+                        $ausencia->fecha_inicio
+                    )->format('d/m/Y')
+                    : 'Sin fecha';
+
+            $fechaTermino =
+                $ausencia->fecha_termino
+                    ? Carbon::parse(
+                        $ausencia->fecha_termino
+                    )->format('d/m/Y')
+                    : $fechaInicio;
+
+            $accionMensaje =
+                $accion === 'registrada'
+                    ? 'registrado'
+                    : 'actualizado';
+
+            $mensaje =
+                "Hola {$trabajador->nombre},\n\n" .
+                "Se ha {$accionMensaje} una ausencia asociada a tu registro.\n\n" .
+                "Desde: {$fechaInicio}\n" .
+                "Hasta: {$fechaTermino}\n" .
+                "Días: {$ausencia->dias}\n" .
+                "Estado: {$estado}\n";
+
+            if ($ausencia->tipo) {
+                $mensaje .=
+                    "Tipo: {$ausencia->tipo}\n";
+            }
+
+            if ($ausencia->justificacion) {
+                $mensaje .=
+                    "Justificación: {$ausencia->justificacion}\n";
+            }
+
+            if ($ausencia->observaciones) {
+                $mensaje .=
+                    "Observaciones: {$ausencia->observaciones}\n";
+            }
+
+            $mensaje .=
+                "\nEste correo fue generado automáticamente por el sistema.";
+
+            Mail::raw(
+                $mensaje,
+                function ($mail) use (
+                    $trabajador,
+                    $accion
+                ) {
+                    $mail->to(
+                        $trabajador->correo,
+                        $trabajador->nombre
+                    );
+
+                    $mail->subject(
+                        'Ausencia ' .
+                        $accion .
+                        ' - Sistema de Gestión'
+                    );
+                }
+            );
+        } catch (Throwable $e) {
+            report($e);
+        }
     }
 }
