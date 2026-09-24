@@ -6,7 +6,9 @@ use App\Models\Permiso;
 use App\Models\Trabajador;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 class PermisoController extends Controller
 {
@@ -143,7 +145,13 @@ class PermisoController extends Controller
         $datos['trabajador_id'] =
             $trabajador->id;
 
-        Permiso::create($datos);
+        $permiso = Permiso::create($datos);
+
+        $this->enviarNotificacion(
+            $trabajador,
+            $permiso,
+            'registrado'
+        );
 
         return redirect()
             ->route(
@@ -303,6 +311,14 @@ class PermisoController extends Controller
 
         $permiso->update($datos);
 
+        $permiso->refresh();
+
+        $this->enviarNotificacion(
+            $trabajador,
+            $permiso,
+            'actualizado'
+        );
+
         return redirect()
             ->route(
                 'trabajadores.show',
@@ -325,6 +341,7 @@ class PermisoController extends Controller
         );
 
         if ($permiso->documentos()->exists()) {
+
             return redirect()
                 ->route(
                     'trabajadores.show',
@@ -359,5 +376,104 @@ class PermisoController extends Controller
             (int) $trabajador->id,
             404
         );
+    }
+
+    private function enviarNotificacion(
+        Trabajador $trabajador,
+        Permiso $permiso,
+        string $accion
+    ): void {
+
+        if (!$trabajador->correo) {
+            return;
+        }
+
+        try {
+
+            $tipo =
+                $permiso->tipo === 'dia_completo'
+                    ? 'Día completo'
+                    : 'Por horas';
+
+            $estado = match ($permiso->estado) {
+                'justificado' => 'Justificado',
+                'injustificado' => 'Injustificado',
+                default => 'Pendiente',
+            };
+
+            $fechaInicio =
+                $permiso->fecha_inicio
+                    ? $permiso->fecha_inicio->format('d/m/Y')
+                    : 'Sin fecha';
+
+            $fechaTermino =
+                $permiso->fecha_termino
+                    ? $permiso->fecha_termino->format('d/m/Y')
+                    : $fechaInicio;
+
+            $mensaje =
+                "Hola {$trabajador->nombre},\n\n" .
+                "Se ha {$accion} un permiso asociado a tu registro.\n\n" .
+                "Tipo: {$tipo}\n" .
+                "Desde: {$fechaInicio}\n" .
+                "Hasta: {$fechaTermino}\n";
+
+            if ($permiso->tipo === 'horas') {
+
+                $horaInicio =
+                    $permiso->hora_inicio
+                        ? substr($permiso->hora_inicio, 0, 5)
+                        : '—';
+
+                $horaTermino =
+                    $permiso->hora_termino
+                        ? substr($permiso->hora_termino, 0, 5)
+                        : '—';
+
+                $mensaje .=
+                    "Horario: {$horaInicio} - {$horaTermino}\n" .
+                    "Cantidad de horas: {$permiso->cantidad_horas}\n";
+            }
+
+            $mensaje .=
+                "Estado: {$estado}\n";
+
+            if ($permiso->motivo) {
+                $mensaje .=
+                    "Motivo: {$permiso->motivo}\n";
+            }
+
+            if ($permiso->justificacion) {
+                $mensaje .=
+                    "Justificación: {$permiso->justificacion}\n";
+            }
+
+            $mensaje .=
+                "\nEste correo fue generado automáticamente por el sistema.";
+
+            Mail::raw(
+                $mensaje,
+                function ($mail) use (
+                    $trabajador,
+                    $accion
+                ) {
+
+                    $mail->to(
+                        $trabajador->correo,
+                        $trabajador->nombre
+                    );
+
+                    $mail->subject(
+                        'Permiso ' .
+                        $accion .
+                        ' - Sistema de Gestión'
+                    );
+                }
+            );
+
+        } catch (Throwable $e) {
+
+            report($e);
+        }
     }
 }
