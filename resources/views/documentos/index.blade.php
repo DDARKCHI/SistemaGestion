@@ -793,17 +793,28 @@
                                     }
 
                                     elseif (
-                                        $documento->documentable_type
-                                        === \App\Models\Trabajador::class
-                                    ) {
+    $documento->documentable_type
+    === \App\Models\Trabajador::class
+) {
 
-                                        $tipoRegistro = 'Trabajador';
+    $tipoRegistro = 'Trabajador';
 
-                                        $nombreRegistro =
-                                            $registro->nombre
-                                            ?? 'Sin nombre';
+    $nombreRegistro =
+        $registro->nombre
+        ?? 'Sin nombre';
 
-                                    }
+    $registroSecundario =
+        $registro->rut
+            ? 'RUT: ' . $registro->rut
+            : null;
+
+    $registroUrl =
+        route(
+            'trabajadores.show',
+            $registro
+        );
+
+}
 
                                     elseif (
                                         $documento->documentable_type

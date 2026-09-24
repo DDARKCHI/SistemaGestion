@@ -3025,7 +3025,7 @@
 
     </section>
 
-    {{-- DOCUMENTOS --}}
+       {{-- DOCUMENTOS --}}
 
     <section class="worker-section">
 
@@ -3043,9 +3043,24 @@
 
             </div>
 
-            <span class="worker-section-count">
-                {{ $trabajador->documentos->count() }}
-            </span>
+
+            <div class="worker-section-header-actions">
+
+                <a
+                    href="{{ route('documentos.create', [
+                        'registro_tipo' => 'trabajador',
+                        'registro_id' => $trabajador->id,
+                    ]) }}"
+                    class="worker-section-add"
+                >
+                    + Subir documento
+                </a>
+
+                <span class="worker-section-count">
+                    {{ $trabajador->documentos->count() }}
+                </span>
+
+            </div>
 
         </div>
 
@@ -3057,13 +3072,18 @@
                 <table class="worker-table">
 
                     <thead>
+
                         <tr>
                             <th>Documento</th>
                             <th>Tipo</th>
-                            <th>Archivo</th>
+                            <th>Formato</th>
                             <th>Descripción</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
                         </tr>
+
                     </thead>
+
 
                     <tbody>
 
@@ -3072,15 +3092,136 @@
                             <tr>
 
                                 <td>
-                                    <strong>{{ $documento->nombre }}</strong>
+
+                                    <strong>
+                                        {{ $documento->nombre }}
+                                    </strong>
+
                                 </td>
 
-                                <td>{{ $documento->tipo ?: '—' }}</td>
 
-                                <td>{{ $documento->mime_type ?: '—' }}</td>
+                                <td>
+
+                                    <span class="worker-badge">
+
+                                        {{ $documento->tipo
+                                            ? ucfirst(str_replace('_', ' ', $documento->tipo))
+                                            : 'Sin tipo'
+                                        }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ $documento->mime_type ?: '—' }}
+
+                                    @if($documento->tamano)
+
+                                        <div
+                                            style="
+                                                margin-top: 3px;
+                                                color: #98a2b3;
+                                                font-size: 9px;
+                                            "
+                                        >
+                                            {{ number_format(
+                                                $documento->tamano / 1024,
+                                                1,
+                                                ',',
+                                                '.'
+                                            ) }}
+                                            KB
+                                        </div>
+
+                                    @endif
+
+                                </td>
+
 
                                 <td>
                                     {{ $documento->descripcion ?: 'Sin descripción' }}
+                                </td>
+
+
+                                <td>
+
+                                    {{ $documento->created_at
+                                        ? $documento->created_at->format('d/m/Y')
+                                        : '—'
+                                    }}
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="worker-action-list">
+
+                                        <a
+                                            href="{{ route(
+                                                'documentos.show',
+                                                $documento
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Ver
+                                        </a>
+
+
+                                        @if($documento->ruta)
+
+                                            <a
+                                                href="{{ asset(
+                                                    'storage/' . $documento->ruta
+                                                ) }}"
+                                                target="_blank"
+                                                class="worker-action"
+                                            >
+                                                Abrir archivo
+                                            </a>
+
+                                        @endif
+
+
+                                        <a
+                                            href="{{ route(
+                                                'documentos.edit',
+                                                $documento
+                                            ) }}"
+                                            class="worker-action"
+                                        >
+                                            Editar
+                                        </a>
+
+
+                                        <form
+                                            action="{{ route(
+                                                'documentos.destroy',
+                                                $documento
+                                            ) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.');"
+                                            style="display:inline;"
+                                        >
+
+                                            @csrf
+                                            @method('DELETE')
+
+
+                                            <button
+                                                type="submit"
+                                                class="worker-action worker-action-danger"
+                                            >
+                                                Eliminar
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
 
                             </tr>
@@ -3092,6 +3233,7 @@
                 </table>
 
             </div>
+
 
         @else
 
@@ -3106,7 +3248,7 @@
                 </h3>
 
                 <p class="worker-empty-text">
-                    Aquí podremos almacenar contratos, anexos, liquidaciones firmadas y demás documentación histórica del trabajador.
+                    Aquí se almacenarán los documentos asociados directamente al trabajador.
                 </p>
 
             </div>
