@@ -7,6 +7,7 @@ use App\Models\Trabajador;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -24,7 +25,220 @@ class RemuneracionController extends Controller
         Request $request,
         Trabajador $trabajador
     ): RedirectResponse {
-        $datos = $request->validate(
+
+        $datos = $this->validarDatos($request);
+
+        $datos['trabajador_id'] =
+            $trabajador->id;
+
+        $datos = $this->calcularRemuneracion(
+            $datos
+        );
+
+        $remuneracionExistente =
+            Remuneracion::query()
+                ->where(
+                    'trabajador_id',
+                    $trabajador->id
+                )
+                ->where(
+                    'periodo',
+                    $datos['periodo']
+                )
+                ->exists();
+
+        if ($remuneracionExistente) {
+            throw ValidationException::withMessages([
+                'periodo' =>
+                    'Ya existe una remuneración registrada para este trabajador en el período indicado.',
+            ]);
+        }
+
+        DB::transaction(
+            function () use (
+                $datos,
+                $request
+            ) {
+                $remuneracion =
+                    Remuneracion::create($datos);
+
+                $this->guardarDocumento(
+                    $request,
+                    $remuneracion
+                );
+            }
+        );
+
+        $mensaje =
+            'Remuneración registrada correctamente.';
+
+        if ($request->hasFile('documento')) {
+            $mensaje .=
+                ' El documento quedó asociado a la remuneración.';
+        }
+
+        return redirect()
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
+            ->with(
+                'success',
+                $mensaje
+            );
+    }
+
+    public function edit(
+        Trabajador $trabajador,
+        Remuneracion $remuneracion
+    ): View {
+
+        $this->validarTrabajador(
+            $trabajador,
+            $remuneracion
+        );
+
+        $remuneracion->load('documentos');
+
+        return view(
+            'trabajadores.remuneraciones.edit',
+            compact(
+                'trabajador',
+                'remuneracion'
+            )
+        );
+    }
+
+    public function update(
+        Request $request,
+        Trabajador $trabajador,
+        Remuneracion $remuneracion
+    ): RedirectResponse {
+
+        $this->validarTrabajador(
+            $trabajador,
+            $remuneracion
+        );
+
+        $datos = $this->validarDatos($request);
+
+        $datos['trabajador_id'] =
+            $trabajador->id;
+
+        $datos = $this->calcularRemuneracion(
+            $datos
+        );
+
+        $remuneracionExistente =
+            Remuneracion::query()
+                ->where(
+                    'trabajador_id',
+                    $trabajador->id
+                )
+                ->where(
+                    'periodo',
+                    $datos['periodo']
+                )
+                ->where(
+                    'id',
+                    '!=',
+                    $remuneracion->id
+                )
+                ->exists();
+
+        if ($remuneracionExistente) {
+            throw ValidationException::withMessages([
+                'periodo' =>
+                    'Ya existe otra remuneración registrada para este trabajador en el período indicado.',
+            ]);
+        }
+
+        DB::transaction(
+            function () use (
+                $datos,
+                $request,
+                $remuneracion
+            ) {
+                $remuneracion->update($datos);
+
+                $this->guardarDocumento(
+                    $request,
+                    $remuneracion
+                );
+            }
+        );
+
+        $mensaje =
+            'Remuneración actualizada correctamente.';
+
+        if ($request->hasFile('documento')) {
+            $mensaje .=
+                ' El nuevo documento quedó asociado a la remuneración.';
+        }
+
+        return redirect()
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
+            ->with(
+                'success',
+                $mensaje
+            );
+    }
+
+    public function destroy(
+        Trabajador $trabajador,
+        Remuneracion $remuneracion
+    ): RedirectResponse {
+
+        $this->validarTrabajador(
+            $trabajador,
+            $remuneracion
+        );
+
+        $remuneracion->load('documentos');
+
+        DB::transaction(
+            function () use (
+                $remuneracion
+            ) {
+                foreach (
+                    $remuneracion->documentos
+                    as $documento
+                ) {
+                    if (
+                        $documento->ruta &&
+                        Storage::disk('public')
+                            ->exists($documento->ruta)
+                    ) {
+                        Storage::disk('public')
+                            ->delete($documento->ruta);
+                    }
+
+                    $documento->delete();
+                }
+
+                $remuneracion->delete();
+            }
+        );
+
+        return redirect()
+            ->route(
+                'trabajadores.show',
+                $trabajador
+            )
+            ->with(
+                'success',
+                'Remuneración eliminada correctamente.'
+            );
+    }
+
+    private function validarDatos(
+        Request $request
+    ): array {
+
+        return $request->validate(
             [
                 'periodo' => [
                     'required',
@@ -123,14 +337,11 @@ class RemuneracionController extends Controller
                     'El documento debe ser PDF, imagen, Word o Excel.',
             ]
         );
+    }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Valores por defecto
-        |--------------------------------------------------------------------------
-        */
-
-        $datos['trabajador_id'] = $trabajador->id;
+    private function calcularRemuneracion(
+        array $datos
+    ): array {
 
         $datos['bonificaciones'] =
             $datos['bonificaciones'] ?? 0;
@@ -141,15 +352,17 @@ class RemuneracionController extends Controller
         $datos['monto_pagado'] =
             $datos['monto_pagado'] ?? 0;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Cálculo automático del total líquido
-        |--------------------------------------------------------------------------
-        */
+        $sueldoBase =
+            (float) $datos['sueldo_base'];
 
-        $sueldoBase = (float) $datos['sueldo_base'];
-        $bonificaciones = (float) $datos['bonificaciones'];
-        $descuentos = (float) $datos['descuentos'];
+        $bonificaciones =
+            (float) $datos['bonificaciones'];
+
+        $descuentos =
+            (float) $datos['descuentos'];
+
+        $montoPagado =
+            (float) $datos['monto_pagado'];
 
         $totalLiquido =
             $sueldoBase
@@ -163,15 +376,11 @@ class RemuneracionController extends Controller
             ]);
         }
 
-        $totalLiquido = round($totalLiquido, 2);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cálculo automático del saldo
-        |--------------------------------------------------------------------------
-        */
-
-        $montoPagado = (float) $datos['monto_pagado'];
+        $totalLiquido =
+            round(
+                $totalLiquido,
+                2
+            );
 
         if ($montoPagado > $totalLiquido) {
             throw ValidationException::withMessages([
@@ -182,136 +391,83 @@ class RemuneracionController extends Controller
 
         $saldoAPagar =
             round(
-                $totalLiquido - $montoPagado,
+                $totalLiquido
+                - $montoPagado,
                 2
             );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Estado automático
-        |--------------------------------------------------------------------------
-        */
-
         if ($montoPagado <= 0) {
-
             $estado = 'pendiente';
-
         } elseif ($montoPagado < $totalLiquido) {
-
             $estado = 'parcialmente_pagada';
-
         } else {
-
             $estado = 'pagada';
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Fecha de pago
-        |--------------------------------------------------------------------------
-        |
-        | Si no existe ningún pago, no corresponde registrar una fecha real
-        | de pago.
-        |
-        */
 
         if ($montoPagado <= 0) {
             $datos['fecha_pago'] = null;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Valores calculados
-        |--------------------------------------------------------------------------
-        */
+        $datos['total_liquido'] =
+            $totalLiquido;
 
-        $datos['total_liquido'] = $totalLiquido;
-        $datos['saldo_a_pagar'] = $saldoAPagar;
-        $datos['estado'] = $estado;
+        $datos['saldo_a_pagar'] =
+            $saldoAPagar;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Evitar remuneraciones duplicadas
-        |--------------------------------------------------------------------------
-        */
+        $datos['estado'] =
+            $estado;
 
-        $remuneracionExistente = Remuneracion::query()
-            ->where('trabajador_id', $trabajador->id)
-            ->where('periodo', $datos['periodo'])
-            ->exists();
+        return $datos;
+    }
 
-        if ($remuneracionExistente) {
-            throw ValidationException::withMessages([
-                'periodo' =>
-                    'Ya existe una remuneración registrada para este trabajador en el período indicado.',
-            ]);
+    private function guardarDocumento(
+        Request $request,
+        Remuneracion $remuneracion
+    ): void {
+
+        if (!$request->hasFile('documento')) {
+            return;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Guardar remuneración y documento
-        |--------------------------------------------------------------------------
-        */
+        $archivo =
+            $request->file('documento');
 
-        DB::transaction(function () use (
-            $datos,
-            $request
-        ) {
-            $remuneracion = Remuneracion::create($datos);
-
-            if ($request->hasFile('documento')) {
-
-                $archivo = $request->file('documento');
-
-                $ruta = $archivo->store(
-                    'remuneraciones',
-                    'public'
-                );
-
-                $remuneracion->documentos()->create([
-                    'nombre' =>
-                        $archivo->getClientOriginalName(),
-
-                    'tipo' =>
-                        'Liquidación / documento de remuneración',
-
-                    'ruta' =>
-                        $ruta,
-
-                    'mime_type' =>
-                        $archivo->getClientMimeType(),
-
-                    'tamano' =>
-                        $archivo->getSize(),
-
-                    'descripcion' =>
-                        'Documento asociado a la remuneración mensual.',
-                ]);
-            }
-        });
-
-        /*
-        |--------------------------------------------------------------------------
-        | Mensaje final
-        |--------------------------------------------------------------------------
-        */
-
-        $mensaje =
-            'Remuneración registrada correctamente.';
-
-        if ($request->hasFile('documento')) {
-            $mensaje .=
-                ' El documento quedó asociado a la remuneración.';
-        }
-
-        return redirect()
-            ->route(
-                'trabajadores.show',
-                $trabajador
-            )
-            ->with(
-                'success',
-                $mensaje
+        $ruta =
+            $archivo->store(
+                'remuneraciones',
+                'public'
             );
+
+        $remuneracion->documentos()->create([
+            'nombre' =>
+                $archivo->getClientOriginalName(),
+
+            'tipo' =>
+                'Liquidación / documento de remuneración',
+
+            'ruta' =>
+                $ruta,
+
+            'mime_type' =>
+                $archivo->getClientMimeType(),
+
+            'tamano' =>
+                $archivo->getSize(),
+
+            'descripcion' =>
+                'Documento asociado a la remuneración mensual.',
+        ]);
+    }
+
+    private function validarTrabajador(
+        Trabajador $trabajador,
+        Remuneracion $remuneracion
+    ): void {
+
+        abort_unless(
+            (int) $remuneracion->trabajador_id ===
+            (int) $trabajador->id,
+            404
+        );
     }
 }

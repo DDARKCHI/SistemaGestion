@@ -1455,236 +1455,317 @@
     </section>
 
 
-    {{-- REMUNERACIONES --}}
+   {{-- REMUNERACIONES --}}
 
-    <section class="worker-section">
+<section class="worker-section">
 
-        <div class="worker-section-header">
+    <div class="worker-section-header">
 
-            <div class="worker-section-heading">
+        <div class="worker-section-heading">
 
-                <h2 class="worker-section-title">
-                    Remuneraciones
-                </h2>
+            <h2 class="worker-section-title">
+                Remuneraciones
+            </h2>
 
-                <p class="worker-section-description">
-                    Historial mensual de remuneraciones y pagos.
-                </p>
-
-            </div>
-
-            <div class="worker-section-header-actions">
-
-                <a
-                    href="{{ route('trabajadores.remuneraciones.create', $trabajador) }}"
-                    class="worker-section-add"
-                >
-                    + Nueva remuneración
-                </a>
-
-                <span class="worker-section-count">
-                    {{ $trabajador->remuneraciones->count() }}
-                </span>
-
-            </div>
+            <p class="worker-section-description">
+                Historial mensual de remuneraciones y pagos.
+            </p>
 
         </div>
 
+        <div class="worker-section-header-actions">
 
-        @if($trabajador->remuneraciones->count())
+            <a
+                href="{{ route(
+                    'trabajadores.remuneraciones.create',
+                    $trabajador
+                ) }}"
+                class="worker-section-add"
+            >
+                + Nueva remuneración
+            </a>
 
-            <div class="worker-table-wrapper">
+            <span class="worker-section-count">
+                {{ $trabajador->remuneraciones->count() }}
+            </span>
 
-                <table class="worker-table">
+        </div>
 
-                    <thead>
+    </div>
+
+    @if($trabajador->remuneraciones->count())
+
+        <div class="worker-table-wrapper">
+
+            <table class="worker-table">
+
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>Sueldo base</th>
+                        <th>Bonificaciones</th>
+                        <th>Descuentos</th>
+                        <th>Líquido</th>
+                        <th>Pagado</th>
+                        <th>Saldo</th>
+                        <th>Fecha de pago</th>
+                        <th>Estado</th>
+                        <th>Documentos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach(
+                        $trabajador->remuneraciones
+                        as $remuneracion
+                    )
+
                         <tr>
-                            <th>Período</th>
-                            <th>Sueldo base</th>
-                            <th>Bonificaciones</th>
-                            <th>Descuentos</th>
-                            <th>Líquido</th>
-                            <th>Pagado</th>
-                            <th>Saldo</th>
-                            <th>Fecha de pago</th>
-                            <th>Estado</th>
-                            <th>Documentos</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
+                            <td>
+                                <strong>
+                                    {{ $remuneracion->periodo }}
+                                </strong>
+                            </td>
 
-                        @foreach($trabajador->remuneraciones as $remuneracion)
+                            <td>
+                                ${{ number_format(
+                                    (float) $remuneracion->sueldo_base,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
+                            </td>
 
-                            <tr>
+                            <td>
+                                ${{ number_format(
+                                    (float) $remuneracion->bonificaciones,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
+                            </td>
 
-                                <td>
-                                    <strong>{{ $remuneracion->periodo }}</strong>
-                                </td>
+                            <td>
+                                ${{ number_format(
+                                    (float) $remuneracion->descuentos,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
+                            </td>
 
-                                <td>
+                            <td>
+                                <strong>
                                     ${{ number_format(
-                                        (float) $remuneracion->sueldo_base,
+                                        (float) $remuneracion->total_liquido,
                                         0,
                                         ',',
                                         '.'
                                     ) }}
-                                </td>
+                                </strong>
+                            </td>
 
-                                <td>
-                                    ${{ number_format(
-                                        (float) $remuneracion->bonificaciones,
-                                        0,
-                                        ',',
-                                        '.'
-                                    ) }}
-                                </td>
+                            <td>
+                                ${{ number_format(
+                                    (float) $remuneracion->monto_pagado,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
+                            </td>
 
-                                <td>
-                                    ${{ number_format(
-                                        (float) $remuneracion->descuentos,
-                                        0,
-                                        ',',
-                                        '.'
-                                    ) }}
-                                </td>
+                            <td>
 
-                                <td>
-                                    <strong>
+                                @if(
+                                    (float) $remuneracion->saldo_a_pagar
+                                    > 0
+                                )
+
+                                    <span class="worker-badge worker-badge-warning">
                                         ${{ number_format(
-                                            (float) $remuneracion->total_liquido,
+                                            (float) $remuneracion->saldo_a_pagar,
                                             0,
                                             ',',
                                             '.'
                                         ) }}
-                                    </strong>
-                                </td>
+                                    </span>
 
-                                <td>
-                                    ${{ number_format(
-                                        (float) $remuneracion->monto_pagado,
-                                        0,
-                                        ',',
-                                        '.'
-                                    ) }}
-                                </td>
+                                @else
 
-                                <td>
+                                    <span class="worker-badge worker-badge-success">
+                                        Pagado
+                                    </span>
 
-                                    @if((float) $remuneracion->saldo_a_pagar > 0)
+                                @endif
 
-                                        <span class="worker-badge worker-badge-warning">
-                                            ${{ number_format(
-                                                (float) $remuneracion->saldo_a_pagar,
-                                                0,
-                                                ',',
-                                                '.'
-                                            ) }}
-                                        </span>
+                            </td>
 
-                                    @else
+                            <td>
 
-                                        <span class="worker-badge worker-badge-success">
-                                            Pagado
-                                        </span>
+                                {{ $remuneracion->fecha_pago
+                                    ? $remuneracion->fecha_pago->format('d/m/Y')
+                                    : 'No registrado'
+                                }}
 
-                                    @endif
+                            </td>
 
-                                </td>
+                            <td>
 
-                                <td>
-                                    {{ $remuneracion->fecha_pago
-                                        ? $remuneracion->fecha_pago->format('d/m/Y')
-                                        : 'No registrado'
-                                    }}
-                                </td>
+                                @if(
+                                    $remuneracion->estado
+                                    === 'pagada'
+                                )
 
-                                <td>
+                                    <span class="worker-badge worker-badge-success">
+                                        Pagada
+                                    </span>
 
-                                    @if($remuneracion->estado === 'pagada')
+                                @elseif(
+                                    $remuneracion->estado
+                                    === 'parcialmente_pagada'
+                                )
 
-                                        <span class="worker-badge worker-badge-success">
-                                            Pagada
-                                        </span>
+                                    <span class="worker-badge worker-badge-warning">
+                                        Pago parcial
+                                    </span>
 
-                                    @elseif($remuneracion->estado === 'parcialmente_pagada')
+                                @else
 
-                                        <span class="worker-badge worker-badge-warning">
-                                            Pago parcial
-                                        </span>
+                                    <span class="worker-badge">
+                                        Pendiente
+                                    </span>
 
-                                    @else
+                                @endif
 
-                                        <span class="worker-badge">
-                                            Pendiente
-                                        </span>
+                            </td>
 
-                                    @endif
+                            <td>
 
-                                </td>
+                                @if(
+                                    $remuneracion->documentos->count()
+                                )
 
-                                <td>
+                                    <div class="worker-document-list">
 
-                                    @if($remuneracion->documentos->count())
+                                        @foreach(
+                                            $remuneracion->documentos
+                                            as $documento
+                                        )
 
-                                        <div class="worker-document-list">
+                                            <a
+                                                href="{{ asset(
+                                                    'storage/' .
+                                                    $documento->ruta
+                                                ) }}"
+                                                target="_blank"
+                                                class="worker-document"
+                                                title="{{ $documento->nombre }}"
+                                            >
+                                                Ver documento
+                                            </a>
 
-                                            @foreach($remuneracion->documentos as $documento)
+                                        @endforeach
 
-                                                <a
-                                                    href="{{ asset('storage/' . $documento->ruta) }}"
-                                                    target="_blank"
-                                                    class="worker-document"
-                                                    title="{{ $documento->nombre }}"
-                                                >
-                                                    Ver documento
-                                                </a>
+                                    </div>
 
-                                            @endforeach
+                                @else
 
-                                        </div>
+                                    <span class="worker-badge">
+                                        Sin documento
+                                    </span>
 
-                                    @else
+                                @endif
 
-                                        <span class="worker-badge">
-                                            Sin documento
-                                        </span>
+                            </td>
 
-                                    @endif
+                            <td>
 
-                                </td>
+                                <div class="worker-action-list">
 
-                            </tr>
+                                    <a
+                                        href="{{ route(
+                                            'trabajadores.remuneraciones.edit',
+                                            [
+                                                'trabajador' =>
+                                                    $trabajador,
 
-                        @endforeach
+                                                'remuneracion' =>
+                                                    $remuneracion,
+                                            ]
+                                        ) }}"
+                                        class="worker-action"
+                                    >
+                                        Editar
+                                    </a>
 
-                    </tbody>
+                                    <form
+                                        action="{{ route(
+                                            'trabajadores.remuneraciones.destroy',
+                                            [
+                                                'trabajador' =>
+                                                    $trabajador,
 
-                </table>
+                                                'remuneracion' =>
+                                                    $remuneracion,
+                                            ]
+                                        ) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('¿Estás seguro de eliminar esta remuneración? También se eliminarán sus documentos asociados. Esta acción no se puede deshacer.');"
+                                        style="display:inline;"
+                                    >
 
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="worker-action worker-action-danger"
+                                        >
+                                            Eliminar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    @else
+
+        <div class="worker-empty">
+
+            <div class="worker-empty-icon">
+                $
             </div>
 
-        @else
+            <h3 class="worker-empty-title">
+                No hay remuneraciones registradas
+            </h3>
 
-            <div class="worker-empty">
+            <p class="worker-empty-text">
+                Aquí se registrarán las remuneraciones mensuales,
+                montos pagados, fechas reales de pago,
+                saldos y documentos de liquidación.
+            </p>
 
-                <div class="worker-empty-icon">
-                    $
-                </div>
+        </div>
 
-                <h3 class="worker-empty-title">
-                    No hay remuneraciones registradas
-                </h3>
+    @endif
 
-                <p class="worker-empty-text">
-                    Aquí se registrarán las remuneraciones mensuales, montos pagados, fechas reales de pago, saldos y documentos de liquidación.
-                </p>
-
-            </div>
-
-        @endif
-
-    </section>
+</section>
 
 
     {{-- VACACIONES --}}

@@ -182,6 +182,21 @@ Route::post(
     [RemuneracionController::class, 'store']
 )->name('trabajadores.remuneraciones.store');
 
+Route::get(
+    'trabajadores/{trabajador}/remuneraciones/{remuneracion}/edit',
+    [RemuneracionController::class, 'edit']
+)->name('trabajadores.remuneraciones.edit');
+
+Route::put(
+    'trabajadores/{trabajador}/remuneraciones/{remuneracion}',
+    [RemuneracionController::class, 'update']
+)->name('trabajadores.remuneraciones.update');
+
+Route::delete(
+    'trabajadores/{trabajador}/remuneraciones/{remuneracion}',
+    [RemuneracionController::class, 'destroy']
+)->name('trabajadores.remuneraciones.destroy');
+
 
 // =========================================================
 // HORARIOS
