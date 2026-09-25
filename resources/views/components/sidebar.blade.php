@@ -513,35 +513,94 @@
             </span>
 
         </div>
+                {{-- =================================================
+             CONFIGURACIÓN
+        ================================================== --}}
+
+        @role('Administrador')
+
+            <div class="sidebar-section-title">
+                Configuración
+            </div>
+
+            {{-- USUARIOS --}}
+
+            <a
+                href="{{ route('usuarios.index') }}"
+                class="sidebar-item {{ request()->routeIs('usuarios.*') ? 'active' : '' }}"
+                title="Usuarios"
+            >
+
+                <span class="sidebar-icon">
+                    ♙
+                </span>
+
+                <span class="sidebar-label">
+                    Usuarios
+                </span>
+
+            </a>
+
+        @endrole
 
     </nav>
 
 
-    {{-- =====================================================
+       {{-- =====================================================
          USUARIO
     ====================================================== --}}
 
-    <div class="sidebar-user">
+    @auth
 
-        <div class="sidebar-user-avatar">
-            AD
+        @php
+            $sidebarUsuario = auth()->user();
+
+            $sidebarRol =
+                $sidebarUsuario->getRoleNames()->first()
+                ?? 'Sin rol';
+
+            $sidebarPartesNombre =
+                preg_split(
+                    '/\s+/',
+                    trim($sidebarUsuario->name)
+                );
+
+            if (count($sidebarPartesNombre) >= 2) {
+                $sidebarIniciales =
+                    mb_strtoupper(
+                        mb_substr($sidebarPartesNombre[0], 0, 1) .
+                        mb_substr($sidebarPartesNombre[1], 0, 1)
+                    );
+            } else {
+                $sidebarIniciales =
+                    mb_strtoupper(
+                        mb_substr($sidebarUsuario->name, 0, 2)
+                    );
+            }
+        @endphp
+
+        <div class="sidebar-user">
+
+            <div class="sidebar-user-avatar">
+                {{ $sidebarIniciales }}
+            </div>
+
+            <div class="sidebar-user-info">
+
+                <strong>
+                    {{ $sidebarUsuario->name }}
+                </strong>
+
+                <span>
+                    {{ $sidebarRol }}
+                </span>
+
+            </div>
+
         </div>
 
-        <div class="sidebar-user-info">
-
-            <strong>
-                Administrador
-            </strong>
-
-            <span>
-                Administración
-            </span>
-
-        </div>
-
-    </div>
-
-</aside>
+    @endauth
+ </aside>   
 
 
 {{-- =========================================================

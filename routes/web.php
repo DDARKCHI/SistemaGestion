@@ -25,10 +25,11 @@ use App\Http\Controllers\RemuneracionController;
 use App\Http\Controllers\ServicioTransporteController;
 use App\Http\Controllers\TrabajadorController;
 use App\Http\Controllers\TransportistaController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VacacionController;
 use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsuarioController;
+
 
 Route::middleware('auth')->group(function () {
 
@@ -524,7 +525,7 @@ Route::middleware('auth')->group(function () {
     ]);
 
 
-        // =========================================================
+    // =========================================================
     // DOCUMENTOS
     // =========================================================
 
@@ -538,35 +539,39 @@ Route::middleware('auth')->group(function () {
     // USUARIOS
     // =========================================================
 
-    Route::get(
-        'usuarios',
-        [UsuarioController::class, 'index']
-    )->name('usuarios.index');
+    Route::middleware('role:Administrador')->group(function () {
 
-    Route::get(
-        'usuarios/create',
-        [UsuarioController::class, 'create']
-    )->name('usuarios.create');
+        Route::get(
+            'usuarios',
+            [UsuarioController::class, 'index']
+        )->name('usuarios.index');
 
-    Route::post(
-        'usuarios',
-        [UsuarioController::class, 'store']
-    )->name('usuarios.store');
+        Route::get(
+            'usuarios/create',
+            [UsuarioController::class, 'create']
+        )->name('usuarios.create');
 
-    Route::get(
-        'usuarios/{usuario}/edit',
-        [UsuarioController::class, 'edit']
-    )->name('usuarios.edit');
+        Route::post(
+            'usuarios',
+            [UsuarioController::class, 'store']
+        )->name('usuarios.store');
 
-    Route::put(
-        'usuarios/{usuario}',
-        [UsuarioController::class, 'update']
-    )->name('usuarios.update');
+        Route::get(
+            'usuarios/{usuario}/edit',
+            [UsuarioController::class, 'edit']
+        )->name('usuarios.edit');
 
-    Route::patch(
-        'usuarios/{usuario}/estado',
-        [UsuarioController::class, 'cambiarEstado']
-    )->name('usuarios.estado');
+        Route::put(
+            'usuarios/{usuario}',
+            [UsuarioController::class, 'update']
+        )->name('usuarios.update');
+
+        Route::patch(
+            'usuarios/{usuario}/estado',
+            [UsuarioController::class, 'cambiarEstado']
+        )->name('usuarios.estado');
+
+    });
 
 });
 
