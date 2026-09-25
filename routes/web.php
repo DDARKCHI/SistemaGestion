@@ -29,6 +29,8 @@ use App\Http\Controllers\VacacionController;
 use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware('auth')->group(function () {
+
 
 // =========================================================
 // INICIO
@@ -530,3 +532,5 @@ Route::resource('documentos', DocumentoController::class)
     ->parameters([
         'documentos' => 'documento',
     ]);
+});
+require __DIR__.'/auth.php';    

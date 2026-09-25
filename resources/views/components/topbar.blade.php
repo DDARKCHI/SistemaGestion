@@ -1,12 +1,6 @@
 <header class="topbar">
 
-    {{-- =====================================================
-         IZQUIERDA
-    ====================================================== --}}
-
     <div class="topbar-left">
-
-        {{-- BOTÓN MOBILE --}}
 
         <button
             type="button"
@@ -18,28 +12,16 @@
             ☰
         </button>
 
-
-        {{-- TÍTULO --}}
-
         <div class="topbar-title">
-
             @yield(
                 'topbar_title',
                 'Sistema de Gestión'
             )
-
         </div>
 
     </div>
 
-
-    {{-- =====================================================
-         DERECHA
-    ====================================================== --}}
-
     <div class="topbar-right">
-
-        {{-- BUSCADOR --}}
 
         <div class="topbar-search">
 
@@ -54,9 +36,6 @@
 
         </div>
 
-
-        {{-- NOTIFICACIONES --}}
-
         <button
             type="button"
             class="topbar-notification"
@@ -65,35 +44,121 @@
             ♧
 
             <span class="notification-dot"></span>
-
         </button>
 
+        @auth
 
-        {{-- USUARIO --}}
+            @php
+                $usuario = auth()->user();
 
-        <div class="topbar-user">
+                $nombre = $usuario->name;
 
-            <div class="topbar-user-avatar">
-                AD
+                $rol = $usuario->getRoleNames()->first() ?? 'Sin rol';
+
+                $partesNombre = preg_split('/\s+/', trim($nombre));
+
+                $iniciales = '';
+
+                if (count($partesNombre) >= 2) {
+                    $iniciales =
+                        mb_strtoupper(
+                            mb_substr($partesNombre[0], 0, 1) .
+                            mb_substr($partesNombre[1], 0, 1)
+                        );
+                } else {
+                    $iniciales =
+                        mb_strtoupper(
+                            mb_substr($nombre, 0, 2)
+                        );
+                }
+            @endphp
+
+            <div class="topbar-user-wrapper">
+
+                <button
+                    type="button"
+                    class="topbar-user"
+                    id="userMenuButton"
+                    aria-expanded="false"
+                    aria-controls="userDropdown"
+                >
+
+                    <div class="topbar-user-avatar">
+                        {{ $iniciales }}
+                    </div>
+
+                    <div class="topbar-user-info">
+
+                        <strong>
+                            {{ $nombre }}
+                        </strong>
+
+                        <span>
+                            {{ $rol }}
+                        </span>
+
+                    </div>
+
+                    <span class="topbar-user-arrow">
+                        ▾
+                    </span>
+
+                </button>
+
+                <div
+                    class="topbar-user-dropdown"
+                    id="userDropdown"
+                >
+
+                    <div class="topbar-dropdown-header">
+
+                        <strong>
+                            {{ $nombre }}
+                        </strong>
+
+                        <span>
+                            {{ $usuario->email }}
+                        </span>
+
+                    </div>
+
+                   <div class="topbar-dropdown-role">
+
+    <span class="topbar-role-label">
+        Rol de usuario
+    </span>
+
+    <strong class="topbar-role-value">
+        {{ $rol }}
+    </strong>
+
+</div>
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                    >
+
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="topbar-logout-button"
+                        >
+                            <span>
+                                ↪
+                            </span>
+
+                            Cerrar sesión
+                        </button>
+
+                    </form>
+
+                </div>
+
             </div>
 
-            <div class="topbar-user-info">
-
-                <strong>
-                    Administrador
-                </strong>
-
-                <span>
-                    Administración
-                </span>
-
-            </div>
-
-            <span class="topbar-user-arrow">
-                ▾
-            </span>
-
-        </div>
+        @endauth
 
     </div>
 
@@ -101,10 +166,6 @@
 
 
 <style>
-
-    /* =========================================================
-       TOPBAR
-    ========================================================== */
 
     .topbar {
 
@@ -132,10 +193,6 @@
 
     }
 
-
-    /* =========================================================
-       LEFT
-    ========================================================== */
 
     .topbar-left {
 
@@ -166,10 +223,6 @@
 
     }
 
-
-    /* =========================================================
-       MOBILE BUTTON
-    ========================================================== */
 
     .mobile-menu-button {
 
@@ -209,10 +262,6 @@
     }
 
 
-    /* =========================================================
-       RIGHT
-    ========================================================== */
-
     .topbar-right {
 
         display: flex;
@@ -223,10 +272,6 @@
 
     }
 
-
-    /* =========================================================
-       SEARCH
-    ========================================================== */
 
     .topbar-search {
 
@@ -303,10 +348,6 @@
     }
 
 
-    /* =========================================================
-       NOTIFICATION
-    ========================================================== */
-
     .topbar-notification {
 
         position: relative;
@@ -360,9 +401,12 @@
     }
 
 
-    /* =========================================================
-       USER
-    ========================================================== */
+    .topbar-user-wrapper {
+
+        position: relative;
+
+    }
+
 
     .topbar-user {
 
@@ -372,12 +416,19 @@
 
         gap: 9px;
 
-        padding-left: 18px;
+        padding:
+            0 0 0 18px;
+
+        border: none;
 
         border-left:
             1px solid #e2e8f0;
 
+        background: transparent;
+
         cursor: pointer;
+
+        text-align: left;
 
     }
 
@@ -404,6 +455,8 @@
 
         font-weight: 700;
 
+        flex-shrink: 0;
+
     }
 
 
@@ -417,6 +470,12 @@
     .topbar-user-info strong {
 
         display: block;
+
+        max-width: 160px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
 
         color: #344054;
 
@@ -448,12 +507,178 @@
 
         font-size: 10px;
 
+        transition:
+            transform .15s ease;
+
     }
 
 
-    /* =========================================================
-       MOBILE
-    ========================================================== */
+    .topbar-user.menu-open
+    .topbar-user-arrow {
+
+        transform:
+            rotate(180deg);
+
+    }
+
+
+    .topbar-user-dropdown {
+
+        display: none;
+
+        position: absolute;
+
+        top: calc(100% + 12px);
+
+        right: 0;
+
+        width: 235px;
+
+        background: #ffffff;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-radius: 9px;
+
+        box-shadow:
+            0 10px 30px rgba(16, 47, 80, .12);
+
+        overflow: hidden;
+
+        z-index: 1000;
+
+    }
+
+
+    .topbar-user-dropdown.open {
+
+        display: block;
+
+    }
+
+
+    .topbar-dropdown-header {
+
+        padding:
+            15px 16px 13px;
+
+        border-bottom:
+            1px solid #edf1f5;
+
+    }
+
+
+    .topbar-dropdown-header strong {
+
+        display: block;
+
+        color: #344054;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+    }
+
+
+    .topbar-dropdown-header span {
+
+        display: block;
+
+        margin-top: 4px;
+
+        color: #98a2b3;
+
+        font-size: 9px;
+
+        word-break: break-word;
+
+    }
+
+
+    .topbar-dropdown-role {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 4px;
+
+    padding:
+        11px 16px 13px;
+
+    border-bottom:
+        1px solid #edf1f5;
+
+}
+
+
+.topbar-role-label {
+
+    color: #98a2b3;
+
+    font-size: 9px;
+
+}
+
+
+.topbar-role-value {
+
+    color: #344054;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+    .topbar-user-dropdown form {
+
+        margin: 0;
+
+    }
+
+
+    .topbar-logout-button {
+
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding:
+            12px 16px;
+
+        border: none;
+
+        background: #ffffff;
+
+        color: #c0392b;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+        text-align: left;
+
+        cursor: pointer;
+
+    }
+
+
+    .topbar-logout-button:hover {
+
+        background: #fff1ef;
+
+    }
+
 
     @media (max-width: 800px) {
 
@@ -505,7 +730,6 @@
 
 
         .topbar-user-info,
-
         .topbar-user-arrow {
 
             display: none;
@@ -528,12 +752,17 @@
 
         }
 
+
+        .topbar-user-dropdown {
+
+            right: 0;
+
+            width: 220px;
+
+        }
+
     }
 
-
-    /* =========================================================
-       VERY SMALL MOBILE
-    ========================================================== */
 
     @media (max-width: 420px) {
 
@@ -559,6 +788,16 @@
                     'mobileMenuButton'
                 );
 
+            const userMenuButton =
+                document.getElementById(
+                    'userMenuButton'
+                );
+
+            const userDropdown =
+                document.getElementById(
+                    'userDropdown'
+                );
+
 
             if (mobileMenuButton) {
 
@@ -576,10 +815,67 @@
             }
 
 
-            /*
-             * Cerrar menú móvil cuando se
-             * selecciona una opción.
-             */
+            if (
+                userMenuButton &&
+                userDropdown
+            ) {
+
+                userMenuButton.addEventListener(
+                    'click',
+                    function (event) {
+
+                        event.stopPropagation();
+
+                        const abierto =
+                            userDropdown.classList.toggle(
+                                'open'
+                            );
+
+                        userMenuButton.classList.toggle(
+                            'menu-open',
+                            abierto
+                        );
+
+                        userMenuButton.setAttribute(
+                            'aria-expanded',
+                            abierto
+                                ? 'true'
+                                : 'false'
+                        );
+
+                    }
+                );
+
+
+                document.addEventListener(
+                    'click',
+                    function (event) {
+
+                        if (
+                            !userDropdown.contains(event.target) &&
+                            !userMenuButton.contains(event.target)
+                        ) {
+
+                            userDropdown.classList.remove(
+                                'open'
+                            );
+
+                            userMenuButton.classList.remove(
+                                'menu-open'
+                            );
+
+                            userMenuButton.setAttribute(
+                                'aria-expanded',
+                                'false'
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+
 
             const sidebarLinks =
                 document.querySelectorAll(
@@ -611,10 +907,6 @@
             );
 
 
-            /*
-             * Cerrar menú móvil con ESC.
-             */
-
             document.addEventListener(
                 'keydown',
                 function (event) {
@@ -626,6 +918,27 @@
                         document.body.classList.remove(
                             'sidebar-mobile-open'
                         );
+
+                        if (userDropdown) {
+
+                            userDropdown.classList.remove(
+                                'open'
+                            );
+
+                        }
+
+                        if (userMenuButton) {
+
+                            userMenuButton.classList.remove(
+                                'menu-open'
+                            );
+
+                            userMenuButton.setAttribute(
+                                'aria-expanded',
+                                'false'
+                            );
+
+                        }
 
                     }
 
