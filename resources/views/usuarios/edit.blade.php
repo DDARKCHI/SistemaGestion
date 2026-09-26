@@ -7,7 +7,6 @@
 @push('styles')
 
 <style>
-
     .user-edit-breadcrumb {
         display: flex;
         align-items: center;
@@ -226,7 +225,8 @@
         gap: 9px;
     }
 
-    .user-validation-alert {
+    .user-validation-alert,
+    .user-session-error {
         margin-bottom: 20px;
         padding: 13px 16px;
         border: 1px solid #f1ceca;
@@ -236,7 +236,8 @@
         font-size: 11px;
     }
 
-    .user-validation-alert strong {
+    .user-validation-alert strong,
+    .user-session-error strong {
         display: block;
         margin-bottom: 6px;
         font-size: 12px;
@@ -251,8 +252,23 @@
         margin-bottom: 3px;
     }
 
-    @media (max-width: 900px) {
+    .user-session-success {
+        margin-bottom: 20px;
+        padding: 13px 16px;
+        border: 1px solid #b9dfca;
+        border-radius: 7px;
+        background: #f1fbf5;
+        color: #287a4b;
+        font-size: 11px;
+    }
 
+    .user-session-success strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
         .user-form-grid {
             grid-template-columns: 1fr;
         }
@@ -260,11 +276,9 @@
         .user-form-group-full {
             grid-column: auto;
         }
-
     }
 
     @media (max-width: 700px) {
-
         .user-edit-header {
             flex-direction: column;
         }
@@ -289,9 +303,7 @@
         .user-form-footer-actions .btn {
             flex: 1;
         }
-
     }
-
 </style>
 
 @endpush
@@ -336,6 +348,36 @@
         </a>
 
     </div>
+
+
+    @if(session('error'))
+
+        <div class="user-session-error">
+
+            <strong>
+                No se pudo realizar la acción
+            </strong>
+
+            {{ session('error') }}
+
+        </div>
+
+    @endif
+
+
+    @if(session('success'))
+
+        <div class="user-session-success">
+
+            <strong>
+                Operación realizada
+            </strong>
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
 
 
     @if($errors->any())
@@ -486,11 +528,10 @@
                         </label>
 
                         @php
-                            $rolActual =
-                                old(
-                                    'rol',
-                                    $usuario->roles->first()?->name
-                                );
+                            $rolActual = old(
+                                'rol',
+                                $usuario->roles->first()?->name
+                            );
                         @endphp
 
                         <select

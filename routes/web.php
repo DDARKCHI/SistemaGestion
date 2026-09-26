@@ -31,7 +31,7 @@ use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     // =========================================================
     // INICIO
@@ -43,11 +43,24 @@ Route::middleware('auth')->group(function () {
 
 
     // =========================================================
-    // CLIENTES
-    // =========================================================
+// CLIENTES
+// =========================================================
 
-    Route::resource('clientes', ClienteController::class);
+Route::resource('clientes', ClienteController::class)
+    ->only(['index', 'show'])
+    ->middleware('permission:ver clientes');
 
+Route::resource('clientes', ClienteController::class)
+    ->only(['create', 'store'])
+    ->middleware('permission:crear clientes');
+
+Route::resource('clientes', ClienteController::class)
+    ->only(['edit', 'update'])
+    ->middleware('permission:editar clientes');
+
+Route::resource('clientes', ClienteController::class)
+    ->only(['destroy'])
+    ->middleware('permission:eliminar clientes');
 
     // =========================================================
     // OPERACIONES

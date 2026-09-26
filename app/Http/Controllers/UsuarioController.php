@@ -124,6 +124,31 @@ class UsuarioController extends Controller
             ],
         ]);
 
+        if (auth()->id() === $usuario->id) {
+            if (! $request->boolean('activo')) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'No puedes desactivar tu propio usuario.'
+                    );
+            }
+
+            if (
+                $usuario->hasRole('Administrador') &&
+                $datos['rol'] !== 'Administrador'
+            ) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with(
+                        'error',
+                        'No puedes quitarte tu propio rol de Administrador.'
+                    );
+            }
+        }
+
         $usuario->name = $datos['name'];
         $usuario->email = $datos['email'];
         $usuario->activo = $request->boolean('activo');
