@@ -734,12 +734,16 @@
                 ← Volver
             </a>
 
-            <a
-                href="{{ route('trabajadores.edit', $trabajador) }}"
-                class="worker-detail-action worker-detail-action-primary"
-            >
-                Editar trabajador
-            </a>
+            @can('editar trabajadores')
+
+    <a
+        href="{{ route('trabajadores.edit', $trabajador) }}"
+        class="worker-detail-action worker-detail-action-primary"
+    >
+        Editar trabajador
+    </a>
+
+@endcan
 
         </div>
 
@@ -947,12 +951,16 @@
 
             <div class="worker-section-header-actions">
 
-                <a
-                    href="{{ route('trabajadores.contratos.create', $trabajador) }}"
-                    class="worker-section-add"
-                >
-                    + Nuevo contrato
-                </a>
+                @can('crear contratos')
+
+    <a
+        href="{{ route('trabajadores.contratos.create', $trabajador) }}"
+        class="worker-section-add"
+    >
+        + Nuevo contrato
+    </a>
+
+@endcan
 
                 <span class="worker-section-count">
                     {{ $trabajador->contratos->count() }}
@@ -1056,18 +1064,22 @@
 
                         <div class="contract-actions">
 
-                            <a
-                                href="{{ route(
-                                    'trabajadores.contratos.modificaciones.create',
-                                    [
-                                        'trabajador' => $trabajador,
-                                        'contrato' => $contrato,
-                                    ]
-                                ) }}"
-                                class="contract-modification-button"
-                            >
-                                + Agregar modificación
-                            </a>
+                            @can('editar contratos')
+
+    <a
+        href="{{ route(
+            'trabajadores.contratos.modificaciones.create',
+            [
+                'trabajador' => $trabajador,
+                'contrato' => $contrato,
+            ]
+        ) }}"
+        class="contract-modification-button"
+    >
+        + Agregar modificación
+    </a>
+
+@endcan
 
                         </div>
 
@@ -1279,12 +1291,16 @@
 
             <div class="worker-section-header-actions">
 
-                <a
-                    href="{{ route('trabajadores.horarios.create', $trabajador) }}"
-                    class="worker-section-add"
-                >
-                    + Nuevo horario
-                </a>
+                @can('crear horarios')
+
+    <a
+        href="{{ route('trabajadores.horarios.create', $trabajador) }}"
+        class="worker-section-add"
+    >
+        + Nuevo horario
+    </a>
+
+@endcan
 
                 <span class="worker-section-count">
                     {{ $trabajador->horarios->count() }}
@@ -1380,43 +1396,51 @@
 
                                     <div class="worker-action-list">
 
-                                        <a
-                                            href="{{ route(
-                                                'trabajadores.horarios.edit',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'horario' => $horario,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Editar
-                                        </a>
+                                        @can('editar horarios')
 
-                                        <form
-                                            action="{{ route(
-                                                'trabajadores.horarios.destroy',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'horario' => $horario,
-                                                ]
-                                            ) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este horario? Esta acción no se puede deshacer.');"
-                                            style="display:inline;"
-                                        >
+    <a
+        href="{{ route(
+            'trabajadores.horarios.edit',
+            [
+                'trabajador' => $trabajador,
+                'horario' => $horario,
+            ]
+        ) }}"
+        class="worker-action"
+    >
+        Editar
+    </a>
 
-                                            @csrf
-                                            @method('DELETE')
+@endcan
 
-                                            <button
-                                                type="submit"
-                                                class="worker-action worker-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+                                        @can('eliminar horarios')
 
-                                        </form>
+    <form
+        action="{{ route(
+            'trabajadores.horarios.destroy',
+            [
+                'trabajador' => $trabajador,
+                'horario' => $horario,
+            ]
+        ) }}"
+        method="POST"
+        onsubmit="return confirm('¿Estás seguro de eliminar este horario? Esta acción no se puede deshacer.');"
+        style="display:inline;"
+    >
+
+        @csrf
+        @method('DELETE')
+
+        <button
+            type="submit"
+            class="worker-action worker-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                                     </div>
 
@@ -1475,15 +1499,19 @@
 
         <div class="worker-section-header-actions">
 
-            <a
-                href="{{ route(
-                    'trabajadores.remuneraciones.create',
-                    $trabajador
-                ) }}"
-                class="worker-section-add"
-            >
-                + Nueva remuneración
-            </a>
+            @can('crear remuneraciones')
+
+    <a
+        href="{{ route(
+            'trabajadores.remuneraciones.create',
+            $trabajador
+        ) }}"
+        class="worker-section-add"
+    >
+        + Nueva remuneración
+    </a>
+
+@endcan
 
             <span class="worker-section-count">
                 {{ $trabajador->remuneraciones->count() }}
@@ -1685,49 +1713,51 @@
 
                                 <div class="worker-action-list">
 
-                                    <a
-                                        href="{{ route(
-                                            'trabajadores.remuneraciones.edit',
-                                            [
-                                                'trabajador' =>
-                                                    $trabajador,
+                                    @can('editar remuneraciones')
 
-                                                'remuneracion' =>
-                                                    $remuneracion,
-                                            ]
-                                        ) }}"
-                                        class="worker-action"
-                                    >
-                                        Editar
-                                    </a>
+    <a
+        href="{{ route(
+            'trabajadores.remuneraciones.edit',
+            [
+                'trabajador' => $trabajador,
+                'remuneracion' => $remuneracion,
+            ]
+        ) }}"
+        class="worker-action"
+    >
+        Editar
+    </a>
 
-                                    <form
-                                        action="{{ route(
-                                            'trabajadores.remuneraciones.destroy',
-                                            [
-                                                'trabajador' =>
-                                                    $trabajador,
+@endcan
 
-                                                'remuneracion' =>
-                                                    $remuneracion,
-                                            ]
-                                        ) }}"
-                                        method="POST"
-                                        onsubmit="return confirm('¿Estás seguro de eliminar esta remuneración? También se eliminarán sus documentos asociados. Esta acción no se puede deshacer.');"
-                                        style="display:inline;"
-                                    >
+                                    @can('eliminar remuneraciones')
 
-                                        @csrf
-                                        @method('DELETE')
+    <form
+        action="{{ route(
+            'trabajadores.remuneraciones.destroy',
+            [
+                'trabajador' => $trabajador,
+                'remuneracion' => $remuneracion,
+            ]
+        ) }}"
+        method="POST"
+        onsubmit="return confirm('¿Estás seguro de eliminar esta remuneración? También se eliminarán sus documentos asociados. Esta acción no se puede deshacer.');"
+        style="display:inline;"
+    >
 
-                                        <button
-                                            type="submit"
-                                            class="worker-action worker-action-danger"
-                                        >
-                                            Eliminar
-                                        </button>
+        @csrf
+        @method('DELETE')
 
-                                    </form>
+        <button
+            type="submit"
+            class="worker-action worker-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                                 </div>
 
@@ -1788,16 +1818,19 @@
 
             <div class="worker-section-header-actions">
 
-                <a
-                    href="{{ route(
-                        'trabajadores.vacaciones.create',
-                        $trabajador
-                    ) }}"
-                    class="worker-section-add"
-                >
-                    + Nuevo período
-                </a>
+               @can('crear vacaciones')
 
+    <a
+        href="{{ route(
+            'trabajadores.vacaciones.create',
+            $trabajador
+        ) }}"
+        class="worker-section-add"
+    >
+        + Nuevo período
+    </a>
+
+@endcan
                 <span class="worker-section-count">
                     {{ $trabajador->vacaciones->count() }}
                 </span>
@@ -1888,32 +1921,40 @@
 
                                     <div class="worker-action-list">
 
-                                        <a
-                                            href="{{ route(
-                                                'trabajadores.vacaciones.detalles.create',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'vacacion' => $vacacion,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Registrar días
-                                        </a>
+                                        @can('editar vacaciones')
 
-                                        <a
-                                            href="{{ route(
-                                                'trabajadores.vacaciones.edit',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'vacacion' => $vacacion,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Editar período
-                                        </a>
+    <a
+        href="{{ route(
+            'trabajadores.vacaciones.detalles.create',
+            [
+                'trabajador' => $trabajador,
+                'vacacion' => $vacacion,
+            ]
+        ) }}"
+        class="worker-action"
+    >
+        Registrar días
+    </a>
 
+@endcan
+
+                                        @can('editar vacaciones')
+
+    <a
+        href="{{ route(
+            'trabajadores.vacaciones.edit',
+            [
+                'trabajador' => $trabajador,
+                'vacacion' => $vacacion,
+            ]
+        ) }}"
+        class="worker-action"
+    >
+        Editar período
+    </a>
+
+@endcan
+@can('eliminar vacaciones')
                                         <form
                                             action="{{ route(
                                                 'trabajadores.vacaciones.destroy',
@@ -1936,8 +1977,10 @@
                                             >
                                                 Eliminar
                                             </button>
+                                            
 
                                         </form>
+                                        @endcan
 
                                     </div>
 
@@ -2051,7 +2094,7 @@
                                                                 <td>
 
                                                                     <div class="worker-action-list">
-
+@can('editar vacaciones')
                                                                         <a
                                                                             href="{{ route(
                                                                                 'trabajadores.vacaciones.detalles.edit',
@@ -2065,7 +2108,8 @@
                                                                         >
                                                                             Editar
                                                                         </a>
-
+                                                                        @endcan
+@can('eliminar vacaciones')
                                                                         <form
                                                                             action="{{ route(
                                                                                 'trabajadores.vacaciones.detalles.destroy',
@@ -2091,6 +2135,7 @@
                                                                             </button>
 
                                                                         </form>
+                                                                        @endcan
 
                                                                     </div>
 

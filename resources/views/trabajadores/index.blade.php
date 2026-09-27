@@ -1111,25 +1111,29 @@
                                         </a>
 
 
-                                        <form
-                                            action="{{ route('trabajadores.destroy', $trabajador) }}"
-                                            method="POST"
-                                            style="display:inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este trabajador?');"
-                                        >
+                                       @can('eliminar trabajadores')
 
-                                            @csrf
+    <form
+        action="{{ route('trabajadores.destroy', $trabajador) }}"
+        method="POST"
+        style="display:inline;"
+        onsubmit="return confirm('¿Estás seguro de eliminar este trabajador?');"
+    >
 
-                                            @method('DELETE')
+        @csrf
 
-                                            <button
-                                                type="submit"
-                                                class="worker-action worker-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+        @method('DELETE')
 
-                                        </form>
+        <button
+            type="submit"
+            class="worker-action worker-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                                     </div>
 

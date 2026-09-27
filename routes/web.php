@@ -293,28 +293,54 @@ Route::middleware(['auth', 'active'])->group(function () {
 
 
     // =========================================================
-    // TRABAJADORES
-    // =========================================================
+// TRABAJADORES
+// =========================================================
 
-    Route::resource('trabajadores', TrabajadorController::class)
-        ->parameters([
-            'trabajadores' => 'trabajador',
-        ]);
+Route::resource('trabajadores', TrabajadorController::class)
+    ->only(['index', 'show'])
+    ->parameters([
+        'trabajadores' => 'trabajador',
+    ])
+    ->middleware('permission:ver trabajadores');
 
+Route::resource('trabajadores', TrabajadorController::class)
+    ->only(['create', 'store'])
+    ->parameters([
+        'trabajadores' => 'trabajador',
+    ])
+    ->middleware('permission:crear trabajadores');
 
-    // =========================================================
+Route::resource('trabajadores', TrabajadorController::class)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'trabajadores' => 'trabajador',
+    ])
+    ->middleware('permission:editar trabajadores');
+
+Route::resource('trabajadores', TrabajadorController::class)
+    ->only(['destroy'])
+    ->parameters([
+        'trabajadores' => 'trabajador',
+    ])
+    ->middleware('permission:eliminar trabajadores');
+
+        // =========================================================
     // CONTRATOS
     // =========================================================
 
     Route::get(
         'trabajadores/{trabajador}/contratos/create',
         [ContratoController::class, 'create']
-    )->name('trabajadores.contratos.create');
+    )
+        ->name('trabajadores.contratos.create')
+        ->middleware('permission:crear contratos');
 
     Route::post(
         'trabajadores/{trabajador}/contratos',
         [ContratoController::class, 'store']
-    )->name('trabajadores.contratos.store');
+    )
+        ->name('trabajadores.contratos.store')
+        ->middleware('permission:crear contratos');
 
 
     // =========================================================
@@ -324,102 +350,132 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get(
         'trabajadores/{trabajador}/contratos/{contrato}/modificaciones/create',
         [ModificacionContratoController::class, 'create']
-    )->name('trabajadores.contratos.modificaciones.create');
+    )
+        ->name('trabajadores.contratos.modificaciones.create')
+        ->middleware('permission:editar contratos');
 
     Route::post(
         'trabajadores/{trabajador}/contratos/{contrato}/modificaciones',
         [ModificacionContratoController::class, 'store']
-    )->name('trabajadores.contratos.modificaciones.store');
-
-
-    // =========================================================
+    )
+        ->name('trabajadores.contratos.modificaciones.store')
+        ->middleware('permission:editar contratos');
+   
+       // =========================================================
     // REMUNERACIONES
     // =========================================================
 
     Route::get(
         'trabajadores/{trabajador}/remuneraciones/create',
         [RemuneracionController::class, 'create']
-    )->name('trabajadores.remuneraciones.create');
+    )
+        ->name('trabajadores.remuneraciones.create')
+        ->middleware('permission:crear remuneraciones');
 
     Route::post(
         'trabajadores/{trabajador}/remuneraciones',
         [RemuneracionController::class, 'store']
-    )->name('trabajadores.remuneraciones.store');
+    )
+        ->name('trabajadores.remuneraciones.store')
+        ->middleware('permission:crear remuneraciones');
 
     Route::get(
         'trabajadores/{trabajador}/remuneraciones/{remuneracion}/edit',
         [RemuneracionController::class, 'edit']
-    )->name('trabajadores.remuneraciones.edit');
+    )
+        ->name('trabajadores.remuneraciones.edit')
+        ->middleware('permission:editar remuneraciones');
 
     Route::put(
         'trabajadores/{trabajador}/remuneraciones/{remuneracion}',
         [RemuneracionController::class, 'update']
-    )->name('trabajadores.remuneraciones.update');
+    )
+        ->name('trabajadores.remuneraciones.update')
+        ->middleware('permission:editar remuneraciones');
 
     Route::delete(
         'trabajadores/{trabajador}/remuneraciones/{remuneracion}',
         [RemuneracionController::class, 'destroy']
-    )->name('trabajadores.remuneraciones.destroy');
+    )
+        ->name('trabajadores.remuneraciones.destroy')
+        ->middleware('permission:eliminar remuneraciones');
 
-
-    // =========================================================
+       // =========================================================
     // HORARIOS
     // =========================================================
 
     Route::get(
         'trabajadores/{trabajador}/horarios/create',
         [HorarioController::class, 'create']
-    )->name('trabajadores.horarios.create');
+    )
+        ->name('trabajadores.horarios.create')
+        ->middleware('permission:crear horarios');
 
     Route::post(
         'trabajadores/{trabajador}/horarios',
         [HorarioController::class, 'store']
-    )->name('trabajadores.horarios.store');
+    )
+        ->name('trabajadores.horarios.store')
+        ->middleware('permission:crear horarios');
 
     Route::get(
         'trabajadores/{trabajador}/horarios/{horario}/edit',
         [HorarioController::class, 'edit']
-    )->name('trabajadores.horarios.edit');
+    )
+        ->name('trabajadores.horarios.edit')
+        ->middleware('permission:editar horarios');
 
     Route::put(
         'trabajadores/{trabajador}/horarios/{horario}',
         [HorarioController::class, 'update']
-    )->name('trabajadores.horarios.update');
+    )
+        ->name('trabajadores.horarios.update')
+        ->middleware('permission:editar horarios');
 
     Route::delete(
         'trabajadores/{trabajador}/horarios/{horario}',
         [HorarioController::class, 'destroy']
-    )->name('trabajadores.horarios.destroy');
-
-
-    // =========================================================
+    )
+        ->name('trabajadores.horarios.destroy')
+        ->middleware('permission:eliminar horarios');
+        // =========================================================
     // VACACIONES
     // =========================================================
 
     Route::get(
         'trabajadores/{trabajador}/vacaciones/create',
         [VacacionController::class, 'create']
-    )->name('trabajadores.vacaciones.create');
+    )
+        ->name('trabajadores.vacaciones.create')
+        ->middleware('permission:crear vacaciones');
 
     Route::post(
         'trabajadores/{trabajador}/vacaciones',
         [VacacionController::class, 'store']
-    )->name('trabajadores.vacaciones.store');
+    )
+        ->name('trabajadores.vacaciones.store')
+        ->middleware('permission:crear vacaciones');
 
     Route::get(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/edit',
         [VacacionController::class, 'edit']
-    )->name('trabajadores.vacaciones.edit');
+    )
+        ->name('trabajadores.vacaciones.edit')
+        ->middleware('permission:editar vacaciones');
 
     Route::put(
         'trabajadores/{trabajador}/vacaciones/{vacacion}',
         [VacacionController::class, 'update']
-    )->name('trabajadores.vacaciones.update');
+    )
+        ->name('trabajadores.vacaciones.update')
+        ->middleware('permission:editar vacaciones');
 
     Route::delete(
         'trabajadores/{trabajador}/vacaciones/{vacacion}',
         [VacacionController::class, 'destroy']
-    )->name('trabajadores.vacaciones.destroy');
+    )
+        ->name('trabajadores.vacaciones.destroy')
+        ->middleware('permission:eliminar vacaciones');
 
 
     // =========================================================
@@ -429,29 +485,37 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/create',
         [DetalleVacacionController::class, 'create']
-    )->name('trabajadores.vacaciones.detalles.create');
+    )
+        ->name('trabajadores.vacaciones.detalles.create')
+        ->middleware('permission:editar vacaciones');
 
     Route::post(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles',
         [DetalleVacacionController::class, 'store']
-    )->name('trabajadores.vacaciones.detalles.store');
+    )
+        ->name('trabajadores.vacaciones.detalles.store')
+        ->middleware('permission:editar vacaciones');
 
     Route::get(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}/edit',
         [DetalleVacacionController::class, 'edit']
-    )->name('trabajadores.vacaciones.detalles.edit');
+    )
+        ->name('trabajadores.vacaciones.detalles.edit')
+        ->middleware('permission:editar vacaciones');
 
     Route::put(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}',
         [DetalleVacacionController::class, 'update']
-    )->name('trabajadores.vacaciones.detalles.update');
+    )
+        ->name('trabajadores.vacaciones.detalles.update')
+        ->middleware('permission:editar vacaciones');
 
     Route::delete(
         'trabajadores/{trabajador}/vacaciones/{vacacion}/detalles/{detalleVacacion}',
         [DetalleVacacionController::class, 'destroy']
-    )->name('trabajadores.vacaciones.detalles.destroy');
-
-
+    )
+        ->name('trabajadores.vacaciones.detalles.destroy')
+        ->middleware('permission:eliminar vacaciones');
     // =========================================================
     // PERMISOS
     // =========================================================
