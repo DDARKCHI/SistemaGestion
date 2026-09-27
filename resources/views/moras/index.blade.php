@@ -1035,27 +1035,31 @@
                                         </a>
 
 
-                                        <form
-                                            action="{{ route(
-                                                'moras.destroy',
-                                                $mora
-                                            ) }}"
-                                            method="POST"
-                                            style="display:inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar esta mora?');"
-                                        >
+                                       @can('eliminar moras')
 
-                                            @csrf
-                                            @method('DELETE')
+    <form
+        action="{{ route(
+            'moras.destroy',
+            $mora
+        ) }}"
+        method="POST"
+        style="display:inline;"
+        onsubmit="return confirm('¿Estás seguro de eliminar esta mora?');"
+    >
 
-                                            <button
-                                                type="submit"
-                                                class="mora-action mora-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+        @csrf
+        @method('DELETE')
 
-                                        </form>
+        <button
+            type="submit"
+            class="mora-action mora-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                                     </div>
 

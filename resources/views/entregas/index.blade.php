@@ -1195,25 +1195,28 @@
                                             Editar
                                         </a>
 
+@can('eliminar entregas')
 
-                                        <form
-                                            action="{{ route('entregas.destroy', $entrega) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Está seguro de eliminar esta entrega?');"
-                                        >
+    <form
+        action="{{ route('entregas.destroy', $entrega) }}"
+        method="POST"
+        onsubmit="return confirm('¿Está seguro de eliminar esta entrega?');"
+    >
 
-                                            @csrf
+        @csrf
 
-                                            @method('DELETE')
+        @method('DELETE')
 
-                                            <button
-                                                type="submit"
-                                                class="delivery-action delivery-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+        <button
+            type="submit"
+            class="delivery-action delivery-action-danger"
+        >
+            Eliminar
+        </button>
 
-                                        </form>
+    </form>
+
+@endcan
 
                                     </div>
 

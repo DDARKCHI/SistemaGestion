@@ -741,25 +741,29 @@
                                         </a>
 
 
-                                        <form
-                                            action="{{ route('gastos.destroy', $gasto) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Seguro que deseas eliminar este gasto?');"
-                                            style="display: inline;"
-                                        >
+                                     @can('eliminar gastos')
 
-                                            @csrf
+    <form
+        action="{{ route('gastos.destroy', $gasto) }}"
+        method="POST"
+        onsubmit="return confirm('¿Seguro que deseas eliminar este gasto?');"
+        style="display: inline;"
+    >
 
-                                            @method('DELETE')
+        @csrf
 
-                                            <button
-                                                type="submit"
-                                                class="gastos-action gastos-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+        @method('DELETE')
 
-                                        </form>
+        <button
+            type="submit"
+            class="gastos-action gastos-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan   
 
                                     </div>
 

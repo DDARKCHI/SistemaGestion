@@ -987,24 +987,28 @@
                                         </a>
 
 
-                                        <form
-                                            action="{{ route('factorings.destroy', $factoring) }}"
-                                            method="POST"
-                                            style="display:inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar esta operación de factoring?');"
-                                        >
+                                       @can('eliminar factoring')
 
-                                            @csrf
-                                            @method('DELETE')
+    <form
+        action="{{ route('factorings.destroy', $factoring) }}"
+        method="POST"
+        style="display:inline;"
+        onsubmit="return confirm('¿Estás seguro de eliminar esta operación de factoring?');"
+    >
 
-                                            <button
-                                                type="submit"
-                                                class="factoring-action factoring-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+        @csrf
+        @method('DELETE')
 
-                                        </form>
+        <button
+            type="submit"
+            class="factoring-action factoring-action-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                                     </div>
 

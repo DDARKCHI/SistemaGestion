@@ -681,12 +681,16 @@
                 ← Volver
             </a>
 
-            <a
-                href="{{ route('operaciones.edit', $operacion) }}"
-                class="btn btn-primary"
-            >
-                ✎ Editar operación
-            </a>
+           @can('editar operaciones')
+
+    <a
+        href="{{ route('operaciones.edit', $operacion) }}"
+        class="btn btn-primary"
+    >
+        ✎ Editar operación
+    </a>
+
+@endcan
 
         </div>
 
@@ -1058,136 +1062,138 @@
         <div class="operation-card-body">
 
 
-            <div class="document-upload-box">
+         @can('crear documentos')
 
-                <div class="document-upload-title">
-                    Adjuntar nuevo documento
+    <div class="document-upload-box">
+
+        <div class="document-upload-title">
+            Adjuntar nuevo documento
+        </div>
+
+        <form
+            action="{{ route('operaciones.documentos.store', $operacion) }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            @csrf
+
+            <div class="document-form-grid">
+
+                <div class="document-form-group">
+
+                    <label class="document-form-label">
+                        Archivo *
+                    </label>
+
+                    <input
+                        type="file"
+                        name="archivo"
+                        class="document-form-control"
+                        required
+                    >
+
+                    <div class="document-form-help">
+                        Tamaño máximo permitido: 10 MB.
+                    </div>
+
                 </div>
 
 
-                <form
-                    action="{{ route('operaciones.documentos.store', $operacion) }}"
-                    method="POST"
-                    enctype="multipart/form-data"
-                >
+                <div class="document-form-group">
 
-                    @csrf
+                    <label class="document-form-label">
+                        Tipo de documento
+                    </label>
 
+                    <select
+                        name="tipo"
+                        class="document-form-control"
+                    >
 
-                    <div class="document-form-grid">
+                        <option value="">
+                            Seleccionar tipo
+                        </option>
 
-                        <div class="document-form-group">
+                        <option value="factura">
+                            Factura
+                        </option>
 
-                            <label class="document-form-label">
-                                Archivo *
-                            </label>
+                        <option value="guia_despacho">
+                            Guía de despacho
+                        </option>
 
-                            <input
-                                type="file"
-                                name="archivo"
-                                class="document-form-control"
-                                required
-                            >
+                        <option value="contrato">
+                            Contrato
+                        </option>
 
-                            <div class="document-form-help">
-                                Tamaño máximo permitido: 10 MB.
-                            </div>
+                        <option value="orden_compra">
+                            Orden de compra
+                        </option>
 
-                        </div>
+                        <option value="respaldo">
+                            Respaldo
+                        </option>
 
+                        <option value="otro">
+                            Otro
+                        </option>
 
-                        <div class="document-form-group">
+                    </select>
 
-                            <label class="document-form-label">
-                                Tipo de documento
-                            </label>
-
-                            <select
-                                name="tipo"
-                                class="document-form-control"
-                            >
-
-                                <option value="">
-                                    Seleccionar tipo
-                                </option>
-
-                                <option value="factura">
-                                    Factura
-                                </option>
-
-                                <option value="guia_despacho">
-                                    Guía de despacho
-                                </option>
-
-                                <option value="contrato">
-                                    Contrato
-                                </option>
-
-                                <option value="orden_compra">
-                                    Orden de compra
-                                </option>
-
-                                <option value="respaldo">
-                                    Respaldo
-                                </option>
-
-                                <option value="otro">
-                                    Otro
-                                </option>
-
-                            </select>
-
-                        </div>
+                </div>
 
 
-                        <div class="document-form-group">
+                <div class="document-form-group">
 
-                            <label class="document-form-label">
-                                Descripción
-                            </label>
+                    <label class="document-form-label">
+                        Descripción
+                    </label>
 
-                            <input
-                                type="text"
-                                name="descripcion"
-                                class="document-form-control"
-                                placeholder="Descripción del documento"
-                            >
+                    <input
+                        type="text"
+                        name="descripcion"
+                        class="document-form-control"
+                        placeholder="Descripción del documento"
+                    >
 
-                        </div>
-
-
-                        <div class="document-form-group">
-
-                            <label class="document-form-label">
-                                Observaciones
-                            </label>
-
-                            <input
-                                type="text"
-                                name="observaciones"
-                                class="document-form-control"
-                                placeholder="Observaciones"
-                            >
-
-                        </div>
-
-                    </div>
+                </div>
 
 
-                    <div class="document-form-actions">
+                <div class="document-form-group">
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary"
-                        >
-                            + Adjuntar documento
-                        </button>
+                    <label class="document-form-label">
+                        Observaciones
+                    </label>
 
-                    </div>
+                    <input
+                        type="text"
+                        name="observaciones"
+                        class="document-form-control"
+                        placeholder="Observaciones"
+                    >
 
-                </form>
+                </div>
 
             </div>
+
+
+            <div class="document-form-actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    + Adjuntar documento
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+@endcan   
 
 
             @if($operacion->documentos->count())
@@ -1252,24 +1258,28 @@
                                 @endif
 
 
-                                <form
-                                    action="{{ route('operaciones.documentos.destroy', [$operacion, $documento]) }}"
-                                    method="POST"
-                                    onsubmit="return confirm('¿Eliminar este documento?');"
-                                >
+                                @can('eliminar documentos')
 
-                                    @csrf
+    <form
+        action="{{ route('operaciones.documentos.destroy', [$operacion, $documento]) }}"
+        method="POST"
+        onsubmit="return confirm('¿Eliminar este documento?');"
+    >
 
-                                    @method('DELETE')
+        @csrf
 
-                                    <button
-                                        type="submit"
-                                        class="btn btn-danger"
-                                    >
-                                        Eliminar
-                                    </button>
+        @method('DELETE')
 
-                                </form>
+        <button
+            type="submit"
+            class="btn btn-danger"
+        >
+            Eliminar
+        </button>
+
+    </form>
+
+@endcan
 
                             </div>
 

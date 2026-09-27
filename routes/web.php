@@ -43,43 +43,76 @@ Route::middleware(['auth', 'active'])->group(function () {
 
 
     // =========================================================
-// CLIENTES
-// =========================================================
+    // CLIENTES
+    // =========================================================
 
-Route::resource('clientes', ClienteController::class)
-    ->only(['index', 'show'])
-    ->middleware('permission:ver clientes');
+    Route::resource('clientes', ClienteController::class)
+        ->only(['index', 'show'])
+        ->middleware('permission:ver clientes');
 
-Route::resource('clientes', ClienteController::class)
-    ->only(['create', 'store'])
-    ->middleware('permission:crear clientes');
+    Route::resource('clientes', ClienteController::class)
+        ->only(['create', 'store'])
+        ->middleware('permission:crear clientes');
 
-Route::resource('clientes', ClienteController::class)
-    ->only(['edit', 'update'])
-    ->middleware('permission:editar clientes');
+    Route::resource('clientes', ClienteController::class)
+        ->only(['edit', 'update'])
+        ->middleware('permission:editar clientes');
 
-Route::resource('clientes', ClienteController::class)
-    ->only(['destroy'])
-    ->middleware('permission:eliminar clientes');
+    Route::resource('clientes', ClienteController::class)
+        ->only(['destroy'])
+        ->middleware('permission:eliminar clientes');
+
 
     // =========================================================
     // OPERACIONES
     // =========================================================
 
     Route::resource('operaciones', OperacionController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'operaciones' => 'operacion',
-        ]);
+        ])
+        ->middleware('permission:ver operaciones');
+
+    Route::resource('operaciones', OperacionController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'operaciones' => 'operacion',
+        ])
+        ->middleware('permission:crear operaciones');
+
+    Route::resource('operaciones', OperacionController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'operaciones' => 'operacion',
+        ])
+        ->middleware('permission:editar operaciones');
+
+    Route::resource('operaciones', OperacionController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'operaciones' => 'operacion',
+        ])
+        ->middleware('permission:eliminar operaciones');
+
+
+    // =========================================================
+    // DOCUMENTOS DE OPERACIONES
+    // =========================================================
 
     Route::post(
         'operaciones/{operacion}/documentos',
         [OperacionController::class, 'storeDocumento']
-    )->name('operaciones.documentos.store');
+    )
+        ->name('operaciones.documentos.store')
+        ->middleware('permission:crear documentos');
 
     Route::delete(
         'operaciones/{operacion}/documentos/{documento}',
         [OperacionController::class, 'destroyDocumento']
-    )->name('operaciones.documentos.destroy');
+    )
+        ->name('operaciones.documentos.destroy')
+        ->middleware('permission:eliminar documentos');
 
 
     // =========================================================
@@ -87,9 +120,32 @@ Route::resource('clientes', ClienteController::class)
     // =========================================================
 
     Route::resource('entregas', EntregaController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'entregas' => 'entrega',
-        ]);
+        ])
+        ->middleware('permission:ver entregas');
+
+    Route::resource('entregas', EntregaController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'entregas' => 'entrega',
+        ])
+        ->middleware('permission:crear entregas');
+
+    Route::resource('entregas', EntregaController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'entregas' => 'entrega',
+        ])
+        ->middleware('permission:editar entregas');
+
+    Route::resource('entregas', EntregaController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'entregas' => 'entrega',
+        ])
+        ->middleware('permission:eliminar entregas');
 
 
     // =========================================================
@@ -97,9 +153,32 @@ Route::resource('clientes', ClienteController::class)
     // =========================================================
 
     Route::resource('facturas', FacturaController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'facturas' => 'factura',
-        ]);
+        ])
+        ->middleware('permission:ver facturas');
+
+    Route::resource('facturas', FacturaController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'facturas' => 'factura',
+        ])
+        ->middleware('permission:crear facturas');
+
+    Route::resource('facturas', FacturaController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'facturas' => 'factura',
+        ])
+        ->middleware('permission:editar facturas');
+
+    Route::resource('facturas', FacturaController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'facturas' => 'factura',
+        ])
+        ->middleware('permission:eliminar facturas');
 
 
     // =========================================================
@@ -119,9 +198,32 @@ Route::resource('clientes', ClienteController::class)
     // =========================================================
 
     Route::resource('factorings', FactoringController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'factorings' => 'factoring',
-        ]);
+        ])
+        ->middleware('permission:ver factoring');
+
+    Route::resource('factorings', FactoringController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'factorings' => 'factoring',
+        ])
+        ->middleware('permission:crear factoring');
+
+    Route::resource('factorings', FactoringController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'factorings' => 'factoring',
+        ])
+        ->middleware('permission:editar factoring');
+
+    Route::resource('factorings', FactoringController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'factorings' => 'factoring',
+        ])
+        ->middleware('permission:eliminar factoring');
 
 
     // =========================================================
@@ -129,9 +231,32 @@ Route::resource('clientes', ClienteController::class)
     // =========================================================
 
     Route::resource('moras', MoraController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'moras' => 'mora',
-        ]);
+        ])
+        ->middleware('permission:ver moras');
+
+    Route::resource('moras', MoraController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'moras' => 'mora',
+        ])
+        ->middleware('permission:crear moras');
+
+    Route::resource('moras', MoraController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'moras' => 'mora',
+        ])
+        ->middleware('permission:editar moras');
+
+    Route::resource('moras', MoraController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'moras' => 'mora',
+        ])
+        ->middleware('permission:eliminar moras');
 
 
     // =========================================================
@@ -139,9 +264,32 @@ Route::resource('clientes', ClienteController::class)
     // =========================================================
 
     Route::resource('gastos', GastoController::class)
+        ->only(['index', 'show'])
         ->parameters([
             'gastos' => 'gasto',
-        ]);
+        ])
+        ->middleware('permission:ver gastos');
+
+    Route::resource('gastos', GastoController::class)
+        ->only(['create', 'store'])
+        ->parameters([
+            'gastos' => 'gasto',
+        ])
+        ->middleware('permission:crear gastos');
+
+    Route::resource('gastos', GastoController::class)
+        ->only(['edit', 'update'])
+        ->parameters([
+            'gastos' => 'gasto',
+        ])
+        ->middleware('permission:editar gastos');
+
+    Route::resource('gastos', GastoController::class)
+        ->only(['destroy'])
+        ->parameters([
+            'gastos' => 'gasto',
+        ])
+        ->middleware('permission:eliminar gastos');
 
 
     // =========================================================
@@ -588,6 +736,7 @@ Route::resource('clientes', ClienteController::class)
 
 });
 
+
 require __DIR__.'/auth.php';
 
 
@@ -596,6 +745,7 @@ require __DIR__.'/auth.php';
 // =========================================================
 
 Route::fallback(function () {
+
     if (auth()->check()) {
         return redirect()->route('inicio');
     }
