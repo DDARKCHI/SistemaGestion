@@ -310,34 +310,33 @@ class AusenciaController extends Controller
                     ? 'registrado'
                     : 'actualizado';
 
-            $mensaje =
-                "Hola {$trabajador->nombre},\n\n" .
-                "Se ha {$accionMensaje} una ausencia asociada a tu registro.\n\n" .
-                "Desde: {$fechaInicio}\n" .
-                "Hasta: {$fechaTermino}\n" .
-                "Días: {$ausencia->dias}\n" .
-                "Estado: {$estado}\n";
+            Mail::send(
+                'emails.ausencia',
+                [
+                    'titulo' =>
+                        'Ausencia ' . $accion,
 
-            if ($ausencia->tipo) {
-                $mensaje .=
-                    "Tipo: {$ausencia->tipo}\n";
-            }
+                    'trabajador' =>
+                        $trabajador,
 
-            if ($ausencia->justificacion) {
-                $mensaje .=
-                    "Justificación: {$ausencia->justificacion}\n";
-            }
+                    'ausencia' =>
+                        $ausencia,
 
-            if ($ausencia->observaciones) {
-                $mensaje .=
-                    "Observaciones: {$ausencia->observaciones}\n";
-            }
+                    'accion' =>
+                        $accion,
 
-            $mensaje .=
-                "\nEste correo fue generado automáticamente por el sistema.";
+                    'accionMensaje' =>
+                        $accionMensaje,
 
-            Mail::raw(
-                $mensaje,
+                    'estado' =>
+                        $estado,
+
+                    'fechaInicio' =>
+                        $fechaInicio,
+
+                    'fechaTermino' =>
+                        $fechaTermino,
+                ],
                 function ($mail) use (
                     $trabajador,
                     $accion

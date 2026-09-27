@@ -7,7 +7,6 @@
 @push('styles')
 
 <style>
-
     .permission-form-header {
         margin-bottom: 24px;
     }
@@ -138,6 +137,13 @@
         box-shadow: 0 0 0 3px rgba(21,90,145,.08);
     }
 
+    .permission-form-input[readonly] {
+        background: #f8fafc;
+        color: #155a91;
+        font-weight: 700;
+        cursor: default;
+    }
+
     textarea.permission-form-input {
         min-height: 105px;
         resize: vertical;
@@ -208,18 +214,9 @@
         border-radius: 6px;
         background: #ffffff;
         color: #344054;
-        font-family: inherit;
         font-size: 10px;
         font-weight: 600;
         text-decoration: none;
-        transition:
-            background .12s ease,
-            border-color .12s ease;
-    }
-
-    .permission-form-cancel:hover {
-        background: #f5f8fb;
-        border-color: #cbd7e3;
     }
 
     .permission-hour-fields {
@@ -231,7 +228,6 @@
     }
 
     @media (max-width: 700px) {
-
         .permission-form-grid {
             grid-template-columns: 1fr;
         }
@@ -253,9 +249,7 @@
         .permission-form-footer-actions .permission-form-cancel {
             flex: 1;
         }
-
     }
-
 </style>
 
 @endpush
@@ -263,407 +257,314 @@
 
 @section('content')
 
-    <div class="permission-form-header">
+<div class="permission-form-header">
 
-        <h1 class="permission-form-title">
-            Nuevo permiso
-        </h1>
+    <h1 class="permission-form-title">
+        Nuevo permiso
+    </h1>
 
-        <p class="permission-form-subtitle">
-            Registra un permiso de jornada completa o por horas para el trabajador.
+    <p class="permission-form-subtitle">
+        Registra un permiso de jornada completa o por horas para el trabajador.
+    </p>
+
+</div>
+
+
+<div class="permission-worker-card">
+
+    <div class="permission-worker-label">
+        Trabajador
+    </div>
+
+    <div class="permission-worker-name">
+        {{ $trabajador->nombre }}
+    </div>
+
+    <div class="permission-worker-rut">
+        RUT: {{ $trabajador->rut }}
+    </div>
+
+</div>
+
+
+@if($errors->any())
+
+    <div class="permission-form-alert">
+        Revisa los datos ingresados. Hay campos que requieren corrección antes de guardar el permiso.
+    </div>
+
+@endif
+
+
+<section class="permission-form-card">
+
+    <div class="permission-form-card-header">
+
+        <h2 class="permission-form-card-title">
+            Información del permiso
+        </h2>
+
+        <p class="permission-form-card-description">
+            Define el tipo de permiso, fechas, horarios y motivo correspondiente.
         </p>
 
     </div>
 
 
-    <div class="permission-worker-card">
+    <form
+        action="{{ route('trabajadores.permisos.store', $trabajador) }}"
+        method="POST"
+    >
 
-        <div class="permission-worker-label">
-            Trabajador
-        </div>
-
-        <div class="permission-worker-name">
-            {{ $trabajador->nombre }}
-        </div>
-
-        <div class="permission-worker-rut">
-            RUT:
-            {{ $trabajador->rut }}
-        </div>
-
-    </div>
+        @csrf
 
 
-    @if($errors->any())
+        <div class="permission-form-body">
 
-        <div class="permission-form-alert">
-            Revisa los datos ingresados. Hay campos que requieren corrección antes de guardar el permiso.
-        </div>
+            <div class="permission-form-grid">
 
-    @endif
+                <div class="permission-form-group">
 
+                    <label
+                        for="tipo"
+                        class="permission-form-label"
+                    >
+                        Tipo
+                        <span class="permission-form-required">*</span>
+                    </label>
 
-    <section class="permission-form-card">
-
-        <div class="permission-form-card-header">
-
-            <h2 class="permission-form-card-title">
-                Información del permiso
-            </h2>
-
-            <p class="permission-form-card-description">
-                Define el tipo de permiso, fechas, horarios y motivo correspondiente.
-            </p>
-
-        </div>
-
-
-        <form
-            action="{{ route('trabajadores.permisos.store', $trabajador) }}"
-            method="POST"
-        >
-
-            @csrf
-
-
-            <div class="permission-form-body">
-
-                <div class="permission-form-grid">
-
-                    <div class="permission-form-group">
-
-                        <label
-                            for="tipo"
-                            class="permission-form-label"
-                        >
-                            Tipo
-                            <span class="permission-form-required">*</span>
-                        </label>
-
-                        <select
-                            id="tipo"
-                            name="tipo"
-                            class="permission-form-input"
-                            required
-                            autofocus
-                        >
-
-                            <option value="">
-                                Seleccionar
-                            </option>
-
-                            <option
-                                value="dia_completo"
-                                {{ old('tipo') === 'dia_completo' ? 'selected' : '' }}
-                            >
-                                Día completo
-                            </option>
-
-                            <option
-                                value="horas"
-                                {{ old('tipo') === 'horas' ? 'selected' : '' }}
-                            >
-                                Por horas
-                            </option>
-
-                        </select>
-
-                        <div class="permission-form-help">
-                            Selecciona si el permiso corresponde a una jornada completa o solo algunas horas.
-                        </div>
-
-                        @error('tipo')
-
-                            <div class="permission-form-error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    <div class="permission-form-group">
-
-                        <label
-                            for="estado"
-                            class="permission-form-label"
-                        >
-                            Estado
-                            <span class="permission-form-required">*</span>
-                        </label>
-
-                        <select
-                            id="estado"
-                            name="estado"
-                            class="permission-form-input"
-                            required
-                        >
-
-                            <option value="pendiente" {{ old('estado', 'pendiente') === 'pendiente' ? 'selected' : '' }}>
-                                Pendiente
-                            </option>
-
-                            <option value="justificado" {{ old('estado') === 'justificado' ? 'selected' : '' }}>
-                                Justificado
-                            </option>
-
-                            <option value="injustificado" {{ old('estado') === 'injustificado' ? 'selected' : '' }}>
-                                Injustificado
-                            </option>
-
-                        </select>
-
-                        @error('estado')
-
-                            <div class="permission-form-error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    <div class="permission-form-group">
-
-                        <label
-                            for="fecha_inicio"
-                            class="permission-form-label"
-                        >
-                            Fecha de inicio
-                            <span class="permission-form-required">*</span>
-                        </label>
-
-                        <input
-                            type="date"
-                            id="fecha_inicio"
-                            name="fecha_inicio"
-                            class="permission-form-input"
-                            value="{{ old('fecha_inicio') }}"
-                            required
-                        >
-
-                        @error('fecha_inicio')
-
-                            <div class="permission-form-error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    <div class="permission-form-group">
-
-                        <label
-                            for="fecha_termino"
-                            class="permission-form-label"
-                        >
-                            Fecha de término
-                        </label>
-
-                        <input
-                            type="date"
-                            id="fecha_termino"
-                            name="fecha_termino"
-                            class="permission-form-input"
-                            value="{{ old('fecha_termino') }}"
-                        >
-
-                        <div class="permission-form-help">
-                            Puede quedar vacía si el permiso corresponde a una sola fecha.
-                        </div>
-
-                        @error('fecha_termino')
-
-                            <div class="permission-form-error">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
-
-                    </div>
-
-
-                    <div
-                        id="permission-hour-fields"
-                        class="permission-hour-fields {{ old('tipo') === 'horas' ? '' : 'is-hidden' }}"
+                    <select
+                        id="tipo"
+                        name="tipo"
+                        class="permission-form-input"
+                        required
+                        autofocus
                     >
 
-                        <div class="permission-form-group">
+                        <option value="">
+                            Seleccionar
+                        </option>
 
-                            <label
-                                for="hora_inicio"
-                                class="permission-form-label"
-                            >
-                                Hora de inicio
-                                <span class="permission-form-required">*</span>
-                            </label>
+                        <option
+                            value="dia_completo"
+                            {{ old('tipo') === 'dia_completo' ? 'selected' : '' }}
+                        >
+                            Día completo
+                        </option>
 
-                            <input
-                                type="time"
-                                id="hora_inicio"
-                                name="hora_inicio"
-                                class="permission-form-input"
-                                value="{{ old('hora_inicio') }}"
-                            >
+                        <option
+                            value="horas"
+                            {{ old('tipo') === 'horas' ? 'selected' : '' }}
+                        >
+                            Por horas
+                        </option>
 
-                            @error('hora_inicio')
+                    </select>
 
-                                <div class="permission-form-error">
-                                    {{ $message }}
-                                </div>
-
-                            @enderror
-
+                    @error('tipo')
+                        <div class="permission-form-error">
+                            {{ $message }}
                         </div>
+                    @enderror
+
+                </div>
 
 
-                        <div class="permission-form-group">
+                <div class="permission-form-group">
 
-                            <label
-                                for="hora_termino"
-                                class="permission-form-label"
-                            >
-                                Hora de término
-                                <span class="permission-form-required">*</span>
-                            </label>
+                    <label
+                        for="estado"
+                        class="permission-form-label"
+                    >
+                        Estado
+                        <span class="permission-form-required">*</span>
+                    </label>
 
-                            <input
-                                type="time"
-                                id="hora_termino"
-                                name="hora_termino"
-                                class="permission-form-input"
-                                value="{{ old('hora_termino') }}"
-                            >
+                    <select
+                        id="estado"
+                        name="estado"
+                        class="permission-form-input"
+                        required
+                    >
 
-                            @error('hora_termino')
+                        <option
+                            value="pendiente"
+                            {{ old('estado', 'pendiente') === 'pendiente' ? 'selected' : '' }}
+                        >
+                            Pendiente
+                        </option>
 
-                                <div class="permission-form-error">
-                                    {{ $message }}
-                                </div>
+                        <option
+                            value="justificado"
+                            {{ old('estado') === 'justificado' ? 'selected' : '' }}
+                        >
+                            Justificado
+                        </option>
 
-                            @enderror
+                        <option
+                            value="injustificado"
+                            {{ old('estado') === 'injustificado' ? 'selected' : '' }}
+                        >
+                            Injustificado
+                        </option>
 
+                    </select>
+
+                    @error('estado')
+                        <div class="permission-form-error">
+                            {{ $message }}
                         </div>
+                    @enderror
+
+                </div>
 
 
-                        <div class="permission-form-group">
+                <div class="permission-form-group">
 
-                            <label
-                                for="cantidad_horas"
-                                class="permission-form-label"
-                            >
-                                Cantidad de horas
-                                <span class="permission-form-required">*</span>
-                            </label>
+                    <label
+                        for="fecha_inicio"
+                        class="permission-form-label"
+                    >
+                        Fecha de inicio
+                        <span class="permission-form-required">*</span>
+                    </label>
 
-                            <input
-                                type="number"
-                                id="cantidad_horas"
-                                name="cantidad_horas"
-                                class="permission-form-input"
-                                value="{{ old('cantidad_horas') }}"
-                                min="0.01"
-                                step="0.25"
-                                placeholder="Ej. 2"
-                            >
+                    <input
+                        type="date"
+                        id="fecha_inicio"
+                        name="fecha_inicio"
+                        class="permission-form-input"
+                        value="{{ old('fecha_inicio') }}"
+                        required
+                    >
 
-                            <div class="permission-form-help">
-                                Cantidad total de horas correspondientes al permiso.
-                            </div>
-
-                            @error('cantidad_horas')
-
-                                <div class="permission-form-error">
-                                    {{ $message }}
-                                </div>
-
-                            @enderror
-
+                    @error('fecha_inicio')
+                        <div class="permission-form-error">
+                            {{ $message }}
                         </div>
+                    @enderror
 
+                </div>
+
+
+                <div class="permission-form-group">
+
+                    <label
+                        for="fecha_termino"
+                        class="permission-form-label"
+                    >
+                        Fecha de término
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha_termino"
+                        name="fecha_termino"
+                        class="permission-form-input"
+                        value="{{ old('fecha_termino') }}"
+                    >
+
+                    <div class="permission-form-help">
+                        Si queda vacía, se considera la misma fecha de inicio.
                     </div>
 
+                    @error('fecha_termino')
+                        <div class="permission-form-error">
+                            {{ $message }}
+                        </div>
+                    @enderror
 
-                    <div class="permission-form-group permission-form-group-full">
+                </div>
+
+
+                <div
+                    id="permission-hour-fields"
+                    class="permission-hour-fields {{ old('tipo') === 'horas' ? '' : 'is-hidden' }}"
+                >
+
+                    <div class="permission-form-group">
 
                         <label
-                            for="motivo"
+                            for="hora_inicio"
                             class="permission-form-label"
                         >
-                            Motivo
+                            Hora de inicio
+                            <span class="permission-form-required">*</span>
                         </label>
 
-                        <textarea
-                            id="motivo"
-                            name="motivo"
+                        <input
+                            type="time"
+                            id="hora_inicio"
+                            name="hora_inicio"
                             class="permission-form-input"
-                            placeholder="Motivo por el cual se solicita o registra el permiso..."
-                        >{{ old('motivo') }}</textarea>
+                            value="{{ old('hora_inicio') }}"
+                        >
 
-                        @error('motivo')
-
+                        @error('hora_inicio')
                             <div class="permission-form-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
 
                     </div>
 
 
-                    <div class="permission-form-group permission-form-group-full">
+                    <div class="permission-form-group">
 
                         <label
-                            for="justificacion"
+                            for="hora_termino"
                             class="permission-form-label"
                         >
-                            Justificación
+                            Hora de término
+                            <span class="permission-form-required">*</span>
                         </label>
 
-                        <textarea
-                            id="justificacion"
-                            name="justificacion"
+                        <input
+                            type="time"
+                            id="hora_termino"
+                            name="hora_termino"
                             class="permission-form-input"
-                            placeholder="Justificación del permiso, si corresponde..."
-                        >{{ old('justificacion') }}</textarea>
+                            value="{{ old('hora_termino') }}"
+                        >
 
-                        @error('justificacion')
-
+                        @error('hora_termino')
                             <div class="permission-form-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
 
                     </div>
 
 
-                    <div class="permission-form-group permission-form-group-full">
+                    <div class="permission-form-group">
 
                         <label
-                            for="observaciones"
+                            for="cantidad_horas"
                             class="permission-form-label"
                         >
-                            Observaciones
+                            Cantidad de horas
                         </label>
 
-                        <textarea
-                            id="observaciones"
-                            name="observaciones"
+                        <input
+                            type="number"
+                            id="cantidad_horas"
+                            name="cantidad_horas"
                             class="permission-form-input"
-                            placeholder="Información adicional sobre este permiso..."
-                        >{{ old('observaciones') }}</textarea>
+                            value="{{ old('cantidad_horas') }}"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="Se calculará automáticamente"
+                            readonly
+                        >
 
-                        @error('observaciones')
+                        <div class="permission-form-help">
+                            Se calcula automáticamente considerando fechas y horas.
+                        </div>
 
+                        @error('cantidad_horas')
                             <div class="permission-form-error">
                                 {{ $message }}
                             </div>
-
                         @enderror
 
                     </div>
@@ -671,55 +572,112 @@
                 </div>
 
 
-                <div class="permission-form-info">
+                <div class="permission-form-group permission-form-group-full">
 
-                    <strong>Día completo:</strong>
-                    no requiere horas de inicio, término ni cantidad de horas.
+                    <label
+                        for="motivo"
+                        class="permission-form-label"
+                    >
+                        Motivo
+                    </label>
 
-                    <br>
+                    <textarea
+                        id="motivo"
+                        name="motivo"
+                        class="permission-form-input"
+                        placeholder="Motivo por el cual se solicita o registra el permiso..."
+                    >{{ old('motivo') }}</textarea>
 
-                    <strong>Por horas:</strong>
-                    debes indicar el horario y la cantidad total de horas correspondientes.
+                </div>
+
+
+                <div class="permission-form-group permission-form-group-full">
+
+                    <label
+                        for="justificacion"
+                        class="permission-form-label"
+                    >
+                        Justificación
+                    </label>
+
+                    <textarea
+                        id="justificacion"
+                        name="justificacion"
+                        class="permission-form-input"
+                        placeholder="Justificación del permiso, si corresponde..."
+                    >{{ old('justificacion') }}</textarea>
+
+                </div>
+
+
+                <div class="permission-form-group permission-form-group-full">
+
+                    <label
+                        for="observaciones"
+                        class="permission-form-label"
+                    >
+                        Observaciones
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        name="observaciones"
+                        class="permission-form-input"
+                        placeholder="Información adicional sobre este permiso..."
+                    >{{ old('observaciones') }}</textarea>
 
                 </div>
 
             </div>
 
 
-            <div class="permission-form-footer">
+            <div class="permission-form-info">
 
-                <div>
+                <strong>Día completo:</strong>
+                no requiere horas.
 
-                    <span class="permission-form-help">
-                        Los campos marcados con * son obligatorios.
-                    </span>
+                <br>
 
-                </div>
-
-
-                <div class="permission-form-footer-actions">
-
-                    <a
-                        href="{{ route('trabajadores.show', $trabajador) }}"
-                        class="permission-form-cancel"
-                    >
-                        Cancelar
-                    </a>
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Guardar permiso
-                    </button>
-
-                </div>
+                <strong>Por horas:</strong>
+                selecciona fecha y hora de inicio y término.
+                El total se calculará automáticamente.
 
             </div>
 
-        </form>
+        </div>
 
-    </section>
+
+        <div class="permission-form-footer">
+
+            <div>
+                <span class="permission-form-help">
+                    Los campos marcados con * son obligatorios.
+                </span>
+            </div>
+
+            <div class="permission-form-footer-actions">
+
+                <a
+                    href="{{ route('trabajadores.show', $trabajador) }}"
+                    class="permission-form-cancel"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Guardar permiso
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</section>
 
 @endsection
 
@@ -727,45 +685,143 @@
 @push('scripts')
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
 
-    document.addEventListener('DOMContentLoaded', function () {
+    const tipo =
+        document.getElementById('tipo');
 
-        const tipo = document.getElementById('tipo');
-        const hourFields = document.getElementById('permission-hour-fields');
+    const fechaInicio =
+        document.getElementById('fecha_inicio');
 
-        const horaInicio = document.getElementById('hora_inicio');
-        const horaTermino = document.getElementById('hora_termino');
-        const cantidadHoras = document.getElementById('cantidad_horas');
+    const fechaTermino =
+        document.getElementById('fecha_termino');
 
-        function actualizarCamposHoras() {
+    const horaInicio =
+        document.getElementById('hora_inicio');
 
-            const esPorHoras = tipo.value === 'horas';
+    const horaTermino =
+        document.getElementById('hora_termino');
 
-            hourFields.classList.toggle(
-                'is-hidden',
-                !esPorHoras
-            );
+    const cantidadHoras =
+        document.getElementById('cantidad_horas');
 
-            horaInicio.required = esPorHoras;
-            horaTermino.required = esPorHoras;
-            cantidadHoras.required = esPorHoras;
-
-            if (!esPorHoras) {
-                horaInicio.value = '';
-                horaTermino.value = '';
-                cantidadHoras.value = '';
-            }
-        }
-
-        tipo.addEventListener(
-            'change',
-            actualizarCamposHoras
+    const hourFields =
+        document.getElementById(
+            'permission-hour-fields'
         );
 
-        actualizarCamposHoras();
 
-    });
+    function calcularHoras() {
 
+        if (
+            tipo.value !== 'horas' ||
+            !fechaInicio.value ||
+            !horaInicio.value ||
+            !horaTermino.value
+        ) {
+            cantidadHoras.value = '';
+            return;
+        }
+
+        const fechaFin =
+            fechaTermino.value ||
+            fechaInicio.value;
+
+        const inicio =
+            new Date(
+                fechaInicio.value +
+                'T' +
+                horaInicio.value +
+                ':00'
+            );
+
+        const termino =
+            new Date(
+                fechaFin +
+                'T' +
+                horaTermino.value +
+                ':00'
+            );
+
+        const diferencia =
+            termino.getTime() -
+            inicio.getTime();
+
+        if (
+            !Number.isFinite(diferencia) ||
+            diferencia <= 0
+        ) {
+            cantidadHoras.value = '';
+            return;
+        }
+
+        const horas =
+            diferencia /
+            (1000 * 60 * 60);
+
+        cantidadHoras.value =
+            Number(
+                horas.toFixed(2)
+            );
+    }
+
+
+    function actualizarCamposHoras() {
+
+        const esPorHoras =
+            tipo.value === 'horas';
+
+        hourFields.classList.toggle(
+            'is-hidden',
+            !esPorHoras
+        );
+
+        horaInicio.required =
+            esPorHoras;
+
+        horaTermino.required =
+            esPorHoras;
+
+        if (!esPorHoras) {
+
+            horaInicio.value = '';
+            horaTermino.value = '';
+            cantidadHoras.value = '';
+
+            return;
+        }
+
+        calcularHoras();
+    }
+
+
+    tipo.addEventListener(
+        'change',
+        actualizarCamposHoras
+    );
+
+    fechaInicio.addEventListener(
+        'change',
+        calcularHoras
+    );
+
+    fechaTermino.addEventListener(
+        'change',
+        calcularHoras
+    );
+
+    horaInicio.addEventListener(
+        'input',
+        calcularHoras
+    );
+
+    horaTermino.addEventListener(
+        'input',
+        calcularHoras
+    );
+
+    actualizarCamposHoras();
+});
 </script>
 
 @endpush

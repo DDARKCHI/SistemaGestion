@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Permiso;
 use App\Models\Trabajador;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
@@ -27,125 +29,19 @@ class PermisoController extends Controller
         Trabajador $trabajador
     ): RedirectResponse {
 
-        $datos = $request->validate(
-            [
-                'tipo' => [
-                    'required',
-                    'in:dia_completo,horas',
-                ],
-
-                'fecha_inicio' => [
-                    'required',
-                    'date',
-                ],
-
-                'fecha_termino' => [
-                    'nullable',
-                    'date',
-                    'after_or_equal:fecha_inicio',
-                ],
-
-                'hora_inicio' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'date_format:H:i',
-                ],
-
-                'hora_termino' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'date_format:H:i',
-                    'after:hora_inicio',
-                ],
-
-                'cantidad_horas' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'numeric',
-                    'min:0.01',
-                ],
-
-                'estado' => [
-                    'required',
-                    'in:pendiente,justificado,injustificado',
-                ],
-
-                'motivo' => [
-                    'nullable',
-                    'string',
-                ],
-
-                'justificacion' => [
-                    'nullable',
-                    'string',
-                ],
-
-                'observaciones' => [
-                    'nullable',
-                    'string',
-                ],
-            ],
-            [
-                'tipo.required' =>
-                    'Debes seleccionar el tipo de permiso.',
-
-                'tipo.in' =>
-                    'El tipo de permiso seleccionado no es válido.',
-
-                'fecha_inicio.required' =>
-                    'La fecha de inicio es obligatoria.',
-
-                'fecha_inicio.date' =>
-                    'La fecha de inicio no es válida.',
-
-                'fecha_termino.date' =>
-                    'La fecha de término no es válida.',
-
-                'fecha_termino.after_or_equal' =>
-                    'La fecha de término no puede ser anterior a la fecha de inicio.',
-
-                'hora_inicio.required_if' =>
-                    'La hora de inicio es obligatoria para permisos por horas.',
-
-                'hora_inicio.date_format' =>
-                    'La hora de inicio no es válida.',
-
-                'hora_termino.required_if' =>
-                    'La hora de término es obligatoria para permisos por horas.',
-
-                'hora_termino.date_format' =>
-                    'La hora de término no es válida.',
-
-                'hora_termino.after' =>
-                    'La hora de término debe ser posterior a la hora de inicio.',
-
-                'cantidad_horas.required_if' =>
-                    'Debes indicar la cantidad de horas del permiso.',
-
-                'cantidad_horas.numeric' =>
-                    'La cantidad de horas debe ser numérica.',
-
-                'cantidad_horas.min' =>
-                    'La cantidad de horas debe ser mayor a cero.',
-
-                'estado.required' =>
-                    'Debes seleccionar el estado del permiso.',
-
-                'estado.in' =>
-                    'El estado seleccionado no es válido.',
-            ]
+        $datos = $this->validarDatos(
+            $request
         );
 
-        if ($datos['tipo'] === 'dia_completo') {
-            $datos['hora_inicio'] = null;
-            $datos['hora_termino'] = null;
-            $datos['cantidad_horas'] = null;
-        }
+        $datos = $this->prepararHorario(
+            $datos
+        );
 
         $datos['trabajador_id'] =
             $trabajador->id;
 
-        $permiso = Permiso::create($datos);
+        $permiso =
+            Permiso::create($datos);
 
         $this->enviarNotificacion(
             $trabajador,
@@ -194,120 +90,13 @@ class PermisoController extends Controller
             $permiso
         );
 
-        $datos = $request->validate(
-            [
-                'tipo' => [
-                    'required',
-                    'in:dia_completo,horas',
-                ],
-
-                'fecha_inicio' => [
-                    'required',
-                    'date',
-                ],
-
-                'fecha_termino' => [
-                    'nullable',
-                    'date',
-                    'after_or_equal:fecha_inicio',
-                ],
-
-                'hora_inicio' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'date_format:H:i',
-                ],
-
-                'hora_termino' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'date_format:H:i',
-                    'after:hora_inicio',
-                ],
-
-                'cantidad_horas' => [
-                    'nullable',
-                    'required_if:tipo,horas',
-                    'numeric',
-                    'min:0.01',
-                ],
-
-                'estado' => [
-                    'required',
-                    'in:pendiente,justificado,injustificado',
-                ],
-
-                'motivo' => [
-                    'nullable',
-                    'string',
-                ],
-
-                'justificacion' => [
-                    'nullable',
-                    'string',
-                ],
-
-                'observaciones' => [
-                    'nullable',
-                    'string',
-                ],
-            ],
-            [
-                'tipo.required' =>
-                    'Debes seleccionar el tipo de permiso.',
-
-                'tipo.in' =>
-                    'El tipo de permiso seleccionado no es válido.',
-
-                'fecha_inicio.required' =>
-                    'La fecha de inicio es obligatoria.',
-
-                'fecha_inicio.date' =>
-                    'La fecha de inicio no es válida.',
-
-                'fecha_termino.date' =>
-                    'La fecha de término no es válida.',
-
-                'fecha_termino.after_or_equal' =>
-                    'La fecha de término no puede ser anterior a la fecha de inicio.',
-
-                'hora_inicio.required_if' =>
-                    'La hora de inicio es obligatoria para permisos por horas.',
-
-                'hora_inicio.date_format' =>
-                    'La hora de inicio no es válida.',
-
-                'hora_termino.required_if' =>
-                    'La hora de término es obligatoria para permisos por horas.',
-
-                'hora_termino.date_format' =>
-                    'La hora de término no es válida.',
-
-                'hora_termino.after' =>
-                    'La hora de término debe ser posterior a la hora de inicio.',
-
-                'cantidad_horas.required_if' =>
-                    'Debes indicar la cantidad de horas del permiso.',
-
-                'cantidad_horas.numeric' =>
-                    'La cantidad de horas debe ser numérica.',
-
-                'cantidad_horas.min' =>
-                    'La cantidad de horas debe ser mayor a cero.',
-
-                'estado.required' =>
-                    'Debes seleccionar el estado del permiso.',
-
-                'estado.in' =>
-                    'El estado seleccionado no es válido.',
-            ]
+        $datos = $this->validarDatos(
+            $request
         );
 
-        if ($datos['tipo'] === 'dia_completo') {
-            $datos['hora_inicio'] = null;
-            $datos['hora_termino'] = null;
-            $datos['cantidad_horas'] = null;
-        }
+        $datos = $this->prepararHorario(
+            $datos
+        );
 
         $permiso->update($datos);
 
@@ -366,6 +155,165 @@ class PermisoController extends Controller
             );
     }
 
+    private function validarDatos(
+        Request $request
+    ): array {
+
+        return $request->validate(
+            [
+                'tipo' => [
+                    'required',
+                    'in:dia_completo,horas',
+                ],
+
+                'fecha_inicio' => [
+                    'required',
+                    'date',
+                ],
+
+                'fecha_termino' => [
+                    'nullable',
+                    'date',
+                    'after_or_equal:fecha_inicio',
+                ],
+
+                'hora_inicio' => [
+                    'nullable',
+                    'required_if:tipo,horas',
+                    'date_format:H:i',
+                ],
+
+                'hora_termino' => [
+                    'nullable',
+                    'required_if:tipo,horas',
+                    'date_format:H:i',
+                ],
+
+                'cantidad_horas' => [
+                    'nullable',
+                    'numeric',
+                    'min:0.01',
+                ],
+
+                'estado' => [
+                    'required',
+                    'in:pendiente,justificado,injustificado',
+                ],
+
+                'motivo' => [
+                    'nullable',
+                    'string',
+                ],
+
+                'justificacion' => [
+                    'nullable',
+                    'string',
+                ],
+
+                'observaciones' => [
+                    'nullable',
+                    'string',
+                ],
+            ],
+            [
+                'tipo.required' =>
+                    'Debes seleccionar el tipo de permiso.',
+
+                'tipo.in' =>
+                    'El tipo de permiso seleccionado no es válido.',
+
+                'fecha_inicio.required' =>
+                    'La fecha de inicio es obligatoria.',
+
+                'fecha_inicio.date' =>
+                    'La fecha de inicio no es válida.',
+
+                'fecha_termino.date' =>
+                    'La fecha de término no es válida.',
+
+                'fecha_termino.after_or_equal' =>
+                    'La fecha de término no puede ser anterior a la fecha de inicio.',
+
+                'hora_inicio.required_if' =>
+                    'La hora de inicio es obligatoria para permisos por horas.',
+
+                'hora_inicio.date_format' =>
+                    'La hora de inicio no es válida.',
+
+                'hora_termino.required_if' =>
+                    'La hora de término es obligatoria para permisos por horas.',
+
+                'hora_termino.date_format' =>
+                    'La hora de término no es válida.',
+
+                'cantidad_horas.numeric' =>
+                    'La cantidad de horas debe ser numérica.',
+
+                'cantidad_horas.min' =>
+                    'La cantidad de horas debe ser mayor a cero.',
+
+                'estado.required' =>
+                    'Debes seleccionar el estado del permiso.',
+
+                'estado.in' =>
+                    'El estado seleccionado no es válido.',
+            ]
+        );
+    }
+
+    private function prepararHorario(
+        array $datos
+    ): array {
+
+        if ($datos['tipo'] === 'dia_completo') {
+
+            $datos['hora_inicio'] = null;
+            $datos['hora_termino'] = null;
+            $datos['cantidad_horas'] = null;
+
+            return $datos;
+        }
+
+        $fechaTermino =
+            $datos['fecha_termino']
+                ?: $datos['fecha_inicio'];
+
+        $inicio = Carbon::createFromFormat(
+            'Y-m-d H:i',
+            $datos['fecha_inicio'] .
+            ' ' .
+            $datos['hora_inicio']
+        );
+
+        $termino = Carbon::createFromFormat(
+            'Y-m-d H:i',
+            $fechaTermino .
+            ' ' .
+            $datos['hora_termino']
+        );
+
+        if ($termino->lessThanOrEqualTo($inicio)) {
+
+            throw ValidationException::withMessages([
+                'hora_termino' =>
+                    'La fecha y hora de término deben ser posteriores a la fecha y hora de inicio.',
+            ]);
+        }
+
+        $minutos =
+            $inicio->diffInMinutes(
+                $termino
+            );
+
+        $datos['cantidad_horas'] =
+            round(
+                $minutos / 60,
+                2
+            );
+
+        return $datos;
+    }
+
     private function validarTrabajador(
         Trabajador $trabajador,
         Permiso $permiso
@@ -389,16 +337,20 @@ class PermisoController extends Controller
         }
 
         try {
-
             $tipo =
                 $permiso->tipo === 'dia_completo'
                     ? 'Día completo'
                     : 'Por horas';
 
             $estado = match ($permiso->estado) {
-                'justificado' => 'Justificado',
-                'injustificado' => 'Injustificado',
-                default => 'Pendiente',
+                'justificado' =>
+                    'Justificado',
+
+                'injustificado' =>
+                    'Injustificado',
+
+                default =>
+                    'Pendiente',
             };
 
             $fechaInicio =
@@ -411,53 +363,61 @@ class PermisoController extends Controller
                     ? $permiso->fecha_termino->format('d/m/Y')
                     : $fechaInicio;
 
-            $mensaje =
-                "Hola {$trabajador->nombre},\n\n" .
-                "Se ha {$accion} un permiso asociado a tu registro.\n\n" .
-                "Tipo: {$tipo}\n" .
-                "Desde: {$fechaInicio}\n" .
-                "Hasta: {$fechaTermino}\n";
+            $horaInicio =
+                $permiso->hora_inicio
+                    ? substr(
+                        $permiso->hora_inicio,
+                        0,
+                        5
+                    )
+                    : '—';
 
-            if ($permiso->tipo === 'horas') {
+            $horaTermino =
+                $permiso->hora_termino
+                    ? substr(
+                        $permiso->hora_termino,
+                        0,
+                        5
+                    )
+                    : '—';
 
-                $horaInicio =
-                    $permiso->hora_inicio
-                        ? substr($permiso->hora_inicio, 0, 5)
-                        : '—';
+            Mail::send(
+                'emails.permiso',
+                [
+                    'titulo' =>
+                        'Permiso ' . $accion,
 
-                $horaTermino =
-                    $permiso->hora_termino
-                        ? substr($permiso->hora_termino, 0, 5)
-                        : '—';
+                    'trabajador' =>
+                        $trabajador,
 
-                $mensaje .=
-                    "Horario: {$horaInicio} - {$horaTermino}\n" .
-                    "Cantidad de horas: {$permiso->cantidad_horas}\n";
-            }
+                    'permiso' =>
+                        $permiso,
 
-            $mensaje .=
-                "Estado: {$estado}\n";
+                    'accion' =>
+                        $accion,
 
-            if ($permiso->motivo) {
-                $mensaje .=
-                    "Motivo: {$permiso->motivo}\n";
-            }
+                    'tipo' =>
+                        $tipo,
 
-            if ($permiso->justificacion) {
-                $mensaje .=
-                    "Justificación: {$permiso->justificacion}\n";
-            }
+                    'estado' =>
+                        $estado,
 
-            $mensaje .=
-                "\nEste correo fue generado automáticamente por el sistema.";
+                    'fechaInicio' =>
+                        $fechaInicio,
 
-            Mail::raw(
-                $mensaje,
+                    'fechaTermino' =>
+                        $fechaTermino,
+
+                    'horaInicio' =>
+                        $horaInicio,
+
+                    'horaTermino' =>
+                        $horaTermino,
+                ],
                 function ($mail) use (
                     $trabajador,
                     $accion
                 ) {
-
                     $mail->to(
                         $trabajador->correo,
                         $trabajador->nombre
