@@ -10,6 +10,12 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <link
+        rel="icon"
+        type="image/png"
+        href="{{ asset('favicon.png') }}"
+    >
+
     <title>
         @yield('title', 'Sistema de Gestión')
     </title>

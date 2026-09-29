@@ -74,28 +74,27 @@
 
                                     <td
                                         style="
-                                            width: 54px;
-                                            height: 54px;
+                                            padding: 10px 18px;
+                                            background: #ffffff;
+                                            border-radius: 10px;
                                             text-align: center;
                                             vertical-align: middle;
                                         "
                                     >
 
-                                        <div
+                                        <img
+                                            src="{{ asset('images/logo-inversiones-sur.png') }}"
+                                            alt="Inversiones Sur Limitada"
+                                            width="210"
                                             style="
-                                                width: 54px;
-                                                height: 54px;
-                                                line-height: 54px;
+                                                display: block;
+                                                width: 210px;
+                                                max-width: 210px;
+                                                height: auto;
                                                 margin: 0 auto;
-                                                border-radius: 12px;
-                                                background: rgba(255,255,255,.10);
-                                                color: #ffffff;
-                                                font-size: 22px;
-                                                font-weight: 700;
+                                                border: 0;
                                             "
                                         >
-                                            SG
-                                        </div>
 
                                     </td>
 
@@ -124,7 +123,7 @@
                                     text-transform: uppercase;
                                 "
                             >
-                                Plataforma empresarial
+                                Inversiones Sur Limitada
                             </div>
 
 

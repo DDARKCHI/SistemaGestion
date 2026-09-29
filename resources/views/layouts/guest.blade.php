@@ -13,6 +13,12 @@
         content="{{ csrf_token() }}"
     >
 
+    <link
+        rel="icon"
+        type="image/png"
+        href="{{ asset('favicon.png') }}"
+    >
+
     <title>
         {{ config('app.name', 'Sistema de Gestión') }}
     </title>
