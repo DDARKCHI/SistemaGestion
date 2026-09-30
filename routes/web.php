@@ -516,35 +516,45 @@ Route::resource('trabajadores', TrabajadorController::class)
     )
         ->name('trabajadores.vacaciones.detalles.destroy')
         ->middleware('permission:eliminar vacaciones');
-    // =========================================================
-    // PERMISOS
-    // =========================================================
+    
+   // =========================================================
+// PERMISOS
+// =========================================================
 
-    Route::get(
-        'trabajadores/{trabajador}/permisos/create',
-        [PermisoController::class, 'create']
-    )->name('trabajadores.permisos.create');
+Route::get(
+    'trabajadores/{trabajador}/permisos/create',
+    [PermisoController::class, 'create']
+)
+    ->name('trabajadores.permisos.create')
+    ->middleware('permission:crear permisos laborales');
 
-    Route::post(
-        'trabajadores/{trabajador}/permisos',
-        [PermisoController::class, 'store']
-    )->name('trabajadores.permisos.store');
+Route::post(
+    'trabajadores/{trabajador}/permisos',
+    [PermisoController::class, 'store']
+)
+    ->name('trabajadores.permisos.store')
+    ->middleware('permission:crear permisos laborales');
 
-    Route::get(
-        'trabajadores/{trabajador}/permisos/{permiso}/edit',
-        [PermisoController::class, 'edit']
-    )->name('trabajadores.permisos.edit');
+Route::get(
+    'trabajadores/{trabajador}/permisos/{permiso}/edit',
+    [PermisoController::class, 'edit']
+)
+    ->name('trabajadores.permisos.edit')
+    ->middleware('permission:editar permisos laborales');
 
-    Route::put(
-        'trabajadores/{trabajador}/permisos/{permiso}',
-        [PermisoController::class, 'update']
-    )->name('trabajadores.permisos.update');
+Route::put(
+    'trabajadores/{trabajador}/permisos/{permiso}',
+    [PermisoController::class, 'update']
+)
+    ->name('trabajadores.permisos.update')
+    ->middleware('permission:editar permisos laborales');
 
-    Route::delete(
-        'trabajadores/{trabajador}/permisos/{permiso}',
-        [PermisoController::class, 'destroy']
-    )->name('trabajadores.permisos.destroy');
-
+Route::delete(
+    'trabajadores/{trabajador}/permisos/{permiso}',
+    [PermisoController::class, 'destroy']
+)
+    ->name('trabajadores.permisos.destroy')
+    ->middleware('permission:eliminar permisos laborales');
 
     // =========================================================
 // AUSENCIAS

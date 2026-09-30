@@ -2424,6 +2424,8 @@
 </section>
     {{-- PERMISOS --}}
 
+@can('ver permisos laborales')
+
     <section class="worker-section">
 
         <div class="worker-section-header">
@@ -2442,12 +2444,14 @@
 
             <div class="worker-section-header-actions">
 
-                <a
-                    href="{{ route('trabajadores.permisos.create', $trabajador) }}"
-                    class="worker-section-add"
-                >
-                    + Nuevo permiso
-                </a>
+                @can('crear permisos laborales')
+                    <a
+                        href="{{ route('trabajadores.permisos.create', $trabajador) }}"
+                        class="worker-section-add"
+                    >
+                        + Nuevo permiso
+                    </a>
+                @endcan
 
                 <span class="worker-section-count">
                     {{ $trabajador->permisos->count() }}
@@ -2593,43 +2597,47 @@
 
                                     <div class="worker-action-list">
 
-                                        <a
-                                            href="{{ route(
-                                                'trabajadores.permisos.edit',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'permiso' => $permiso,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Editar
-                                        </a>
-
-                                        <form
-                                            action="{{ route(
-                                                'trabajadores.permisos.destroy',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'permiso' => $permiso,
-                                                ]
-                                            ) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este permiso? Esta acción no se puede deshacer.');"
-                                            style="display:inline;"
-                                        >
-
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="worker-action worker-action-danger"
+                                        @can('editar permisos laborales')
+                                            <a
+                                                href="{{ route(
+                                                    'trabajadores.permisos.edit',
+                                                    [
+                                                        'trabajador' => $trabajador,
+                                                        'permiso' => $permiso,
+                                                    ]
+                                                ) }}"
+                                                class="worker-action"
                                             >
-                                                Eliminar
-                                            </button>
+                                                Editar
+                                            </a>
+                                        @endcan
 
-                                        </form>
+                                        @can('eliminar permisos laborales')
+                                            <form
+                                                action="{{ route(
+                                                    'trabajadores.permisos.destroy',
+                                                    [
+                                                        'trabajador' => $trabajador,
+                                                        'permiso' => $permiso,
+                                                    ]
+                                                ) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('¿Estás seguro de eliminar este permiso? Esta acción no se puede deshacer.');"
+                                                style="display:inline;"
+                                            >
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    class="worker-action worker-action-danger"
+                                                >
+                                                    Eliminar
+                                                </button>
+
+                                            </form>
+                                        @endcan
 
                                     </div>
 
@@ -2667,209 +2675,208 @@
 
     </section>
 
+@endcan
 
-       {{-- FALTAS --}}
+{{-- FALTAS --}}
 
-    <section class="worker-section">
+<section class="worker-section">
 
-        <div class="worker-section-header">
+    <div class="worker-section-header">
 
-            <div class="worker-section-heading">
+        <div class="worker-section-heading">
 
-                <h2 class="worker-section-title">
-                    Faltas
-                </h2>
+            <h2 class="worker-section-title">
+                Faltas
+            </h2>
 
-                <p class="worker-section-description">
-                    Registro de faltas, estados y sanciones del trabajador.
-                </p>
-
-            </div>
-
-            <div class="worker-section-header-actions">
-
-                <a
-                    href="{{ route('trabajadores.faltas.create', $trabajador) }}"
-                    class="worker-section-add"
-                >
-                    + Nueva falta
-                </a>
-
-                <span class="worker-section-count">
-                    {{ $trabajador->faltas->count() }}
-                </span>
-
-            </div>
+            <p class="worker-section-description">
+                Registro de faltas, estados y sanciones del trabajador.
+            </p>
 
         </div>
 
+        <div class="worker-section-header-actions">
 
-        @if($trabajador->faltas->count())
+            <a
+                href="{{ route('trabajadores.faltas.create', $trabajador) }}"
+                class="worker-section-add"
+            >
+                + Nueva falta
+            </a>
 
-            <div class="worker-table-wrapper">
+            <span class="worker-section-count">
+                {{ $trabajador->faltas->count() }}
+            </span>
 
-                <table class="worker-table">
+        </div>
 
-                    <thead>
+    </div>
+
+
+    @if($trabajador->faltas->count())
+
+        <div class="worker-table-wrapper">
+
+            <table class="worker-table">
+
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Sanción</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach($trabajador->faltas as $falta)
+
                         <tr>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Descripción</th>
-                            <th>Estado</th>
-                            <th>Sanción</th>
-                            <th>Observaciones</th>
-                            <th>Acciones</th>
+
+                            <td>
+
+                                <strong>
+                                    {{ $falta->fecha
+                                        ? $falta->fecha->format('d/m/Y')
+                                        : '—'
+                                    }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                {{ $falta->tipo ?: 'Sin registro' }}
+                            </td>
+
+                            <td>
+                                {{ $falta->descripcion ?: '—' }}
+                            </td>
+
+                            <td>
+
+                                @if($falta->estado === 'cerrada')
+
+                                    <span class="worker-badge worker-badge-success">
+                                        Cerrada
+                                    </span>
+
+                                @elseif($falta->estado === 'sancionada')
+
+                                    <span class="worker-badge worker-badge-danger">
+                                        Sancionada
+                                    </span>
+
+                                @elseif($falta->estado === 'pendiente')
+
+                                    <span class="worker-badge worker-badge-warning">
+                                        Pendiente
+                                    </span>
+
+                                @elseif($falta->estado === 'registrada')
+
+                                    <span class="worker-badge">
+                                        Registrada
+                                    </span>
+
+                                @else
+
+                                    <span class="worker-badge">
+                                        {{ $falta->estado }}
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                            <td>
+                                {{ $falta->sancion ?: 'Sin sanción' }}
+                            </td>
+
+                            <td>
+                                {{ $falta->observaciones ?: '—' }}
+                            </td>
+
+                            <td>
+
+                                <div class="worker-action-list">
+
+                                    <a
+                                        href="{{ route(
+                                            'trabajadores.faltas.edit',
+                                            [
+                                                'trabajador' => $trabajador,
+                                                'falta' => $falta,
+                                            ]
+                                        ) }}"
+                                        class="worker-action"
+                                    >
+                                        Editar
+                                    </a>
+
+                                    <form
+                                        action="{{ route(
+                                            'trabajadores.faltas.destroy',
+                                            [
+                                                'trabajador' => $trabajador,
+                                                'falta' => $falta,
+                                            ]
+                                        ) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('¿Estás seguro de eliminar esta falta? Esta acción no se puede deshacer.');"
+                                        style="display:inline;"
+                                    >
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="worker-action worker-action-danger"
+                                        >
+                                            Eliminar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
                         </tr>
-                    </thead>
 
-                    <tbody>
+                    @endforeach
 
-                        @foreach($trabajador->faltas as $falta)
+                </tbody>
 
-                            <tr>
+            </table>
 
-                                <td>
+        </div>
 
-                                    <strong>
-                                        {{ $falta->fecha
-                                            ? $falta->fecha->format('d/m/Y')
-                                            : '—'
-                                        }}
-                                    </strong>
+    @else
 
-                                </td>
+        <div class="worker-empty">
 
-                                <td>
-                                    {{ $falta->tipo ?: 'Sin registro' }}
-                                </td>
-
-                                <td>
-                                    {{ $falta->descripcion ?: '—' }}
-                                </td>
-
-                                <td>
-
-                                    @if($falta->estado === 'cerrada')
-
-                                        <span class="worker-badge worker-badge-success">
-                                            Cerrada
-                                        </span>
-
-                                    @elseif($falta->estado === 'sancionada')
-
-                                        <span class="worker-badge worker-badge-danger">
-                                            Sancionada
-                                        </span>
-
-                                    @elseif($falta->estado === 'pendiente')
-
-                                        <span class="worker-badge worker-badge-warning">
-                                            Pendiente
-                                        </span>
-
-                                    @elseif($falta->estado === 'registrada')
-
-                                        <span class="worker-badge">
-                                            Registrada
-                                        </span>
-
-                                    @else
-
-                                        <span class="worker-badge">
-                                            {{ $falta->estado }}
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-                                <td>
-                                    {{ $falta->sancion ?: 'Sin sanción' }}
-                                </td>
-
-                                <td>
-                                    {{ $falta->observaciones ?: '—' }}
-                                </td>
-
-                                <td>
-
-                                    <div class="worker-action-list">
-
-                                        <a
-                                            href="{{ route(
-                                                'trabajadores.faltas.edit',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'falta' => $falta,
-                                                ]
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Editar
-                                        </a>
-
-                                        <form
-                                            action="{{ route(
-                                                'trabajadores.faltas.destroy',
-                                                [
-                                                    'trabajador' => $trabajador,
-                                                    'falta' => $falta,
-                                                ]
-                                            ) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar esta falta? Esta acción no se puede deshacer.');"
-                                            style="display:inline;"
-                                        >
-
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="worker-action worker-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
-
-                                        </form>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
+            <div class="worker-empty-icon">
+                !
             </div>
 
-        @else
+            <h3 class="worker-empty-title">
+                No hay faltas registradas
+            </h3>
 
-            <div class="worker-empty">
+            <p class="worker-empty-text">
+                Las faltas, sanciones y su estado quedarán registradas en esta sección.
+            </p>
 
-                <div class="worker-empty-icon">
-                    !
-                </div>
+        </div>
 
-                <h3 class="worker-empty-title">
-                    No hay faltas registradas
-                </h3>
+    @endif
 
-                <p class="worker-empty-text">
-                    Las faltas, sanciones y su estado quedarán registradas en esta sección.
-                </p>
-
-            </div>
-
-        @endif
-
-    </section>
-
-
+</section> 
        {{-- CUADRATURAS --}}
 
     <section class="worker-section">
