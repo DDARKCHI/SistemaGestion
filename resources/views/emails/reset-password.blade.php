@@ -152,7 +152,16 @@
 
         <strong style="color: #172033;">
             Sistema de Gestión
-        </strong>
+        </strong><br>
+
+        <span
+            style="
+                color: #667085;
+                font-size: 11px;
+            "
+        >
+            Inversiones Sur Limitada
+        </span>
     </p>
 
 @endsection

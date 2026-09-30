@@ -8,7 +8,30 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>{{ $titulo ?? 'Sistema de Gestión' }}</title>
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+
+    <style>
+        :root {
+            color-scheme: light;
+            supported-color-schemes: light;
+        }
+
+        .email-logo-box {
+            background-color: #ffffff !important;
+        }
+
+        .email-logo-image {
+            background-color: #ffffff !important;
+        }
+
+        [data-ogsc] .email-logo-box,
+        [data-ogsb] .email-logo-box {
+            background-color: #ffffff !important;
+        }
+    </style>
+
+    <title>{{ $titulo ?? 'Sistema de Gestión - Inversiones Sur Limitada' }}</title>
 </head>
 
 <body
@@ -73,9 +96,12 @@
                                 <tr>
 
                                     <td
+                                        class="email-logo-box"
+                                        bgcolor="#ffffff"
                                         style="
                                             padding: 10px 18px;
-                                            background: #ffffff;
+                                            background: #ffffff !important;
+                                            background-color: #ffffff !important;
                                             border-radius: 10px;
                                             text-align: center;
                                             vertical-align: middle;
@@ -83,15 +109,20 @@
                                     >
 
                                         <img
-                                            src="{{ asset('images/logo-inversiones-sur.png') }}"
+                                            class="email-logo-image"
+                                            src="{{ $message->embed(public_path('images/logo-inversiones-sur-email.png')) }}"
                                             alt="Inversiones Sur Limitada"
                                             width="210"
+                                            bgcolor="#ffffff"
                                             style="
                                                 display: block;
                                                 width: 210px;
                                                 max-width: 210px;
                                                 height: auto;
                                                 margin: 0 auto;
+                                                padding: 0;
+                                                background: #ffffff !important;
+                                                background-color: #ffffff !important;
                                                 border: 0;
                                             "
                                         >
@@ -231,7 +262,7 @@
                                     font-size: 9px;
                                 "
                             >
-                                Sistema de Gestión Empresarial
+                                Inversiones Sur Limitada · Sistema de Gestión Empresarial
                             </div>
 
                         </td>

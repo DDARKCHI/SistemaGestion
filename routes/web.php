@@ -547,35 +547,43 @@ Route::resource('trabajadores', TrabajadorController::class)
 
 
     // =========================================================
-    // AUSENCIAS
-    // =========================================================
+// AUSENCIAS
+// =========================================================
 
-    Route::get(
-        'trabajadores/{trabajador}/ausencias/create',
-        [AusenciaController::class, 'create']
-    )->name('trabajadores.ausencias.create');
+Route::get(
+    'trabajadores/{trabajador}/ausencias/create',
+    [AusenciaController::class, 'create']
+)
+    ->name('trabajadores.ausencias.create')
+    ->middleware('permission:crear ausencias');
 
-    Route::post(
-        'trabajadores/{trabajador}/ausencias',
-        [AusenciaController::class, 'store']
-    )->name('trabajadores.ausencias.store');
+Route::post(
+    'trabajadores/{trabajador}/ausencias',
+    [AusenciaController::class, 'store']
+)
+    ->name('trabajadores.ausencias.store')
+    ->middleware('permission:crear ausencias');
 
-    Route::get(
-        'trabajadores/{trabajador}/ausencias/{ausencia}/edit',
-        [AusenciaController::class, 'edit']
-    )->name('trabajadores.ausencias.edit');
+Route::get(
+    'trabajadores/{trabajador}/ausencias/{ausencia}/edit',
+    [AusenciaController::class, 'edit']
+)
+    ->name('trabajadores.ausencias.edit')
+    ->middleware('permission:editar ausencias');
 
-    Route::put(
-        'trabajadores/{trabajador}/ausencias/{ausencia}',
-        [AusenciaController::class, 'update']
-    )->name('trabajadores.ausencias.update');
+Route::put(
+    'trabajadores/{trabajador}/ausencias/{ausencia}',
+    [AusenciaController::class, 'update']
+)
+    ->name('trabajadores.ausencias.update')
+    ->middleware('permission:editar ausencias');
 
-    Route::delete(
-        'trabajadores/{trabajador}/ausencias/{ausencia}',
-        [AusenciaController::class, 'destroy']
-    )->name('trabajadores.ausencias.destroy');
-
-
+Route::delete(
+    'trabajadores/{trabajador}/ausencias/{ausencia}',
+    [AusenciaController::class, 'destroy']
+)
+    ->name('trabajadores.ausencias.destroy')
+    ->middleware('permission:eliminar ausencias');
     // =========================================================
     // FALTAS
     // =========================================================

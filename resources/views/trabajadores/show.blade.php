@@ -2205,144 +2205,147 @@
 
        {{-- AUSENCIAS --}}
 
-    <section class="worker-section">
+<section class="worker-section">
 
-        <div class="worker-section-header">
+    <div class="worker-section-header">
 
-            <div class="worker-section-heading">
+        <div class="worker-section-heading">
 
-                <h2 class="worker-section-title">
-                    Ausencias
-                </h2>
+            <h2 class="worker-section-title">
+                Ausencias
+            </h2>
 
-                <p class="worker-section-description">
-                    Registro histórico de ausencias del trabajador.
-                </p>
+            <p class="worker-section-description">
+                Registro histórico de ausencias del trabajador.
+            </p>
 
-            </div>
+        </div>
 
-            <div class="worker-section-header-actions">
+        <div class="worker-section-header-actions">
 
+            @can('crear ausencias')
                 <a
                     href="{{ route('trabajadores.ausencias.create', $trabajador) }}"
                     class="worker-section-add"
                 >
                     + Nueva ausencia
                 </a>
+            @endcan
 
-                <span class="worker-section-count">
-                    {{ $trabajador->ausencias->count() }}
-                </span>
-
-            </div>
+            <span class="worker-section-count">
+                {{ $trabajador->ausencias->count() }}
+            </span>
 
         </div>
 
+    </div>
 
-        @if($trabajador->ausencias->count())
 
-            <div class="worker-table-wrapper">
+    @if($trabajador->ausencias->count())
 
-                <table class="worker-table">
+        <div class="worker-table-wrapper">
 
-                    <thead>
+            <table class="worker-table">
+
+                <thead>
+                    <tr>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Días</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Justificación</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach($trabajador->ausencias as $ausencia)
+
                         <tr>
-                            <th>Desde</th>
-                            <th>Hasta</th>
-                            <th>Días</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Justificación</th>
-                            <th>Observaciones</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
+                            <td>
+                                {{ $ausencia->fecha_inicio
+                                    ? $ausencia->fecha_inicio->format('d/m/Y')
+                                    : '—'
+                                }}
+                            </td>
 
-                        @foreach($trabajador->ausencias as $ausencia)
+                            <td>
+                                {{ $ausencia->fecha_termino
+                                    ? $ausencia->fecha_termino->format('d/m/Y')
+                                    : '—'
+                                }}
+                            </td>
 
-                            <tr>
+                            <td>
 
-                                <td>
-                                    {{ $ausencia->fecha_inicio
-                                        ? $ausencia->fecha_inicio->format('d/m/Y')
-                                        : '—'
-                                    }}
-                                </td>
-
-                                <td>
-                                    {{ $ausencia->fecha_termino
-                                        ? $ausencia->fecha_termino->format('d/m/Y')
-                                        : '—'
-                                    }}
-                                </td>
-
-                                <td>
-
-                                    <strong>
-                                        {{ rtrim(
-                                            rtrim(
-                                                number_format(
-                                                    (float) $ausencia->dias,
-                                                    2,
-                                                    '.',
-                                                    ''
-                                                ),
-                                                '0'
+                                <strong>
+                                    {{ rtrim(
+                                        rtrim(
+                                            number_format(
+                                                (float) $ausencia->dias,
+                                                2,
+                                                '.',
+                                                ''
                                             ),
-                                            '.'
-                                        ) }}
-                                    </strong>
+                                            '0'
+                                        ),
+                                        '.'
+                                    ) }}
+                                </strong>
 
-                                </td>
+                            </td>
 
-                                <td>
-                                    {{ $ausencia->tipo ?: 'Sin registro' }}
-                                </td>
+                            <td>
+                                {{ $ausencia->tipo ?: 'Sin registro' }}
+                            </td>
 
-                                <td>
+                            <td>
 
-                                    @if($ausencia->estado === 'justificada')
+                                @if($ausencia->estado === 'justificada')
 
-                                        <span class="worker-badge worker-badge-success">
-                                            Justificada
-                                        </span>
+                                    <span class="worker-badge worker-badge-success">
+                                        Justificada
+                                    </span>
 
-                                    @elseif($ausencia->estado === 'injustificada')
+                                @elseif($ausencia->estado === 'injustificada')
 
-                                        <span class="worker-badge worker-badge-danger">
-                                            Injustificada
-                                        </span>
+                                    <span class="worker-badge worker-badge-danger">
+                                        Injustificada
+                                    </span>
 
-                                    @elseif($ausencia->estado === 'pendiente')
+                                @elseif($ausencia->estado === 'pendiente')
 
-                                        <span class="worker-badge worker-badge-warning">
-                                            Pendiente
-                                        </span>
+                                    <span class="worker-badge worker-badge-warning">
+                                        Pendiente
+                                    </span>
 
-                                    @else
+                                @else
 
-                                        <span class="worker-badge">
-                                            {{ $ausencia->estado }}
-                                        </span>
+                                    <span class="worker-badge">
+                                        {{ $ausencia->estado }}
+                                    </span>
 
-                                    @endif
+                                @endif
 
-                                </td>
+                            </td>
 
-                                <td>
-                                    {{ $ausencia->justificacion ?: 'Sin registro' }}
-                                </td>
+                            <td>
+                                {{ $ausencia->justificacion ?: 'Sin registro' }}
+                            </td>
 
-                                <td>
-                                    {{ $ausencia->observaciones ?: '—' }}
-                                </td>
+                            <td>
+                                {{ $ausencia->observaciones ?: '—' }}
+                            </td>
 
-                                <td>
+                            <td>
 
-                                    <div class="worker-action-list">
+                                <div class="worker-action-list">
 
+                                    @can('editar ausencias')
                                         <a
                                             href="{{ route(
                                                 'trabajadores.ausencias.edit',
@@ -2355,7 +2358,9 @@
                                         >
                                             Editar
                                         </a>
+                                    @endcan
 
+                                    @can('eliminar ausencias')
                                         <form
                                             action="{{ route(
                                                 'trabajadores.ausencias.destroy',
@@ -2380,43 +2385,43 @@
                                             </button>
 
                                         </form>
+                                    @endcan
 
-                                    </div>
+                                </div>
 
-                                </td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                        @endforeach
+                    @endforeach
 
-                    </tbody>
+                </tbody>
 
-                </table>
+            </table>
 
+        </div>
+
+    @else
+
+        <div class="worker-empty">
+
+            <div class="worker-empty-icon">
+                —
             </div>
 
-        @else
+            <h3 class="worker-empty-title">
+                No hay ausencias registradas
+            </h3>
 
-            <div class="worker-empty">
+            <p class="worker-empty-text">
+                Las ausencias justificadas o no justificadas quedarán registradas aquí.
+            </p>
 
-                <div class="worker-empty-icon">
-                    —
-                </div>
+        </div>
 
-                <h3 class="worker-empty-title">
-                    No hay ausencias registradas
-                </h3>
+    @endif
 
-                <p class="worker-empty-text">
-                    Las ausencias justificadas o no justificadas quedarán registradas aquí.
-                </p>
-
-            </div>
-
-        @endif
-
-    </section>
-
+</section>
     {{-- PERMISOS --}}
 
     <section class="worker-section">

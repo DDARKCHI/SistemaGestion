@@ -72,15 +72,43 @@
             text-align: center;
         }
 
-        .auth-logo {
-            width: 96px;
-            height: 96px;
-            margin-bottom: 27px;
+        .auth-brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .auth-logo svg {
+        .auth-brand-heading {
+            text-align: center;
+        }
+
+        .auth-logo {
+            width: 270px;
+            min-height: 112px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 31px;
+            padding: 15px 22px;
+            background: #ffffff;
+            border: 1px solid rgba(255,255,255,.22);
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .14);
+        }
+
+        .auth-logo-full {
+            display: block;
             width: 100%;
-            height: 100%;
+            height: auto;
+            max-height: 86px;
+            object-fit: contain;
+        }
+
+        .auth-logo-icon {
+            display: none;
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
         }
 
         .auth-brand-title {
@@ -104,7 +132,7 @@
             height: 3px;
             margin-top: 22px;
             border-radius: 999px;
-            background: #14a0a5;
+            background: #2a7bc2;
         }
 
         .auth-brand-description {
@@ -337,19 +365,50 @@
                 padding: 30px 24px;
             }
 
+            .auth-brand-header {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+            }
+
             .auth-logo {
-                width: 64px;
-                height: 64px;
-                margin-bottom: 14px;
+                width: 82px;
+                min-width: 82px;
+                min-height: 82px;
+                height: 82px;
+                margin-bottom: 0;
+                padding: 10px;
+                background: #ffffff;
+                border-radius: 14px;
+                box-shadow: 0 8px 22px rgba(0, 0, 0, .12);
+            }
+
+            .auth-logo-full {
+                display: none;
+            }
+
+            .auth-logo-icon {
+                display: block;
+                width: 60px;
+                height: 60px;
+            }
+
+            .auth-brand-heading {
+                text-align: left;
             }
 
             .auth-brand-title {
                 font-size: 17px;
+                line-height: 1.2;
             }
 
             .auth-brand-subtitle {
-                margin-top: 5px;
+                margin-top: 6px;
                 font-size: 9px;
+                line-height: 1.35;
             }
 
             .auth-brand-line,
@@ -367,6 +426,35 @@
         }
 
         @media (max-width: 420px) {
+            .auth-brand {
+                padding: 26px 18px;
+            }
+
+            .auth-brand-header {
+                gap: 13px;
+            }
+
+            .auth-logo {
+                width: 74px;
+                min-width: 74px;
+                min-height: 74px;
+                height: 74px;
+                padding: 9px;
+            }
+
+            .auth-logo-icon {
+                width: 54px;
+                height: 54px;
+            }
+
+            .auth-brand-title {
+                font-size: 15px;
+            }
+
+            .auth-brand-subtitle {
+                font-size: 8px;
+            }
+
             .auth-panel {
                 padding: 32px 20px;
             }
@@ -382,38 +470,36 @@
 
                 <div class="auth-brand-content">
 
-                    <div class="auth-logo">
+                    <div class="auth-brand-header">
 
-                        <svg
-                            viewBox="0 0 100 100"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M50 8L82 27L69 35L50 24L31 35L18 27L50 8Z"
-                                fill="white"
-                            />
+                        <div class="auth-logo">
 
-                            <path
-                                d="M18 31L31 39V59L50 70L69 59V47L55 55V47L82 31V67L50 86L18 67V31Z"
-                                fill="white"
-                            />
+                            <img
+                                src="{{ asset('images/logo-inversiones-sur.png') }}"
+                                alt="Inversiones Sur Limitada"
+                                class="auth-logo-full"
+                            >
 
-                            <path
-                                d="M31 39L50 50L61 44L48 36L31 46V39Z"
-                                fill="#8FC5EA"
-                                opacity=".85"
-                            />
-                        </svg>
+                            <img
+                                src="{{ asset('images/icono-inversiones-sur.png') }}"
+                                alt="Inversiones Sur"
+                                class="auth-logo-icon"
+                            >
 
-                    </div>
+                        </div>
 
-                    <h1 class="auth-brand-title">
-                        SISTEMA DE GESTIÓN
-                    </h1>
+                        <div class="auth-brand-heading">
 
-                    <div class="auth-brand-subtitle">
-                        Plataforma empresarial
+                            <h1 class="auth-brand-title">
+                                SISTEMA DE GESTIÓN
+                            </h1>
+
+                            <div class="auth-brand-subtitle">
+                                Inversiones Sur Limitada
+                            </div>
+
+                        </div>
+
                     </div>
 
                     <div class="auth-brand-line"></div>
