@@ -595,63 +595,83 @@ Route::delete(
     ->name('trabajadores.ausencias.destroy')
     ->middleware('permission:eliminar ausencias');
     // =========================================================
-    // FALTAS
+// FALTAS
+// =========================================================
+
+Route::get(
+    'trabajadores/{trabajador}/faltas/create',
+    [FaltaController::class, 'create']
+)
+    ->name('trabajadores.faltas.create')
+    ->middleware('permission:crear faltas');
+
+Route::post(
+    'trabajadores/{trabajador}/faltas',
+    [FaltaController::class, 'store']
+)
+    ->name('trabajadores.faltas.store')
+    ->middleware('permission:crear faltas');
+
+Route::get(
+    'trabajadores/{trabajador}/faltas/{falta}/edit',
+    [FaltaController::class, 'edit']
+)
+    ->name('trabajadores.faltas.edit')
+    ->middleware('permission:editar faltas');
+
+Route::put(
+    'trabajadores/{trabajador}/faltas/{falta}',
+    [FaltaController::class, 'update']
+)
+    ->name('trabajadores.faltas.update')
+    ->middleware('permission:editar faltas');
+
+Route::delete(
+    'trabajadores/{trabajador}/faltas/{falta}',
+    [FaltaController::class, 'destroy']
+)
+    ->name('trabajadores.faltas.destroy')
+    ->middleware('permission:eliminar faltas');
+
+
     // =========================================================
+// CUADRATURAS
+// =========================================================
 
-    Route::get(
-        'trabajadores/{trabajador}/faltas/create',
-        [FaltaController::class, 'create']
-    )->name('trabajadores.faltas.create');
+Route::get(
+    'trabajadores/{trabajador}/cuadraturas/create',
+    [CuadraturaController::class, 'create']
+)
+    ->name('trabajadores.cuadraturas.create')
+    ->middleware('permission:crear cuadraturas');
 
-    Route::post(
-        'trabajadores/{trabajador}/faltas',
-        [FaltaController::class, 'store']
-    )->name('trabajadores.faltas.store');
+Route::post(
+    'trabajadores/{trabajador}/cuadraturas',
+    [CuadraturaController::class, 'store']
+)
+    ->name('trabajadores.cuadraturas.store')
+    ->middleware('permission:crear cuadraturas');
 
-    Route::get(
-        'trabajadores/{trabajador}/faltas/{falta}/edit',
-        [FaltaController::class, 'edit']
-    )->name('trabajadores.faltas.edit');
+Route::get(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}/edit',
+    [CuadraturaController::class, 'edit']
+)
+    ->name('trabajadores.cuadraturas.edit')
+    ->middleware('permission:editar cuadraturas');
 
-    Route::put(
-        'trabajadores/{trabajador}/faltas/{falta}',
-        [FaltaController::class, 'update']
-    )->name('trabajadores.faltas.update');
+Route::put(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
+    [CuadraturaController::class, 'update']
+)
+    ->name('trabajadores.cuadraturas.update')
+    ->middleware('permission:editar cuadraturas');
 
-    Route::delete(
-        'trabajadores/{trabajador}/faltas/{falta}',
-        [FaltaController::class, 'destroy']
-    )->name('trabajadores.faltas.destroy');
-
-
-    // =========================================================
-    // CUADRATURAS
-    // =========================================================
-
-    Route::get(
-        'trabajadores/{trabajador}/cuadraturas/create',
-        [CuadraturaController::class, 'create']
-    )->name('trabajadores.cuadraturas.create');
-
-    Route::post(
-        'trabajadores/{trabajador}/cuadraturas',
-        [CuadraturaController::class, 'store']
-    )->name('trabajadores.cuadraturas.store');
-
-    Route::get(
-        'trabajadores/{trabajador}/cuadraturas/{cuadratura}/edit',
-        [CuadraturaController::class, 'edit']
-    )->name('trabajadores.cuadraturas.edit');
-
-    Route::put(
-        'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
-        [CuadraturaController::class, 'update']
-    )->name('trabajadores.cuadraturas.update');
-
-    Route::delete(
-        'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
-        [CuadraturaController::class, 'destroy']
-    )->name('trabajadores.cuadraturas.destroy');
+Route::delete(
+    'trabajadores/{trabajador}/cuadraturas/{cuadratura}',
+    [CuadraturaController::class, 'destroy']
+)
+    ->name('trabajadores.cuadraturas.destroy')
+    ->middleware('permission:eliminar cuadraturas');
 
 
     // =========================================================
