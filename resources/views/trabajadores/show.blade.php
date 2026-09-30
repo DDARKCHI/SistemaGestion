@@ -3183,7 +3183,10 @@
     </section>
 
 @endcan
-       {{-- DOCUMENTOS --}}
+
+{{-- DOCUMENTOS --}}
+
+@can('ver documentos')
 
     <section class="worker-section">
 
@@ -3201,18 +3204,19 @@
 
             </div>
 
-
             <div class="worker-section-header-actions">
 
-                <a
-                    href="{{ route('documentos.create', [
-                        'registro_tipo' => 'trabajador',
-                        'registro_id' => $trabajador->id,
-                    ]) }}"
-                    class="worker-section-add"
-                >
-                    + Subir documento
-                </a>
+                @can('crear documentos')
+                    <a
+                        href="{{ route('documentos.create', [
+                            'registro_tipo' => 'trabajador',
+                            'registro_id' => $trabajador->id,
+                        ]) }}"
+                        class="worker-section-add"
+                    >
+                        + Subir documento
+                    </a>
+                @endcan
 
                 <span class="worker-section-count">
                     {{ $trabajador->documentos->count() }}
@@ -3344,39 +3348,42 @@
                                         @endif
 
 
-                                        <a
-                                            href="{{ route(
-                                                'documentos.edit',
-                                                $documento
-                                            ) }}"
-                                            class="worker-action"
-                                        >
-                                            Editar
-                                        </a>
-
-
-                                        <form
-                                            action="{{ route(
-                                                'documentos.destroy',
-                                                $documento
-                                            ) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.');"
-                                            style="display:inline;"
-                                        >
-
-                                            @csrf
-                                            @method('DELETE')
-
-
-                                            <button
-                                                type="submit"
-                                                class="worker-action worker-action-danger"
+                                        @can('editar documentos')
+                                            <a
+                                                href="{{ route(
+                                                    'documentos.edit',
+                                                    $documento
+                                                ) }}"
+                                                class="worker-action"
                                             >
-                                                Eliminar
-                                            </button>
+                                                Editar
+                                            </a>
+                                        @endcan
 
-                                        </form>
+
+                                        @can('eliminar documentos')
+                                            <form
+                                                action="{{ route(
+                                                    'documentos.destroy',
+                                                    $documento
+                                                ) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.');"
+                                                style="display:inline;"
+                                            >
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    class="worker-action worker-action-danger"
+                                                >
+                                                    Eliminar
+                                                </button>
+
+                                            </form>
+                                        @endcan
 
                                     </div>
 
@@ -3415,4 +3422,5 @@
 
     </section>
 
+@endcan
 @endsection

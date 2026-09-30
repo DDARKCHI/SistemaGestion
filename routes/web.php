@@ -788,16 +788,37 @@ Route::delete(
     ]);
 
 
-    // =========================================================
-    // DOCUMENTOS
-    // =========================================================
+ // =========================================================
+// DOCUMENTOS
+// =========================================================
 
-    Route::resource('documentos', DocumentoController::class)
-        ->parameters([
-            'documentos' => 'documento',
-        ]);
+Route::resource('documentos', DocumentoController::class)
+    ->only(['create', 'store'])
+    ->parameters([
+        'documentos' => 'documento',
+    ])
+    ->middleware('permission:crear documentos');
 
+Route::resource('documentos', DocumentoController::class)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'documentos' => 'documento',
+    ])
+    ->middleware('permission:editar documentos');
 
+Route::resource('documentos', DocumentoController::class)
+    ->only(['destroy'])
+    ->parameters([
+        'documentos' => 'documento',
+    ])
+    ->middleware('permission:eliminar documentos');
+
+Route::resource('documentos', DocumentoController::class)
+    ->only(['index', 'show'])
+    ->parameters([
+        'documentos' => 'documento',
+    ])
+    ->middleware('permission:ver documentos');
     // =========================================================
     // USUARIOS
     // =========================================================

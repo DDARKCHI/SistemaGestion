@@ -433,12 +433,14 @@
             ← Volver
         </a>
 
-        <a
-            href="{{ route('documentos.edit', $documento) }}"
-            class="btn btn-primary"
-        >
-            ✎ Editar documento
-        </a>
+        @can('editar documentos')
+    <a
+        href="{{ route('documentos.edit', $documento) }}"
+        class="btn btn-primary"
+    >
+        ✎ Editar documento
+    </a>
+@endcan
 
     </div>
 

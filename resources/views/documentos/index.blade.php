@@ -547,14 +547,16 @@
 
         <div class="documents-header-actions">
 
-            <a
-                href="{{ route('documentos.create') }}"
-                class="btn btn-primary"
-            >
-                + Subir documento
-            </a>
+    @can('crear documentos')
+    <a
+        href="{{ route('documentos.create') }}"
+        class="btn btn-primary"
+    >
+        + Subir documento
+    </a>
+@endcan
 
-        </div>
+</div>
 
     </div>
 
@@ -1011,45 +1013,48 @@
 
                                 <td>
 
-                                    <div class="document-actions">
+    <div class="document-actions">
 
-                                        <a
-                                            href="{{ route('documentos.show', $documento) }}"
-                                            class="document-action document-action-primary"
-                                        >
-                                            Ver
-                                        </a>
+        <a
+            href="{{ route('documentos.show', $documento) }}"
+            class="document-action document-action-primary"
+        >
+            Ver
+        </a>
 
-                                        <a
-                                            href="{{ route('documentos.edit', $documento) }}"
-                                            class="document-action"
-                                        >
-                                            Editar
-                                        </a>
+        @can('editar documentos')
+            <a
+                href="{{ route('documentos.edit', $documento) }}"
+                class="document-action"
+            >
+                Editar
+            </a>
+        @endcan
 
-                                        <form
-                                            action="{{ route('documentos.destroy', $documento) }}"
-                                            method="POST"
-                                            style="display:inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este documento?');"
-                                        >
+        @can('eliminar documentos')
+            <form
+                action="{{ route('documentos.destroy', $documento) }}"
+                method="POST"
+                style="display:inline;"
+                onsubmit="return confirm('¿Estás seguro de eliminar este documento?');"
+            >
 
-                                            @csrf
+                @csrf
+                @method('DELETE')
 
-                                            @method('DELETE')
+                <button
+                    type="submit"
+                    class="document-action document-action-danger"
+                >
+                    Eliminar
+                </button>
 
-                                            <button
-                                                type="submit"
-                                                class="document-action document-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
+            </form>
+        @endcan
 
-                                        </form>
+    </div>
 
-                                    </div>
-
-                                </td>
+</td>
 
                             </tr>
 
@@ -1099,12 +1104,14 @@
                     Desde aquí podrás consultar la documentación almacenada en el sistema o cargar un documento asociado a un registro.
                 </p>
 
-                <a
-                    href="{{ route('documentos.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Subir documento
-                </a>
+                @can('crear documentos')
+    <a
+        href="{{ route('documentos.create') }}"
+        class="btn btn-primary"
+    >
+        + Subir documento
+    </a>
+@endcan
 
             </div>
 
