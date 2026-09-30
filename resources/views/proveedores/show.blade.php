@@ -799,21 +799,43 @@
 
         <div class="provider-show-actions">
 
-            <a
-                href="{{ route('proveedores.index') }}"
+    <a
+        href="{{ route('proveedores.index') }}"
+        class="provider-show-action"
+    >
+        ← Volver
+    </a>
+
+    @can('editar proveedores')
+        <a
+            href="{{ route('proveedores.edit', $proveedor) }}"
+            class="provider-show-action provider-show-action-primary"
+        >
+            Editar proveedor
+        </a>
+    @endcan
+
+    @can('eliminar proveedores')
+        <form
+            action="{{ route('proveedores.destroy', $proveedor) }}"
+            method="POST"
+            onsubmit="return confirm('¿Estás seguro de eliminar este proveedor? Esta acción no se puede deshacer.');"
+            style="display:inline;"
+        >
+            @csrf
+            @method('DELETE')
+
+            <button
+                type="submit"
                 class="provider-show-action"
+                style="color:#a52f26; border-color:#e9c1bc;"
             >
-                ← Volver
-            </a>
+                Eliminar proveedor
+            </button>
+        </form>
+    @endcan
 
-            <a
-                href="{{ route('proveedores.edit', $proveedor) }}"
-                class="provider-show-action provider-show-action-primary"
-            >
-                Editar proveedor
-            </a>
-
-        </div>
+</div>
 
     </div>
 
@@ -1069,12 +1091,14 @@
             </div>
 
 
-            <a
-                href="{{ route('proveedores.bodegas.create', $proveedor) }}"
-                class="provider-show-action provider-show-action-primary"
-            >
-                + Nueva bodega
-            </a>
+            @can('crear proveedores')
+    <a
+        href="{{ route('proveedores.bodegas.create', $proveedor) }}"
+        class="provider-show-action provider-show-action-primary"
+    >
+        + Nueva bodega
+    </a>
+@endcan
 
         </div>
 
@@ -1146,49 +1170,49 @@
 
                                 <td>
 
-                                    <div class="provider-table-actions">
+                                   <div class="provider-table-actions">
 
-                                        <a
-                                            href="{{ route(
-                                                'proveedores.bodegas.edit',
-                                                [
-                                                    'proveedor' => $proveedor,
-                                                    'bodega' => $bodega
-                                                ]
-                                            ) }}"
-                                            class="provider-table-action"
-                                        >
-                                            Editar
-                                        </a>
+    @can('editar proveedores')
+        <a
+            href="{{ route(
+                'proveedores.bodegas.edit',
+                [
+                    'proveedor' => $proveedor,
+                    'bodega' => $bodega
+                ]
+            ) }}"
+            class="provider-table-action"
+        >
+            Editar
+        </a>
+    @endcan
 
+    @can('eliminar proveedores')
+        <form
+            action="{{ route(
+                'proveedores.bodegas.destroy',
+                [
+                    'proveedor' => $proveedor,
+                    'bodega' => $bodega
+                ]
+            ) }}"
+            method="POST"
+            style="display: inline;"
+            onsubmit="return confirm('¿Estás seguro de eliminar esta bodega? Esta acción no se puede deshacer.');"
+        >
+            @csrf
+            @method('DELETE')
 
-                                        <form
-                                            action="{{ route(
-                                                'proveedores.bodegas.destroy',
-                                                [
-                                                    'proveedor' => $proveedor,
-                                                    'bodega' => $bodega
-                                                ]
-                                            ) }}"
-                                            method="POST"
-                                            style="display: inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar esta bodega? Esta acción no se puede deshacer.');"
-                                        >
+            <button
+                type="submit"
+                class="provider-table-action provider-table-action-danger"
+            >
+                Eliminar
+            </button>
+        </form>
+    @endcan
 
-                                            @csrf
-
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="provider-table-action provider-table-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
-
-                                        </form>
-
-                                    </div>
+</div>
 
                                 </td>
 
@@ -1243,12 +1267,14 @@
             </div>
 
 
-            <a
-                href="{{ route('proveedores.ejecutivos.create', $proveedor) }}"
-                class="provider-show-action provider-show-action-primary"
-            >
-                + Nuevo ejecutivo
-            </a>
+           @can('crear proveedores')
+    <a
+        href="{{ route('proveedores.ejecutivos.create', $proveedor) }}"
+        class="provider-show-action provider-show-action-primary"
+    >
+        + Nuevo ejecutivo
+    </a>
+@endcan
 
         </div>
 
@@ -1331,47 +1357,47 @@
 
                                     <div class="provider-table-actions">
 
-                                        <a
-                                            href="{{ route(
-                                                'proveedores.ejecutivos.edit',
-                                                [
-                                                    'proveedor' => $proveedor,
-                                                    'ejecutivo' => $ejecutivo
-                                                ]
-                                            ) }}"
-                                            class="provider-table-action"
-                                        >
-                                            Editar
-                                        </a>
+    @can('editar proveedores')
+        <a
+            href="{{ route(
+                'proveedores.ejecutivos.edit',
+                [
+                    'proveedor' => $proveedor,
+                    'ejecutivo' => $ejecutivo
+                ]
+            ) }}"
+            class="provider-table-action"
+        >
+            Editar
+        </a>
+    @endcan
 
+    @can('eliminar proveedores')
+        <form
+            action="{{ route(
+                'proveedores.ejecutivos.destroy',
+                [
+                    'proveedor' => $proveedor,
+                    'ejecutivo' => $ejecutivo
+                ]
+            ) }}"
+            method="POST"
+            style="display: inline;"
+            onsubmit="return confirm('¿Estás seguro de eliminar este ejecutivo? Esta acción no se puede deshacer.');"
+        >
+            @csrf
+            @method('DELETE')
 
-                                        <form
-                                            action="{{ route(
-                                                'proveedores.ejecutivos.destroy',
-                                                [
-                                                    'proveedor' => $proveedor,
-                                                    'ejecutivo' => $ejecutivo
-                                                ]
-                                            ) }}"
-                                            method="POST"
-                                            style="display: inline;"
-                                            onsubmit="return confirm('¿Estás seguro de eliminar este ejecutivo? Esta acción no se puede deshacer.');"
-                                        >
+            <button
+                type="submit"
+                class="provider-table-action provider-table-action-danger"
+            >
+                Eliminar
+            </button>
+        </form>
+    @endcan
 
-                                            @csrf
-
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="provider-table-action provider-table-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
-
-                                        </form>
-
-                                    </div>
+</div>
 
                                 </td>
 

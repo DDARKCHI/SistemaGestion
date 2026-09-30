@@ -889,14 +889,16 @@
 
         <div class="suppliers-header-actions">
 
-            <a
-                href="{{ route('proveedores.create') }}"
-                class="btn btn-primary"
-            >
-                + Nuevo proveedor
-            </a>
+    @can('crear proveedores')
+        <a
+            href="{{ route('proveedores.create') }}"
+            class="btn btn-primary"
+        >
+            + Nuevo proveedor
+        </a>
+    @endcan
 
-        </div>
+</div>
 
     </div>
 
@@ -1218,26 +1220,47 @@
 
                                 <td>
 
-                                    <div class="supplier-actions">
+    <div class="supplier-actions">
 
-                                        <a
-                                            href="{{ route('proveedores.show', $proveedor) }}"
-                                            class="supplier-action supplier-action-primary"
-                                        >
-                                            Ver
-                                        </a>
+    <a
+        href="{{ route('proveedores.show', $proveedor) }}"
+        class="supplier-action supplier-action-primary"
+    >
+        Ver
+    </a>
 
+    @can('editar proveedores')
+        <a
+            href="{{ route('proveedores.edit', $proveedor) }}"
+            class="supplier-action"
+        >
+            Editar
+        </a>
+    @endcan
 
-                                        <a
-                                            href="{{ route('proveedores.edit', $proveedor) }}"
-                                            class="supplier-action"
-                                        >
-                                            Editar
-                                        </a>
+    @can('eliminar proveedores')
+        <form
+            action="{{ route('proveedores.destroy', $proveedor) }}"
+            method="POST"
+            style="display:inline;"
+            onsubmit="return confirm('¿Estás seguro de eliminar este proveedor? Esta acción no se puede deshacer.');"
+        >
+            @csrf
+            @method('DELETE')
 
-                                    </div>
+            <button
+                type="submit"
+                class="supplier-action"
+                style="color:#a52f26; border-color:#e9c1bc;"
+            >
+                Eliminar
+            </button>
+        </form>
+    @endcan
 
-                                </td>
+</div>
+
+</td>
 
                             </tr>
 
@@ -1289,12 +1312,14 @@
                     Comienza registrando el primer proveedor para poder administrar sus datos, bodegas, ejecutivos y notas de crédito pendientes.
                 </p>
 
-                <a
-                    href="{{ route('proveedores.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Crear primer proveedor
-                </a>
+                @can('crear proveedores')
+    <a
+        href="{{ route('proveedores.create') }}"
+        class="btn btn-primary"
+    >
+        + Crear primer proveedor
+    </a>
+@endcan
 
             </div>
 
