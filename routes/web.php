@@ -1543,21 +1543,37 @@ Route::resource('transportistas', TransportistaController::class)
 
 
 
-    // =========================================================
+   // =========================================================
+// VEHÍCULOS
+// =========================================================
 
-    // VEHÍCULOS
+Route::resource('vehiculos', VehiculoController::class)
+    ->only(['create', 'store'])
+    ->parameters([
+        'vehiculos' => 'vehiculo',
+    ])
+    ->middleware('permission:crear vehiculos');
 
-    // =========================================================
+Route::resource('vehiculos', VehiculoController::class)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'vehiculos' => 'vehiculo',
+    ])
+    ->middleware('permission:editar vehiculos');
 
+Route::resource('vehiculos', VehiculoController::class)
+    ->only(['destroy'])
+    ->parameters([
+        'vehiculos' => 'vehiculo',
+    ])
+    ->middleware('permission:eliminar vehiculos');
 
-
-    Route::resource('vehiculos', VehiculoController::class)
-
-        ->parameters([
-
-            'vehiculos' => 'vehiculo',
-
-        ]);
+Route::resource('vehiculos', VehiculoController::class)
+    ->only(['index', 'show'])
+    ->parameters([
+        'vehiculos' => 'vehiculo',
+    ])
+    ->middleware('permission:ver vehiculos');
 
 
 

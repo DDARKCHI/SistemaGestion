@@ -493,31 +493,25 @@
     </a>
 
 @endcan
-        {{-- VEHÍCULOS --}}
+       {{-- VEHÍCULOS --}}
 
-        <a
+@can('ver vehiculos')
 
-            href="{{ route('vehiculos.index') }}"
+    <a
+        href="{{ route('vehiculos.index') }}"
+        class="sidebar-item {{ request()->routeIs('vehiculos.*') ? 'active' : '' }}"
+        title="Vehículos"
+    >
+        <span class="sidebar-icon">
+            ▱
+        </span>
 
-            class="sidebar-item {{ request()->routeIs('vehiculos.*') ? 'active' : '' }}"
+        <span class="sidebar-label">
+            Vehículos
+        </span>
+    </a>
 
-            title="Vehículos"
-
-        >
-
-            <span class="sidebar-icon">
-
-                ▱
-
-            </span>
-
-            <span class="sidebar-label">
-
-                Vehículos
-
-            </span>
-
-        </a>
+@endcan
 
         {{-- SERVICIOS DE TRANSPORTE --}}
 

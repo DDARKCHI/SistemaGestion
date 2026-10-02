@@ -889,14 +889,18 @@
 
         <div class="carriers-header-actions">
 
-            <a
-                href="{{ route('vehiculos.create') }}"
-                class="btn btn-primary"
-            >
-                + Nuevo vehículo
-            </a>
+    @can('crear vehiculos')
 
-        </div>
+        <a
+            href="{{ route('vehiculos.create') }}"
+            class="btn btn-primary"
+        >
+            + Nuevo vehículo
+        </a>
+
+    @endcan
+
+</div>
 
     </div>
 
@@ -946,38 +950,42 @@
         </div>
 
 
-        <div class="carriers-summary-card">
+        @can('ver servicios transporte')
 
-            <div class="carriers-summary-label">
-                Con servicios
-            </div>
+    <div class="carriers-summary-card">
 
-            <div class="carriers-summary-value">
-                {{ $vehiculos->where('servicios_transporte_count', '>', 0)->count() }}
-            </div>
-
-            <div class="carriers-summary-description">
-                Vehículos con servicios registrados
-            </div>
-
+        <div class="carriers-summary-label">
+            Con servicios
         </div>
 
-
-        <div class="carriers-summary-card">
-
-            <div class="carriers-summary-label">
-                Sin servicios
-            </div>
-
-            <div class="carriers-summary-value">
-                {{ $vehiculos->where('servicios_transporte_count', 0)->count() }}
-            </div>
-
-            <div class="carriers-summary-description">
-                Vehículos aún sin servicios
-            </div>
-
+        <div class="carriers-summary-value">
+            {{ $vehiculos->where('servicios_transporte_count', '>', 0)->count() }}
         </div>
+
+        <div class="carriers-summary-description">
+            Vehículos con servicios registrados
+        </div>
+
+    </div>
+
+
+    <div class="carriers-summary-card">
+
+        <div class="carriers-summary-label">
+            Sin servicios
+        </div>
+
+        <div class="carriers-summary-value">
+            {{ $vehiculos->where('servicios_transporte_count', 0)->count() }}
+        </div>
+
+        <div class="carriers-summary-description">
+            Vehículos aún sin servicios
+        </div>
+
+    </div>
+
+@endcan
 
     </div>
 
@@ -1039,7 +1047,9 @@
                             <th>Tipo</th>
                             <th>Marca / Modelo</th>
                             <th>Año</th>
-                            <th>Servicios</th>
+                            @can('ver servicios transporte')
+    <th>Servicios</th>
+@endcan
                             <th>Acciones</th>
 
                         </tr>
@@ -1167,13 +1177,17 @@
                                 </td>
 
 
-                                <td>
+                                @can('ver servicios transporte')
 
-                                    <span class="carrier-count">
-                                        {{ $vehiculo->servicios_transporte_count }}
-                                    </span>
+    <td>
 
-                                </td>
+        <span class="carrier-count">
+            {{ $vehiculo->servicios_transporte_count }}
+        </span>
+
+    </td>
+
+@endcan
 
 
                                 <td>
@@ -1188,12 +1202,16 @@
                                         </a>
 
 
-                                        <a
-                                            href="{{ route('vehiculos.edit', $vehiculo) }}"
-                                            class="carrier-action"
-                                        >
-                                            Editar
-                                        </a>
+                                       @can('editar vehiculos')
+
+    <a
+        href="{{ route('vehiculos.edit', $vehiculo) }}"
+        class="carrier-action"
+    >
+        Editar
+    </a>
+
+@endcan
 
                                     </div>
 
@@ -1249,12 +1267,16 @@
                     Registra el primer vehículo para asociarlo a un transportista y utilizarlo en los servicios de transporte.
                 </p>
 
-                <a
-                    href="{{ route('vehiculos.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Crear primer vehículo
-                </a>
+                @can('crear vehiculos')
+
+    <a
+        href="{{ route('vehiculos.create') }}"
+        class="btn btn-primary"
+    >
+        + Crear primer vehículo
+    </a>
+
+@endcan
 
             </div>
 

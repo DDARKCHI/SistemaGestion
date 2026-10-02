@@ -728,12 +728,37 @@
                 ← Volver
             </a>
 
-            <a
-                href="{{ route('vehiculos.edit', $vehiculo) }}"
-                class="carrier-show-action carrier-show-action-primary"
-            >
-                Editar vehículo
-            </a>
+            @can('editar vehiculos')
+
+    <a
+        href="{{ route('vehiculos.edit', $vehiculo) }}"
+        class="carrier-show-action carrier-show-action-primary"
+    >
+        Editar vehículo
+    </a>
+
+@endcan
+@can('eliminar vehiculos')
+
+    <form
+        action="{{ route('vehiculos.destroy', $vehiculo) }}"
+        method="POST"
+        onsubmit="return confirm('¿Estás seguro de eliminar este vehículo? Esta acción no se puede deshacer.');"
+        style="margin: 0;"
+    >
+        @csrf
+        @method('DELETE')
+
+        <button
+            type="submit"
+            class="carrier-show-action"
+            style="color: #b42318; border-color: #f1c7c3;"
+        >
+            Eliminar vehículo
+        </button>
+    </form>
+
+@endcan
 
         </div>
 
@@ -768,21 +793,25 @@
 
     <div class="carrier-show-summary">
 
-        <div class="carrier-show-summary-card">
+      @can('ver servicios transporte')
 
-            <div class="carrier-show-summary-label">
-                Servicios
-            </div>
+    <div class="carrier-show-summary-card">
 
-            <div class="carrier-show-summary-value">
-                {{ $vehiculo->serviciosTransporte->count() }}
-            </div>
-
-            <div class="carrier-show-summary-description">
-                Servicios de transporte registrados
-            </div>
-
+        <div class="carrier-show-summary-label">
+            Servicios
         </div>
+
+        <div class="carrier-show-summary-value">
+            {{ $vehiculo->serviciosTransporte->count() }}
+        </div>
+
+        <div class="carrier-show-summary-description">
+            Servicios de transporte registrados
+        </div>
+
+    </div>
+
+@endcan
 
 
         <div class="carrier-show-summary-card">
@@ -883,18 +912,26 @@
 
                         @if($vehiculo->transportista)
 
-                            <a
-                                href="{{ route('transportistas.show', $vehiculo->transportista) }}"
-                                style="color: inherit; text-decoration: none;"
-                            >
-                                {{ $vehiculo->transportista->nombre }}
-                            </a>
+    @can('ver transportistas')
 
-                        @else
+        <a
+            href="{{ route('transportistas.show', $vehiculo->transportista) }}"
+            style="color: inherit; text-decoration: none;"
+        >
+            {{ $vehiculo->transportista->nombre }}
+        </a>
 
-                            No registrado
+    @else
 
-                        @endif
+        {{ $vehiculo->transportista->nombre }}
+
+    @endcan
+
+@else
+
+    No registrado
+
+@endif
 
                     </div>
 
@@ -985,7 +1022,7 @@
     {{-- =====================================================
          SERVICIOS DE TRANSPORTE
     ====================================================== --}}
-
+@can('ver servicios transporte')
     <section class="carrier-show-card">
 
         <div class="carrier-show-card-header">
@@ -1005,20 +1042,24 @@
 
             @if($vehiculo->transportista)
 
-                <a
-                    href="{{ route(
-                        'servicios-transporte.create',
-                        [
-                            'transportista_id' => $vehiculo->transportista_id,
-                            'vehiculo_id' => $vehiculo->id,
-                        ]
-                    ) }}"
-                    class="carrier-show-action carrier-show-action-primary"
-                >
-                    + Nuevo servicio
-                </a>
+    @can('crear servicios transporte')
 
-            @endif
+        <a
+            href="{{ route(
+                'servicios-transporte.create',
+                [
+                    'transportista_id' => $vehiculo->transportista_id,
+                    'vehiculo_id' => $vehiculo->id,
+                ]
+            ) }}"
+            class="carrier-show-action carrier-show-action-primary"
+        >
+            + Nuevo servicio
+        </a>
+
+    @endcan
+
+@endif
 
         </div>
 
@@ -1222,29 +1263,35 @@
 
                 @if($vehiculo->transportista)
 
-                    <div style="margin-top: 14px;">
+    @can('crear servicios transporte')
 
-                        <a
-                            href="{{ route(
-                                'servicios-transporte.create',
-                                [
-                                    'transportista_id' => $vehiculo->transportista_id,
-                                    'vehiculo_id' => $vehiculo->id,
-                                ]
-                            ) }}"
-                            class="carrier-show-action carrier-show-action-primary"
-                        >
-                            + Registrar primer servicio
-                        </a>
+        <div style="margin-top: 14px;">
 
-                    </div>
+            <a
+                href="{{ route(
+                    'servicios-transporte.create',
+                    [
+                        'transportista_id' => $vehiculo->transportista_id,
+                        'vehiculo_id' => $vehiculo->id,
+                    ]
+                ) }}"
+                class="carrier-show-action carrier-show-action-primary"
+            >
+                + Registrar primer servicio
+            </a>
 
-                @endif
+        </div>
 
-            </div>
+   @endcan
 
-        @endif
+@endif
 
-    </section>
+</div>
+
+@endif
+
+</section>
+
+@endcan
 
 @endsection
