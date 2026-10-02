@@ -902,23 +902,27 @@
         </div>
 
 
-        <div class="provider-show-summary-card">
+        @can('ver notas credito proveedores')
 
-            <div class="provider-show-summary-label">
-                NC pendientes
-            </div>
+    <div class="provider-show-summary-card">
 
-            <div class="provider-show-summary-value">
-                {{ $proveedor->notasCredito->where('estado', 'pendiente')->count() }}
-            </div>
+        <div class="provider-show-summary-label">
+            NC pendientes
+        </div>
 
-            <div class="provider-show-summary-description">
-                Notas por recuperar
-            </div>
+        <div class="provider-show-summary-value">
+            {{ $proveedor->notasCredito->where('estado', 'pendiente')->count() }}
+        </div>
 
+        <div class="provider-show-summary-description">
+            Notas por recuperar
         </div>
 
     </div>
+
+@endcan
+
+</div>
 
 
     {{-- =====================================================
@@ -1431,10 +1435,12 @@
 
 
     {{-- =====================================================
-         NOTAS DE CRÉDITO
-    ====================================================== --}}
+     NOTAS DE CRÉDITO
+====================================================== --}}
 
-    <section class="provider-show-card">
+@can('ver notas credito proveedores')
+
+<section class="provider-show-card">
 
         <div class="provider-show-card-header">
 
@@ -1451,15 +1457,19 @@
             </div>
 
 
-            <a
-                href="{{ route(
-                    'notas-credito-proveedores.create',
-                    ['proveedor_id' => $proveedor->id]
-                ) }}"
-                class="provider-show-action provider-show-action-primary"
-            >
-                + Nueva nota de crédito
-            </a>
+            @can('crear notas credito proveedores')
+
+    <a
+        href="{{ route(
+            'notas-credito-proveedores.create',
+            ['proveedor_id' => $proveedor->id]
+        ) }}"
+        class="provider-show-action provider-show-action-primary"
+    >
+        + Nueva nota de crédito
+    </a>
+
+@endcan
 
         </div>
 
@@ -1582,15 +1592,19 @@
                                         </a>
 
 
-                                        <a
-                                            href="{{ route(
-                                                'notas-credito-proveedores.edit',
-                                                $nota
-                                            ) }}"
-                                            class="provider-table-action"
-                                        >
-                                            Editar
-                                        </a>
+                                        @can('editar notas credito proveedores')
+
+    <a
+        href="{{ route(
+            'notas-credito-proveedores.edit',
+            $nota
+        ) }}"
+        class="provider-table-action"
+    >
+        Editar
+    </a>
+
+@endcan
 
                                     </div>
 
@@ -1649,5 +1663,7 @@
         @endif
 
     </section>
+
+    @endcan
 
 @endsection

@@ -334,29 +334,23 @@
 
         {{-- NOTAS DE CRÉDITO --}}
 
-        <a
+@can('ver notas credito proveedores')
 
-            href="{{ route('notas-credito-proveedores.index') }}"
+    <a
+        href="{{ route('notas-credito-proveedores.index') }}"
+        class="sidebar-item {{ request()->routeIs('notas-credito-proveedores.*') ? 'active' : '' }}"
+        title="Notas de crédito de proveedores"
+    >
+        <span class="sidebar-icon">
+            ◫
+        </span>
 
-            class="sidebar-item {{ request()->routeIs('notas-credito-proveedores.*') ? 'active' : '' }}"
+        <span class="sidebar-label">
+            Notas de crédito
+        </span>
+    </a>
 
-            title="Notas de crédito de proveedores"
-
-        >
-
-            <span class="sidebar-icon">
-
-                ◫
-
-            </span>
-
-            <span class="sidebar-label">
-
-                Notas de crédito
-
-            </span>
-
-        </a>
+@endcan
 
         {{-- CUADRATURAS - PENDIENTE --}}
 

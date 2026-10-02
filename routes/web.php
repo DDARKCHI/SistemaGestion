@@ -1463,26 +1463,48 @@ Route::delete(
         ->middleware('permission:eliminar proveedores');
 
     // =========================================================
+// NOTAS DE CRÉDITO DE PROVEEDORES
+// =========================================================
 
-    // NOTAS DE CRÉDITO DE PROVEEDORES
-
-    // =========================================================
-
-
-
-    Route::resource(
-
-        'notas-credito-proveedores',
-
-        NotaCreditoProveedorController::class
-
-    )->parameters([
-
+Route::resource(
+    'notas-credito-proveedores',
+    NotaCreditoProveedorController::class
+)
+    ->only(['create', 'store'])
+    ->parameters([
         'notas-credito-proveedores' => 'notaCreditoProveedor',
+    ])
+    ->middleware('permission:crear notas credito proveedores');
 
-    ]);
+Route::resource(
+    'notas-credito-proveedores',
+    NotaCreditoProveedorController::class
+)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'notas-credito-proveedores' => 'notaCreditoProveedor',
+    ])
+    ->middleware('permission:editar notas credito proveedores');
 
+Route::resource(
+    'notas-credito-proveedores',
+    NotaCreditoProveedorController::class
+)
+    ->only(['destroy'])
+    ->parameters([
+        'notas-credito-proveedores' => 'notaCreditoProveedor',
+    ])
+    ->middleware('permission:eliminar notas credito proveedores');
 
+Route::resource(
+    'notas-credito-proveedores',
+    NotaCreditoProveedorController::class
+)
+    ->only(['index', 'show'])
+    ->parameters([
+        'notas-credito-proveedores' => 'notaCreditoProveedor',
+    ])
+    ->middleware('permission:ver notas credito proveedores');
 
 
 
