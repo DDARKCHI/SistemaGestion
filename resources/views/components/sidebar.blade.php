@@ -476,30 +476,23 @@
 
         {{-- TRANSPORTISTAS --}}
 
-        <a
+@can('ver transportistas')
 
-            href="{{ route('transportistas.index') }}"
+    <a
+        href="{{ route('transportistas.index') }}"
+        class="sidebar-item {{ request()->routeIs('transportistas.*') ? 'active' : '' }}"
+        title="Transportistas"
+    >
+        <span class="sidebar-icon">
+            □
+        </span>
 
-            class="sidebar-item {{ request()->routeIs('transportistas.*') ? 'active' : '' }}"
+        <span class="sidebar-label">
+            Transportistas
+        </span>
+    </a>
 
-            title="Transportistas"
-
-        >
-
-            <span class="sidebar-icon">
-
-                □
-
-            </span>
-
-            <span class="sidebar-label">
-
-                Transportistas
-
-            </span>
-
-        </a>
-
+@endcan
         {{-- VEHÍCULOS --}}
 
         <a

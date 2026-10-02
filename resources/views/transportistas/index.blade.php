@@ -889,14 +889,18 @@
 
         <div class="carriers-header-actions">
 
-            <a
-                href="{{ route('transportistas.create') }}"
-                class="btn btn-primary"
-            >
-                + Nuevo transportista
-            </a>
+    @can('crear transportistas')
 
-        </div>
+        <a
+            href="{{ route('transportistas.create') }}"
+            class="btn btn-primary"
+        >
+            + Nuevo transportista
+        </a>
+
+    @endcan
+
+</div>
 
     </div>
 
@@ -1222,22 +1226,25 @@
 
                                     <div class="carrier-actions">
 
-                                        <a
-                                            href="{{ route('transportistas.show', $transportista) }}"
-                                            class="carrier-action carrier-action-primary"
-                                        >
-                                            Ver
-                                        </a>
+    <a
+        href="{{ route('transportistas.show', $transportista) }}"
+        class="carrier-action carrier-action-primary"
+    >
+        Ver
+    </a>
 
+    @can('editar transportistas')
 
-                                        <a
-                                            href="{{ route('transportistas.edit', $transportista) }}"
-                                            class="carrier-action"
-                                        >
-                                            Editar
-                                        </a>
+        <a
+            href="{{ route('transportistas.edit', $transportista) }}"
+            class="carrier-action"
+        >
+            Editar
+        </a>
 
-                                    </div>
+    @endcan
+
+</div>
 
                                 </td>
 
@@ -1291,12 +1298,16 @@
                     Comienza registrando el primer transportista para poder administrar sus datos, vehículos, servicios y gastos asociados.
                 </p>
 
-                <a
-                    href="{{ route('transportistas.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Crear primer transportista
-                </a>
+                @can('crear transportistas')
+
+    <a
+        href="{{ route('transportistas.create') }}"
+        class="btn btn-primary"
+    >
+        + Crear primer transportista
+    </a>
+
+@endcan
 
             </div>
 

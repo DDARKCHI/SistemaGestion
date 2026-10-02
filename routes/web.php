@@ -1508,22 +1508,37 @@ Route::resource(
 
 
 
-    // =========================================================
+   // =========================================================
+// TRANSPORTISTAS
+// =========================================================
 
-    // TRANSPORTISTAS
+Route::resource('transportistas', TransportistaController::class)
+    ->only(['create', 'store'])
+    ->parameters([
+        'transportistas' => 'transportista',
+    ])
+    ->middleware('permission:crear transportistas');
 
-    // =========================================================
+Route::resource('transportistas', TransportistaController::class)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'transportistas' => 'transportista',
+    ])
+    ->middleware('permission:editar transportistas');
 
+Route::resource('transportistas', TransportistaController::class)
+    ->only(['destroy'])
+    ->parameters([
+        'transportistas' => 'transportista',
+    ])
+    ->middleware('permission:eliminar transportistas');
 
-
-    Route::resource('transportistas', TransportistaController::class)
-
-        ->parameters([
-
-            'transportistas' => 'transportista',
-
-        ]);
-
+Route::resource('transportistas', TransportistaController::class)
+    ->only(['index', 'show'])
+    ->parameters([
+        'transportistas' => 'transportista',
+    ])
+    ->middleware('permission:ver transportistas');
 
 
 
