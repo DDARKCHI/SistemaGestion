@@ -440,9 +440,19 @@
 
     <div class="transport-service-breadcrumb">
 
-        <a href="{{ route('transportistas.index') }}">
-            Transportistas
-        </a>
+        @can('ver transportistas')
+
+    <a href="{{ route('transportistas.index') }}">
+        Transportistas
+    </a>
+
+@else
+
+    <span>
+        Transportistas
+    </span>
+
+@endcan
 
         <span>›</span>
 
@@ -480,12 +490,16 @@
         </div>
 
 
-        <a
-            href="{{ route('servicios-transporte.create') }}"
-            class="btn btn-primary"
-        >
-            + Nuevo servicio
-        </a>
+       @can('crear servicios transporte')
+
+    <a
+        href="{{ route('servicios-transporte.create') }}"
+        class="btn btn-primary"
+    >
+        + Nuevo servicio
+    </a>
+
+@endcan
 
     </div>
 
@@ -877,15 +891,19 @@
                                         </a>
 
 
-                                        <a
-                                            href="{{ route(
-                                                'servicios-transporte.edit',
-                                                $servicio
-                                            ) }}"
-                                            class="transport-service-action"
-                                        >
-                                            Editar
-                                        </a>
+                                        @can('editar servicios transporte')
+
+    <a
+        href="{{ route(
+            'servicios-transporte.edit',
+            $servicio
+        ) }}"
+        class="transport-service-action"
+    >
+        Editar
+    </a>
+
+@endcan
 
                                     </div>
 
@@ -917,12 +935,16 @@
                     Comienza registrando el primer servicio de transporte.
                 </p>
 
-                <a
-                    href="{{ route('servicios-transporte.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Nuevo servicio
-                </a>
+                @can('crear servicios transporte')
+
+    <a
+        href="{{ route('servicios-transporte.create') }}"
+        class="btn btn-primary"
+    >
+        + Nuevo servicio
+    </a>
+
+@endcan
 
             </div>
 

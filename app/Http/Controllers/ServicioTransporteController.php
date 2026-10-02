@@ -267,9 +267,10 @@ class ServicioTransporteController extends Controller
                 ],
 
                 'estado_facturacion' => [
-                    'required',
-                    'in:Pendiente,Recibida',
-                ],
+    'nullable',
+    'required_if:emite_factura,1',
+    'in:Pendiente,Recibida',
+],
 
                 'numero_factura' => [
                     'nullable',

@@ -564,15 +564,19 @@
             </a>
 
 
-            <a
-                href="{{ route(
-                    'servicios-transporte.edit',
-                    $servicio
-                ) }}"
-                class="btn btn-primary"
-            >
-                Editar servicio
-            </a>
+            @can('editar servicios transporte')
+
+    <a
+        href="{{ route(
+            'servicios-transporte.edit',
+            $servicio
+        ) }}"
+        class="btn btn-primary"
+    >
+        Editar servicio
+    </a>
+
+@endcan
 
         </div>
 
@@ -766,15 +770,23 @@
 
                         @if($servicio->operacion)
 
-                            <a
-                                href="{{ route(
-                                    'operaciones.show',
-                                    $servicio->operacion
-                                ) }}"
-                                class="transport-service-show-link"
-                            >
-                                Operación #{{ $servicio->operacion->id }}
-                            </a>
+    @can('ver operaciones')
+
+        <a
+            href="{{ route(
+                'operaciones.show',
+                $servicio->operacion
+            ) }}"
+            class="transport-service-show-link"
+        >
+            Operación #{{ $servicio->operacion->id }}
+        </a>
+
+    @else
+
+        Operación #{{ $servicio->operacion->id }}
+
+    @endcan
 
                             @if($servicio->operacion->cliente)
 
@@ -829,22 +841,28 @@
 
                         @if($servicio->transportista)
 
-                            <a
-                                href="{{ route(
-                                    'transportistas.show',
-                                    $servicio->transportista
-                                ) }}"
-                                class="transport-service-show-link"
-                            >
-                                {{ $servicio->transportista->nombre }}
-                            </a>
+    @can('ver transportistas')
 
-                            <div class="transport-service-show-detail-secondary">
+        <a
+            href="{{ route(
+                'transportistas.show',
+                $servicio->transportista
+            ) }}"
+            class="transport-service-show-link"
+        >
+            {{ $servicio->transportista->nombre }}
+        </a>
 
-                                RUT:
-                                {{ $servicio->transportista->rut }}
+    @else
 
-                            </div>
+        {{ $servicio->transportista->nombre }}
+
+    @endcan
+
+    <div class="transport-service-show-detail-secondary">
+        RUT:
+        {{ $servicio->transportista->rut }}
+    </div>
 
                         @else
 
@@ -894,7 +912,7 @@
     {{-- =====================================================
          VEHÍCULO
     ====================================================== --}}
-
+@can('ver vehiculos')
     <section class="transport-service-show-card">
 
         <div class="transport-service-show-card-header">
@@ -1070,6 +1088,7 @@
         </div>
 
     </section>
+    @endcan
 
 
     {{-- =====================================================
@@ -1295,39 +1314,46 @@
                 </a>
 
 
-                <a
-                    href="{{ route(
-                        'servicios-transporte.edit',
-                        $servicio
-                    ) }}"
-                    class="btn btn-primary"
-                >
-                    Editar servicio
-                </a>
+                @can('editar servicios transporte')
+
+    <a
+        href="{{ route(
+            'servicios-transporte.edit',
+            $servicio
+        ) }}"
+        class="btn btn-primary"
+    >
+        Editar servicio
+    </a>
+
+@endcan
 
 
-                <form
-                    action="{{ route(
-                        'servicios-transporte.destroy',
-                        $servicio
-                    ) }}"
-                    method="POST"
-                    class="transport-service-show-delete-form"
-                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio de transporte?');"
-                >
+                @can('eliminar servicios transporte')
 
-                    @csrf
+    <form
+        action="{{ route(
+            'servicios-transporte.destroy',
+            $servicio
+        ) }}"
+        method="POST"
+        class="transport-service-show-delete-form"
+        onsubmit="return confirm('¿Estás seguro de que deseas eliminar este servicio de transporte?');"
+    >
 
-                    @method('DELETE')
+        @csrf
+        @method('DELETE')
 
-                    <button
-                        type="submit"
-                        class="transport-service-show-delete-button"
-                    >
-                        Eliminar
-                    </button>
+        <button
+            type="submit"
+            class="transport-service-show-delete-button"
+        >
+            Eliminar
+        </button>
 
-                </form>
+    </form>
+
+@endcan
 
             </div>
 

@@ -1580,24 +1580,36 @@ Route::resource('vehiculos', VehiculoController::class)
 
 
     // =========================================================
+// SERVICIOS DE TRANSPORTE
+// =========================================================
 
-    // SERVICIOS DE TRANSPORTE
-
-    // =========================================================
-
-
-
-    Route::resource(
-
-        'servicios-transporte',
-
-        ServicioTransporteController::class
-
-    )->parameters([
-
+Route::resource('servicios-transporte', ServicioTransporteController::class)
+    ->only(['create', 'store'])
+    ->parameters([
         'servicios-transporte' => 'servicioTransporte',
+    ])
+    ->middleware('permission:crear servicios transporte');
 
-    ]);
+Route::resource('servicios-transporte', ServicioTransporteController::class)
+    ->only(['edit', 'update'])
+    ->parameters([
+        'servicios-transporte' => 'servicioTransporte',
+    ])
+    ->middleware('permission:editar servicios transporte');
+
+Route::resource('servicios-transporte', ServicioTransporteController::class)
+    ->only(['destroy'])
+    ->parameters([
+        'servicios-transporte' => 'servicioTransporte',
+    ])
+    ->middleware('permission:eliminar servicios transporte');
+
+Route::resource('servicios-transporte', ServicioTransporteController::class)
+    ->only(['index', 'show'])
+    ->parameters([
+        'servicios-transporte' => 'servicioTransporte',
+    ])
+    ->middleware('permission:ver servicios transporte');
 
 
 

@@ -515,29 +515,23 @@
 
         {{-- SERVICIOS DE TRANSPORTE --}}
 
-        <a
+@can('ver servicios transporte')
 
-            href="{{ route('servicios-transporte.index') }}"
+    <a
+        href="{{ route('servicios-transporte.index') }}"
+        class="sidebar-item {{ request()->routeIs('servicios-transporte.*') ? 'active' : '' }}"
+        title="Servicios de transporte"
+    >
+        <span class="sidebar-icon">
+            ⇄
+        </span>
 
-            class="sidebar-item {{ request()->routeIs('servicios-transporte.*') ? 'active' : '' }}"
+        <span class="sidebar-label">
+            Servicios transporte
+        </span>
+    </a>
 
-            title="Servicios de transporte"
-
-        >
-
-            <span class="sidebar-icon">
-
-                ⇄
-
-            </span>
-
-            <span class="sidebar-label">
-
-                Servicios transporte
-
-            </span>
-
-        </a>
+@endcan
 
         {{-- =================================================
 
