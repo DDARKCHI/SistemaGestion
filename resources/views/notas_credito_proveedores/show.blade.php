@@ -760,22 +760,23 @@
 
         <div class="credit-note-detail-actions">
 
-            <a
-                href="{{ route('notas-credito-proveedores.index') }}"
-                class="credit-note-detail-button credit-note-detail-button-secondary"
-            >
-                Volver
-            </a>
+    <a
+        href="{{ route('notas-credito-proveedores.index') }}"
+        class="credit-note-detail-button credit-note-detail-button-secondary"
+    >
+        Volver
+    </a>
 
+    @can('editar notas credito proveedores')
+        <a
+            href="{{ route('notas-credito-proveedores.edit', $notaCreditoProveedor) }}"
+            class="credit-note-detail-button credit-note-detail-button-primary"
+        >
+            Editar
+        </a>
+    @endcan
 
-            <a
-                href="{{ route('notas-credito-proveedores.edit', $notaCreditoProveedor) }}"
-                class="credit-note-detail-button credit-note-detail-button-primary"
-            >
-                Editar
-            </a>
-
-        </div>
+</div>
 
     </div>
 
@@ -1110,25 +1111,27 @@
             </p>
 
 
-            <form
-                action="{{ route('notas-credito-proveedores.destroy', $notaCreditoProveedor) }}"
-                method="POST"
-                class="credit-note-detail-delete-form"
-                onsubmit="return confirm('¿Está seguro de eliminar esta nota de crédito?');"
-            >
+           @can('eliminar notas credito proveedores')
 
-                @csrf
+    <form
+        action="{{ route('notas-credito-proveedores.destroy', $notaCreditoProveedor) }}"
+        method="POST"
+        class="credit-note-detail-delete-form"
+        onsubmit="return confirm('¿Está seguro de eliminar esta nota de crédito?');"
+    >
+        @csrf
+        @method('DELETE')
 
-                @method('DELETE')
+        <button
+            type="submit"
+            class="credit-note-detail-delete-button"
+        >
+            Eliminar nota
+        </button>
 
-                <button
-                    type="submit"
-                    class="credit-note-detail-delete-button"
-                >
-                    Eliminar nota
-                </button>
+    </form>
 
-            </form>
+@endcan
 
         </div>
 

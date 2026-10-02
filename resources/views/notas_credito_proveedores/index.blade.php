@@ -1093,14 +1093,16 @@
 
         <div class="credit-notes-header-actions">
 
-            <a
-                href="{{ route('notas-credito-proveedores.create') }}"
-                class="btn btn-primary"
-            >
-                + Nueva nota de crédito
-            </a>
+    @can('crear notas credito proveedores')
+        <a
+            href="{{ route('notas-credito-proveedores.create') }}"
+            class="btn btn-primary"
+        >
+            + Nueva nota de crédito
+        </a>
+    @endcan
 
-        </div>
+</div>
 
     </div>
 
@@ -1442,50 +1444,49 @@
                                 </td>
 
 
-                                {{-- ACCIONES --}}
+                          {{-- ACCIONES --}}
 
-                                <td>
+<td>
 
-                                    <div class="credit-notes-actions">
+    <div class="credit-notes-actions">
 
-                                        <a
-                                            href="{{ route('notas-credito-proveedores.show', $notaCredito) }}"
-                                            class="credit-notes-action credit-notes-action-primary"
-                                        >
-                                            Ver
-                                        </a>
+        <a
+            href="{{ route('notas-credito-proveedores.show', $notaCredito) }}"
+            class="credit-notes-action credit-notes-action-primary"
+        >
+            Ver
+        </a>
 
+        @can('editar notas credito proveedores')
+            <a
+                href="{{ route('notas-credito-proveedores.edit', $notaCredito) }}"
+                class="credit-notes-action"
+            >
+                Editar
+            </a>
+        @endcan
 
-                                        <a
-                                            href="{{ route('notas-credito-proveedores.edit', $notaCredito) }}"
-                                            class="credit-notes-action"
-                                        >
-                                            Editar
-                                        </a>
+        @can('eliminar notas credito proveedores')
+            <form
+                action="{{ route('notas-credito-proveedores.destroy', $notaCredito) }}"
+                method="POST"
+                onsubmit="return confirm('¿Está seguro de eliminar esta nota de crédito?');"
+            >
+                @csrf
+                @method('DELETE')
 
+                <button
+                    type="submit"
+                    class="credit-notes-action credit-notes-action-danger"
+                >
+                    Eliminar
+                </button>
+            </form>
+        @endcan
 
-                                        <form
-                                            action="{{ route('notas-credito-proveedores.destroy', $notaCredito) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('¿Está seguro de eliminar esta nota de crédito?');"
-                                        >
+    </div>
 
-                                            @csrf
-
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="credit-notes-action credit-notes-action-danger"
-                                            >
-                                                Eliminar
-                                            </button>
-
-                                        </form>
-
-                                    </div>
-
-                                </td>
+</td>
 
                             </tr>
 
@@ -1552,12 +1553,14 @@
                 </p>
 
 
-                <a
-                    href="{{ route('notas-credito-proveedores.create') }}"
-                    class="btn btn-primary"
-                >
-                    + Registrar nota de crédito
-                </a>
+               @can('crear notas credito proveedores')
+    <a
+        href="{{ route('notas-credito-proveedores.create') }}"
+        class="btn btn-primary"
+    >
+        + Registrar nota de crédito
+    </a>
+@endcan
 
             </div>
 
